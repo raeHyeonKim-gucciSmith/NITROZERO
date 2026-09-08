@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4956892516329244676}
-  - component: {fileID: 810000000000000100}
   m_Layer: 0
   m_Name: ' CustomParts'
   m_TagString: Untagged
@@ -2311,44 +2310,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c65ef81935d4d01b94d8234aed51ba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier:
---- !u!114 &810000000000000100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 478087777897678067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f0e0c3f47d549728094612ccb1725ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openAmount: 0
-  covers:
-  - pivot: {fileID: 810000000000000011}
-    localAxis: {x: 1, y: 0, z: 0}
-    openAngle: 45
-    openOffset: {x: 0, y: 0, z: 0.05}
-  - pivot: {fileID: 810000000000000021}
-    localAxis: {x: 1, y: 0, z: 0}
-    openAngle: 25
-    openOffset: {x: -0.025, y: 0.16, z: 0.30}
-  - pivot: {fileID: 810000000000000031}
-    localAxis: {x: 1, y: 0, z: 0}
-    openAngle: 45
-    openOffset: {x: 0, y: 0, z: 0.05}
-  - pivot: {fileID: 810000000000000041}
-    localAxis: {x: 1, y: 0, z: 0}
-    openAngle: 35
-    openOffset: {x: 0.015, y: 0.08, z: 0.18}
-  - pivot: {fileID: 810000000000000051}
-    localAxis: {x: 1, y: 0, z: 0}
-    openAngle: 35
-    openOffset: {x: -0.015, y: 0.08, z: 0.18}
-  - pivot: {fileID: 810000000000000061}
-    localAxis: {x: 1, y: 0, z: 0}
-    openAngle: 25
-    openOffset: {x: 0.025, y: 0.16, z: 0.30}
-  backTrack: {fileID: 3213693116089491752}
-  backTrackOpenOffset: {x: 0, y: 0.05, z: 0}
-  backTrackOpenEulerAngles: {x: 9.46, y: 0, z: 0}

@@ -565,6 +565,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localAxis: {x: 0, y: 0, z: 1}
   degreesPerSecond: 720
+  speedMultiplier: 1
 --- !u!1001 &175678995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -914,6 +915,7 @@ GameObject:
   m_Component:
   - component: {fileID: 226863552}
   - component: {fileID: 226863553}
+  - component: {fileID: 226863554}
   m_Layer: 0
   m_Name: Nozzle_PetalGroup
   m_TagString: Untagged
@@ -986,6 +988,24 @@ MonoBehaviour:
   targetClosure: 0
   closeAngle: 15
   movementSpeed: 2
+--- !u!114 &226863554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226863551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae38c0a92c645258f451db806d84b4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deployment: {fileID: 1275285598}
+  maximumOpenAngle: 18
+  openingStart: 0.72
+  fullyOpenAt: 0.84
+  closingStart: 0.88
+  closedAgainAt: 1
 --- !u!1001 &242340714
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3941,6 +3961,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1141969755}
   - component: {fileID: 1141969756}
+  - component: {fileID: 1141969757}
   m_Layer: 0
   m_Name: Nozzle_PetalGroup
   m_TagString: Untagged
@@ -4013,6 +4034,24 @@ MonoBehaviour:
   targetClosure: 0
   closeAngle: 15
   movementSpeed: 2
+--- !u!114 &1141969757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141969754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae38c0a92c645258f451db806d84b4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deployment: {fileID: 1275285598}
+  maximumOpenAngle: 18
+  openingStart: 0.72
+  fullyOpenAt: 0.84
+  closingStart: 0.88
+  closedAgainAt: 1
 --- !u!1 &1148302067
 GameObject:
   m_ObjectHideFlags: 0
@@ -4215,6 +4254,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localAxis: {x: 0, y: 0, z: 1}
   degreesPerSecond: 720
+  speedMultiplier: 1
 --- !u!1 &1162697042
 GameObject:
   m_ObjectHideFlags: 0
@@ -4384,8 +4424,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1275285597}
+  - component: {fileID: 1275285598}
   m_Layer: 0
-  m_Name: HidingBooster
+  m_Name: BoosterDeploymentRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4399,15 +4440,52 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1275285596}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.005023622, y: -0, z: -0, w: 0.9999874}
+  m_LocalPosition: {x: 0, y: 0.089, z: 0.285}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2089704401}
   - {fileID: 1513193207}
   m_Father: {fileID: 913478668}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.576, y: 0, z: 0}
+--- !u!114 &1275285598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275285596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e224e46a3ea047bbaf34dcfc1a4fcf79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterSequenceAmount: 0
+  hiddenLocalPosition: {x: 0, y: 0.089, z: 0.285}
+  hiddenLocalEulerAngles: {x: 0.57566714, y: -0, z: -0}
+  deployedLocalPosition: {x: 0, y: 0, z: 0}
+  deployedLocalEulerAngles: {x: 0, y: 0, z: 0}
+  coversFullyOpenAt: 0.35
+  boosterMovementStartsAt: 0.2
+  levelingStart: 0.65
+  topOpenAngle: 45
+  middleOpenAngle: 35
+  bottomOpenAngle: 25
+  topOpenOffset: {x: 0, y: 0, z: 0.05}
+  middleLeftOpenOffset: {x: 0.015, y: 0.08, z: 0.18}
+  middleRightOpenOffset: {x: -0.015, y: 0.08, z: 0.18}
+  bottomLeftOpenOffset: {x: -0.025, y: 0.16, z: 0.3}
+  bottomRightOpenOffset: {x: 0.025, y: 0.16, z: 0.3}
+  backTrackOpenOffset: {x: 0, y: 0.05, z: 0}
+  backTrackOpenEulerAngles: {x: 9.46, y: 0, z: 0}
+  ringSlideAxis: {x: -1, y: 0, z: 0}
+  ringSlideDistance: 0.12
+  ringUnlockAt: 0.73
+  ringSlideStartsAt: 0.76
+  ringSlideEndsAt: 0.84
+  ringSettlesAt: 0.88
+  fanAccelerationStartsAt: 0.84
 --- !u!1001 &1276804557
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4504,6 +4582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localAxis: {x: 0, y: 0, z: 1}
   degreesPerSecond: -720
+  speedMultiplier: 1
 --- !u!1 &1287358926
 GameObject:
   m_ObjectHideFlags: 0
@@ -6005,6 +6084,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localAxis: {x: 0, y: 0, z: 1}
   degreesPerSecond: -720
+  speedMultiplier: 1
 --- !u!1 &1951245202
 GameObject:
   m_ObjectHideFlags: 0

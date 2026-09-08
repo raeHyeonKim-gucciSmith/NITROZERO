@@ -5,6 +5,7 @@ public sealed class ContinuousLocalRotation : MonoBehaviour
     [Header("Rotation")]
     [SerializeField] private Vector3 localAxis = Vector3.right;
     [SerializeField] private float degreesPerSecond = 180f;
+    [SerializeField, Range(0f, 1f)] private float speedMultiplier = 1f;
 
     private Vector3 localPivot;
 
@@ -41,6 +42,11 @@ public sealed class ContinuousLocalRotation : MonoBehaviour
         transform.RotateAround(
             worldPivot,
             worldAxis,
-            degreesPerSecond * Time.deltaTime);
+            degreesPerSecond * speedMultiplier * Time.deltaTime);
+    }
+
+    public void SetSpeedMultiplier(float value)
+    {
+        speedMultiplier = Mathf.Clamp01(value);
     }
 }
