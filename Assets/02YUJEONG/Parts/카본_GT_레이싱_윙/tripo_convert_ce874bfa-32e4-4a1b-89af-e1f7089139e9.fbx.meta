@@ -3,7 +3,12 @@ guid: fd01f05aef1296d4b825ab018db44e06
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_ce874bfa
+    second: {fileID: 2100000, guid: ab3476bbd373f864b95e5b26a69ff45e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -72,7 +77,7 @@ ModelImporter:
     strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
