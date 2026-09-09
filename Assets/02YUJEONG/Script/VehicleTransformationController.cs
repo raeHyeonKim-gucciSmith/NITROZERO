@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace YUJEONG
@@ -69,12 +70,80 @@ namespace YUJEONG
         [Header("[ 3단계 대상: 기계식 상부 아머드 카울 ]")]
         public Transform armoredCowl;  // 부품_기계식상부아머드카울
 
-        [Header("[ 4단계 대상: 대형 단발 제트 부스터 노즐 ]")]
+        [Header("[ 4단계 대상: 대형 단발 제트 부스터 노즐 & 터빈 ]")]
         public Transform boosterNozzle; // 대형_단발_제트_부스터_노즐
+        public Transform boosterTurbine; // 제트부스터_터빈
         public GameObject boosterNeon;   // 네온
+
+        public enum TurbineAxis
+        {
+            [InspectorName("Y축 (권장: 원형 제자리 시계방향)")]
+            Up_Y,
+            [InspectorName("Y축 역방향 (권장: 원형 제자리 반시계방향)")]
+            Down_NegY,
+            [InspectorName("X축")]
+            Right_X,
+            [InspectorName("X축 역방향")]
+            Left_NegX,
+            [InspectorName("Z축")]
+            Forward_Z,
+            [InspectorName("Z축 역방향")]
+            Back_NegZ
+        }
+
+        [Header("[ 제트부스터 터빈 회전 설정 ]")]
+        [Tooltip("터빈 회전 축 (FBX 피벗 특성상 원형 제자리 회전은 Y축 또는 Y축 역방향입니다)")]
+        public TurbineAxis turbineAxis = TurbineAxis.Up_Y;
+
+        [Tooltip("터빈 최고 회전 속도 (도/초, 1800도 = 초당 5바퀴)")]
+        [Range(360f, 7200f)]
+        public float maxTurbineSpeed = 1800f;
+
+        [Tooltip("엔진 기동 가속 시간 (천천히->빠르게 가속되는 시간, 초)")]
+        [Range(0.5f, 5.0f)]
+        public float spoolUpDuration = 1.8f;
+
+        [Tooltip("엔진 정지 감속 시간 (빠르게->천천히 멈추는 시간, 초)")]
+        [Range(0.5f, 5.0f)]
+        public float spoolDownDuration = 1.2f;
+
+        [Tooltip("가속 곡선 (엔진 시동 걸리듯 서서히 가속)")]
+        public AnimationCurve spoolUpCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+        [Tooltip("감속 곡선 (서서히 정지)")]
+        public AnimationCurve spoolDownCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+        [Header("[ 제트부스터 네온 스플라인 순차 점등 연출 (빨강->파랑->노랑->주황) ]")]
+        [Tooltip("1단계 점등: 빨강 스플라인")]
+        public GameObject splineRed;
+        [Tooltip("2단계 점등: 파랑 스플라인")]
+        public GameObject splineBlue;
+        [Tooltip("3단계 점등: 노랑 스플라인")]
+        public GameObject splineYellow;
+        [Tooltip("4단계 점등: 주황 스플라인")]
+        public GameObject splineOrange;
+
+        [Tooltip("스플라인 간 점등 딜레이 (초, 빨강 후 파랑, 파랑 후 노랑...)")]
+        [Range(0.05f, 1.0f)]
+        public float splineInterval = 0.28f;
+
+        [Tooltip("각 스플라인이 서서히 밝아지며 본래 색으로 진해지는 시간 (초)")]
+        [Range(0.1f, 2.0f)]
+        public float splineGlowDuration = 0.5f;
+
+        [Tooltip("부스터 수납 시 빛이 꺼지는 페이드 아웃 시간 (초)")]
+        [Range(0.1f, 1.5f)]
+        public float splineFadeOutDuration = 0.4f;
 
         [Header("[ 5단계 대상: 부품 메인상판덮개 ]")]
         public Transform mainCover;     // 부품_메인상판덮개
+
+        [Header("[ 바퀴 회전 컨트롤러 연동 옵션 ]")]
+        [Tooltip("바퀴 회전 제어 스크립트")]
+        public VehicleWheelSpinController wheelSpinController;
+
+        [Tooltip("체크 시 부스터(Space/4번) 작동 시 바퀴도 자동으로 초고속 연동 (기본값: false, T/B 키로 각각 독립 조작)")]
+        public bool syncWheelBoostWithBooster = false;
 
         [Header("[ 애니메이션 세부 설정 ]")]
         [Tooltip("각 단계별 기본 이동 소요 시간 (초)")]
@@ -156,6 +225,30 @@ namespace YUJEONG
         private bool isBoosterDeployed = false;
         private Coroutine boosterCoroutine = null;
 
+        // 제트 부스터 터빈 상태 관리
+        private float currentTurbineSpeed = 0f;
+        private Coroutine turbineCoroutine = null;
+        private Quaternion initialTurbineRotation = Quaternion.identity;
+        private bool hasStoredTurbineRot = false;
+        private Transform turbineSpinPivot = null;
+
+        // 스플라인 점등 상태 관리
+        private Coroutine splineSequenceCoroutine = null;
+
+        private class SplineGlowData
+        {
+            public GameObject obj;
+            public MeshRenderer renderer;
+            public Material material;
+            public Color targetEmission;
+            public Color targetBaseColor;
+        }
+
+        private SplineGlowData redGlowData;
+        private SplineGlowData blueGlowData;
+        private SplineGlowData yellowGlowData;
+        private SplineGlowData orangeGlowData;
+
         // 메인 상판 덮개 상태 관리
         private bool isCoverOpened = false;
         private Coroutine coverCoroutine = null;
@@ -186,6 +279,12 @@ namespace YUJEONG
             coverStep2.rotationEuler = new Vector3(-142.1f, 180f, 0f);
             coverStep3.position = new Vector3(0.003f, -0.098f, -0.565f);
             coverStep3.rotationEuler = new Vector3(-142.1f, 180f, 0f);
+
+            // 터빈 중심 피벗 자동 보정
+            SetupTurbinePivot();
+
+            // 바퀴 회전 컨트롤러 자동 탐색 연동
+            AutoFindWheelController();
         }
 
         [ContextMenu("SportCar_4change_2 부품 자동 연결")]
@@ -249,6 +348,46 @@ namespace YUJEONG
                 }
                 if (foundNeon != null) boosterNeon = foundNeon.gameObject;
 
+                // 제트부스터_터빈 찾기
+                Transform foundTurbine = targetCarRoot.Find("제트부스터_터빈");
+                if (foundTurbine == null) foundTurbine = targetCarRoot.Find("부스터터빈");
+                if (foundTurbine == null && boosterNozzle != null)
+                {
+                    foundTurbine = boosterNozzle.Find("제트부스터_터빈");
+                    if (foundTurbine == null) foundTurbine = boosterNozzle.Find("부스터터빈");
+                }
+                if (foundTurbine == null)
+                {
+                    Transform parentBooster = targetCarRoot.Find("대형_단발_제트_부스터");
+                    if (parentBooster != null)
+                    {
+                        foundTurbine = parentBooster.Find("제트부스터_터빈");
+                        if (foundTurbine == null) foundTurbine = parentBooster.Find("부스터터빈");
+                    }
+                }
+                if (foundTurbine == null)
+                {
+                    foreach (Transform child in targetCarRoot.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (child.name.Contains("터빈") || child.name.ToLower().Contains("turbine"))
+                        {
+                            foundTurbine = child;
+                            break;
+                        }
+                    }
+                }
+                if (foundTurbine != null) boosterTurbine = foundTurbine;
+
+                // 빨강, 파랑, 노랑, 주황 스플라인 자동 연결
+                Transform searchRoot = (boosterNozzle != null) ? boosterNozzle : targetCarRoot;
+                if (searchRoot != null)
+                {
+                    if (splineRed == null) { Transform t = searchRoot.Find("빨강"); if (t != null) splineRed = t.gameObject; }
+                    if (splineBlue == null) { Transform t = searchRoot.Find("파랑"); if (t != null) splineBlue = t.gameObject; }
+                    if (splineYellow == null) { Transform t = searchRoot.Find("노랑"); if (t != null) splineYellow = t.gameObject; }
+                    if (splineOrange == null) { Transform t = searchRoot.Find("주황"); if (t != null) splineOrange = t.gameObject; }
+                }
+
                 // 부품_메인상판덮개 찾기
                 Transform foundCover = targetCarRoot.Find("부품_메인상판덮개");
                 if (foundCover != null) mainCover = foundCover;
@@ -282,9 +421,21 @@ namespace YUJEONG
                 GameObject neonObj = GameObject.Find("네온");
                 if (neonObj != null) boosterNeon = neonObj;
 
+                GameObject turbineObj = GameObject.Find("제트부스터_터빈");
+                if (turbineObj == null) turbineObj = GameObject.Find("부스터터빈");
+                if (turbineObj != null) boosterTurbine = turbineObj.transform;
+
+                if (splineRed == null) splineRed = GameObject.Find("빨강");
+                if (splineBlue == null) splineBlue = GameObject.Find("파랑");
+                if (splineYellow == null) splineYellow = GameObject.Find("노랑");
+                if (splineOrange == null) splineOrange = GameObject.Find("주황");
+
                 GameObject coverObj = GameObject.Find("부품_메인상판덮개");
                 if (coverObj != null) mainCover = coverObj.transform;
             }
+
+            // 바퀴 회전 컨트롤러 자동 탐색 및 연결
+            AutoFindWheelController();
         }
 
         [Header("[ 거울(Mirror) 대칭 모드 ]")]
@@ -323,6 +474,8 @@ namespace YUJEONG
             {
                 AutoBindParts();
             }
+
+            SetupTurbinePivot();
 
             if (ventLeft != null && ventRight != null)
             {
@@ -495,12 +648,15 @@ namespace YUJEONG
                 Debug.Log("[VehicleTransformationController] 🎯 5번 키 입력 감지! 메인 상판 덮개 개폐 시작");
                 ToggleMainCover();
             }
+
+            // 터빈 회전 업데이트
+            UpdateTurbineRotation();
         }
 
         private void OnGUI()
         {
             // 화면 좌상단에 테스트용 UI 패널 표시
-            GUI.Box(new Rect(10, 10, 260, 245), "🚗 변형 제어 패널");
+            GUI.Box(new Rect(10, 10, 260, 280), "🚗 변형 제어 패널");
 
             // 전체 변형 시퀀스 버튼 (1->2->3->4+5)
             GUI.color = isFullyTransformed ? new Color(1f, 0.75f, 0.75f) : new Color(0.75f, 1f, 0.75f);
@@ -538,6 +694,20 @@ namespace YUJEONG
             if (GUI.Button(new Rect(20, 190, 240, 26), isCoverOpened ? "5번: 메인상판 원복 (3->1)" : "5번: 메인상판 내부수납 (1->3)"))
             {
                 ToggleMainCover();
+            }
+
+            // 터빈 회전 상태 표시 및 방향/리셋 버튼
+            if (boosterTurbine != null)
+            {
+                GUI.Label(new Rect(20, 220, 240, 20), $"🌀 터빈: {(int)currentTurbineSpeed} deg/s ({turbineAxis})");
+                if (GUI.Button(new Rect(20, 244, 115, 24), "방향/축 전환"))
+                {
+                    CycleTurbineAxis();
+                }
+                if (GUI.Button(new Rect(145, 244, 115, 24), "각도 리셋"))
+                {
+                    ResetTurbineRotation();
+                }
             }
         }
 
@@ -1030,7 +1200,7 @@ namespace YUJEONG
         }
 
         /// <summary>
-        /// 부스터 노즐 돌출 시퀀스 코루틴 (후방 돌출 - 네온은 모든 기믹 완료 후 순서대로 진행 예정)
+        /// 부스터 노즐 돌출 시퀀스 코루틴 (후방 돌출 완료 시 터빈 엔진 가속 시작)
         /// </summary>
         private IEnumerator AnimateBoosterSequence(bool deploy)
         {
@@ -1038,15 +1208,387 @@ namespace YUJEONG
             {
                 // 1 -> 2단계: 후방으로 노즐 슬라이드 돌출
                 yield return AnimateBoosterBetweenPoses(boosterStep1, boosterStep2, stepDuration);
-                // 네온 연출은 모든 변형 완료 후 순서에 맞춰 점등할 예정 (사용자 요청으로 보류)
+                
+                // ★ 대형 단발 제트 부스터가 변신 자리에 온 그 순간! 터빈 엔진 천천히->빠르게 가속 시작!
+                StartTurbineSpoolUp();
             }
             else
             {
+                // 수납 시작 시: 터빈 서서히 감속 정지
+                StartTurbineSpoolDown();
+
                 // 2 -> 1단계: 원래 대기 위치로 수납
                 yield return AnimateBoosterBetweenPoses(boosterStep2, boosterStep1, stepDuration);
             }
 
             boosterCoroutine = null;
+        }
+
+        /// <summary>
+        /// 제트 부스터가 변신 자리에 도착했을 때 터빈 엔진 가속 기동 (천천히 -> 빠르게)
+        /// </summary>
+        [ContextMenu("🚀 터빈 가속 시작 (Spool Up)")]
+        public void StartTurbineSpoolUp()
+        {
+            if (turbineSpinPivot == null) SetupTurbinePivot();
+
+            if (turbineCoroutine != null) StopCoroutine(turbineCoroutine);
+            turbineCoroutine = StartCoroutine(AnimateTurbineSpeed(maxTurbineSpeed, spoolUpDuration, spoolUpCurve));
+
+            // ★ 터빈이 천천히 돌기 시작하는 바로 그 순간! 빨강->파랑->노랑->주황 스플라인 순차 점등 시작!
+            StartSplineSequence();
+
+            // ★ 부스터 작동 시 바퀴 자동 연동 옵션이 켜져 있을 때만 바퀴 연동 (기본은 독립 조작)
+            if (syncWheelBoostWithBooster)
+            {
+                if (wheelSpinController == null) AutoFindWheelController();
+                if (wheelSpinController != null)
+                {
+                    wheelSpinController.SetBoostMode(true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 터빈 메쉬의 오프셋 피벗(Z축 편향)을 보정하여 원판 정중앙을 기준으로 완벽한 제자리 회전축을 구성
+        /// </summary>
+        public void SetupTurbinePivot()
+        {
+            if (boosterTurbine == null) return;
+
+            // 이미 제트부스터_터빈_회전축으로 지정되어 있는 경우
+            if (boosterTurbine.name == "제트부스터_터빈_회전축")
+            {
+                turbineSpinPivot = boosterTurbine;
+                initialTurbineRotation = turbineSpinPivot.localRotation;
+                hasStoredTurbineRot = true;
+                return;
+            }
+
+            if (boosterTurbine.parent != null && boosterTurbine.parent.name == "제트부스터_터빈_회전축")
+            {
+                turbineSpinPivot = boosterTurbine.parent;
+                initialTurbineRotation = turbineSpinPivot.localRotation;
+                hasStoredTurbineRot = true;
+                return;
+            }
+
+            MeshFilter mf = boosterTurbine.GetComponentInChildren<MeshFilter>();
+            if (mf != null && mf.sharedMesh != null)
+            {
+                Vector3 localCenter = mf.sharedMesh.bounds.center;
+                if (localCenter.magnitude > 0.01f)
+                {
+                    Vector3 worldCenter = mf.transform.TransformPoint(localCenter);
+
+                    GameObject pivotObj = new GameObject("제트부스터_터빈_회전축");
+                    pivotObj.transform.SetParent(boosterTurbine.parent, false);
+                    pivotObj.transform.position = worldCenter;
+                    pivotObj.transform.rotation = boosterTurbine.rotation;
+                    pivotObj.transform.localScale = Vector3.one;
+
+                    boosterTurbine.SetParent(pivotObj.transform, true);
+                    turbineSpinPivot = pivotObj.transform;
+
+                    initialTurbineRotation = turbineSpinPivot.localRotation;
+                    hasStoredTurbineRot = true;
+
+                    Debug.Log($"[VehicleTransformationController] 🎯 터빈 원판 정중앙(오프셋: {localCenter})에 완벽한 회전 중심축({pivotObj.name})을 구성하여 제자리 고정 회전을 보장합니다!");
+                    return;
+                }
+            }
+
+            turbineSpinPivot = boosterTurbine;
+            initialTurbineRotation = turbineSpinPivot.localRotation;
+            hasStoredTurbineRot = true;
+        }
+
+        /// <summary>
+        /// 터빈 각도 초기화 (뒤틀린 상태 원복)
+        /// </summary>
+        [ContextMenu("🔄 터빈 초기 각도로 원복")]
+        public void ResetTurbineRotation()
+        {
+            Transform target = turbineSpinPivot != null ? turbineSpinPivot : boosterTurbine;
+            if (target != null && hasStoredTurbineRot)
+            {
+                currentTurbineSpeed = 0f;
+                if (turbineCoroutine != null) StopCoroutine(turbineCoroutine);
+                target.localRotation = initialTurbineRotation;
+                Debug.Log("[VehicleTransformationController] 터빈 각도가 초기 위치로 원복되었습니다.");
+            }
+        }
+
+        /// <summary>
+        /// 터빈 회전 축 및 방향 순환 전환 (Y축 시계 <-> Y축 반시계 등)
+        /// </summary>
+        [ContextMenu("🔄 터빈 회전 축/방향 전환")]
+        public void CycleTurbineAxis()
+        {
+            switch (turbineAxis)
+            {
+                case TurbineAxis.Up_Y: turbineAxis = TurbineAxis.Down_NegY; break;
+                case TurbineAxis.Down_NegY: turbineAxis = TurbineAxis.Up_Y; break;
+                case TurbineAxis.Right_X: turbineAxis = TurbineAxis.Left_NegX; break;
+                case TurbineAxis.Left_NegX: turbineAxis = TurbineAxis.Right_X; break;
+                case TurbineAxis.Forward_Z: turbineAxis = TurbineAxis.Back_NegZ; break;
+                case TurbineAxis.Back_NegZ: turbineAxis = TurbineAxis.Forward_Z; break;
+            }
+            Debug.Log($"[VehicleTransformationController] 🔄 터빈 회전 축이 변경되었습니다: {turbineAxis}");
+        }
+
+        /// <summary>
+        /// 제트 부스터 수납 시 터빈 엔진 감속 정지 (빠르게 -> 천천히 -> 0)
+        /// </summary>
+        [ContextMenu("🛑 터빈 감속 정지 (Spool Down)")]
+        public void StartTurbineSpoolDown()
+        {
+            if (turbineCoroutine != null) StopCoroutine(turbineCoroutine);
+            turbineCoroutine = StartCoroutine(AnimateTurbineSpeed(0f, spoolDownDuration, spoolDownCurve));
+
+            // ★ 부스터 수납 및 터빈 감속 시 스플라인 서서히 소등
+            StopSplineSequence();
+
+            // ★ 부스터 자동 연동 옵션이 켜져 있을 때만 바퀴 복귀
+            if (syncWheelBoostWithBooster)
+            {
+                if (wheelSpinController == null) AutoFindWheelController();
+                if (wheelSpinController != null)
+                {
+                    wheelSpinController.SetBoostMode(false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 차량의 바퀴 회전 컨트롤러 자동 탐색 및 연결
+        /// </summary>
+        public void AutoFindWheelController()
+        {
+            if (wheelSpinController != null) return;
+
+            wheelSpinController = GetComponent<VehicleWheelSpinController>();
+            if (wheelSpinController == null && targetCarRoot != null)
+            {
+                wheelSpinController = targetCarRoot.GetComponent<VehicleWheelSpinController>();
+                if (wheelSpinController == null)
+                {
+                    wheelSpinController = targetCarRoot.GetComponentInChildren<VehicleWheelSpinController>();
+                }
+            }
+            if (wheelSpinController == null)
+            {
+                wheelSpinController = UnityEngine.Object.FindFirstObjectByType<VehicleWheelSpinController>();
+            }
+        }
+
+        #region [ 스플라인 순차 점등 및 발광 페이드 인 연출 ]
+
+        private SplineGlowData CreateSplineGlowData(GameObject obj, Color defaultEmission, Color defaultBase)
+        {
+            if (obj == null) return null;
+            MeshRenderer mr = obj.GetComponentInChildren<MeshRenderer>(true);
+            if (mr == null) return null;
+
+            Material mat = mr.material;
+            mat.EnableKeyword("_EMISSION");
+
+            Color em = mat.HasProperty("_EmissionColor") ? mat.GetColor("_EmissionColor") : defaultEmission;
+            if (em == Color.black || em.maxColorComponent < 0.1f) em = defaultEmission;
+
+            Color baseCol = mat.HasProperty("_BaseColor") ? mat.GetColor("_BaseColor") : defaultBase;
+
+            // 초기 상태는 어둡게 꺼둠
+            if (mat.HasProperty("_EmissionColor")) mat.SetColor("_EmissionColor", Color.black);
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.black);
+            obj.SetActive(false);
+
+            return new SplineGlowData
+            {
+                obj = obj,
+                renderer = mr,
+                material = mat,
+                targetEmission = em,
+                targetBaseColor = baseCol
+            };
+        }
+
+        private void EnsureSplineGlowData()
+        {
+            if (redGlowData == null && splineRed != null)
+                redGlowData = CreateSplineGlowData(splineRed, new Color(8f, 0f, 0f, 1f), new Color(1f, 0.27f, 0f, 1f));
+
+            if (blueGlowData == null && splineBlue != null)
+                blueGlowData = CreateSplineGlowData(splineBlue, new Color(0f, 0.22f, 16f, 1f), new Color(0.04f, 0f, 1f, 1f));
+
+            if (yellowGlowData == null && splineYellow != null)
+                yellowGlowData = CreateSplineGlowData(splineYellow, new Color(7.2f, 8f, 0f, 1f), new Color(0.97f, 1f, 0f, 1f));
+
+            if (orangeGlowData == null && splineOrange != null)
+                orangeGlowData = CreateSplineGlowData(splineOrange, new Color(8f, 3.5f, 0f, 1f), new Color(1f, 0.5f, 0f, 1f));
+        }
+
+        /// <summary>
+        /// 터빈 회전 시작 시: 빨강 -> 파랑 -> 노랑 -> 주황 순으로 서서히 빛이 진해지며 켜짐
+        /// </summary>
+        [ContextMenu("✨ 스플라인 순차 점등 (빨강->파랑->노랑->주황)")]
+        public void StartSplineSequence()
+        {
+            if (splineSequenceCoroutine != null) StopCoroutine(splineSequenceCoroutine);
+            splineSequenceCoroutine = StartCoroutine(AnimateSplineSequence());
+        }
+
+        /// <summary>
+        /// 부스터 수납 시: 스플라인 빛이 서서히 소등
+        /// </summary>
+        [ContextMenu("🌑 스플라인 전체 소등")]
+        public void StopSplineSequence()
+        {
+            if (splineSequenceCoroutine != null) StopCoroutine(splineSequenceCoroutine);
+            splineSequenceCoroutine = StartCoroutine(AnimateSplineFadeOut());
+        }
+
+        private IEnumerator AnimateSplineSequence()
+        {
+            EnsureSplineGlowData();
+
+            // 순서: 1. 빨강 -> 2. 파랑 -> 3. 노랑 -> 4. 주황
+            SplineGlowData[] sequence = new SplineGlowData[] { redGlowData, blueGlowData, yellowGlowData, orangeGlowData };
+
+            for (int i = 0; i < sequence.Length; i++)
+            {
+                SplineGlowData data = sequence[i];
+                if (data != null && data.obj != null)
+                {
+                    StartCoroutine(AnimateSplineGlow(data, true, splineGlowDuration));
+                }
+
+                if (i < sequence.Length - 1 && splineInterval > 0f)
+                {
+                    yield return new WaitForSeconds(splineInterval);
+                }
+            }
+
+            splineSequenceCoroutine = null;
+        }
+
+        private IEnumerator AnimateSplineFadeOut()
+        {
+            EnsureSplineGlowData();
+
+            SplineGlowData[] sequence = new SplineGlowData[] { redGlowData, blueGlowData, yellowGlowData, orangeGlowData };
+            List<Coroutine> cors = new List<Coroutine>();
+
+            foreach (var data in sequence)
+            {
+                if (data != null && data.obj != null && data.obj.activeSelf)
+                {
+                    cors.Add(StartCoroutine(AnimateSplineGlow(data, false, splineFadeOutDuration)));
+                }
+            }
+
+            foreach (var cor in cors)
+            {
+                yield return cor;
+            }
+
+            splineSequenceCoroutine = null;
+        }
+
+        private IEnumerator AnimateSplineGlow(SplineGlowData data, bool fadeIn, float duration)
+        {
+            if (data == null || data.obj == null || data.material == null) yield break;
+
+            if (fadeIn)
+            {
+                data.obj.SetActive(true);
+            }
+
+            Color fromEmission = fadeIn ? Color.black : data.targetEmission;
+            Color toEmission = fadeIn ? data.targetEmission : Color.black;
+
+            Color fromBase = fadeIn ? Color.black : data.targetBaseColor;
+            Color toBase = fadeIn ? data.targetBaseColor : Color.black;
+
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                float curveT = t * t * (3f - 2f * t); // SmoothStep
+
+                if (data.material.HasProperty("_EmissionColor"))
+                {
+                    data.material.SetColor("_EmissionColor", Color.Lerp(fromEmission, toEmission, curveT));
+                }
+                if (data.material.HasProperty("_BaseColor"))
+                {
+                    data.material.SetColor("_BaseColor", Color.Lerp(fromBase, toBase, curveT));
+                }
+
+                yield return null;
+            }
+
+            if (data.material.HasProperty("_EmissionColor"))
+            {
+                data.material.SetColor("_EmissionColor", toEmission);
+            }
+            if (data.material.HasProperty("_BaseColor"))
+            {
+                data.material.SetColor("_BaseColor", toBase);
+            }
+
+            if (!fadeIn)
+            {
+                data.obj.SetActive(false);
+            }
+        }
+
+        #endregion
+
+        private IEnumerator AnimateTurbineSpeed(float targetSpeed, float duration, AnimationCurve curve)
+        {
+            float startSpeed = currentTurbineSpeed;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                float curveT = curve != null ? curve.Evaluate(t) : t;
+
+                currentTurbineSpeed = Mathf.Lerp(startSpeed, targetSpeed, curveT);
+                yield return null;
+            }
+
+            currentTurbineSpeed = targetSpeed;
+            turbineCoroutine = null;
+        }
+
+        private void UpdateTurbineRotation()
+        {
+            if (currentTurbineSpeed <= 0.001f) return;
+
+            if (turbineSpinPivot == null) SetupTurbinePivot();
+            Transform target = turbineSpinPivot != null ? turbineSpinPivot : boosterTurbine;
+            if (target == null) return;
+
+            Vector3 axis = GetTurbineAxisVector();
+            target.Rotate(axis * (currentTurbineSpeed * Time.deltaTime), Space.Self);
+        }
+
+        private Vector3 GetTurbineAxisVector()
+        {
+            switch (turbineAxis)
+            {
+                case TurbineAxis.Forward_Z: return Vector3.forward;
+                case TurbineAxis.Back_NegZ: return Vector3.back;
+                case TurbineAxis.Up_Y: return Vector3.up;
+                case TurbineAxis.Down_NegY: return Vector3.down;
+                case TurbineAxis.Right_X: return Vector3.right;
+                case TurbineAxis.Left_NegX: return Vector3.left;
+                default: return Vector3.forward;
+            }
         }
 
         /// <summary>
