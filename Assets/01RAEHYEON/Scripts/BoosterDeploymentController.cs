@@ -15,8 +15,10 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
     [Header("Sequence Timing")]
     [SerializeField, Range(0.01f, 1f)] private float coversFullyOpenAt = 0.35f;
-    [SerializeField, Range(0f, 0.99f)] private float boosterMovementStartsAt = 0.2f;
-    [SerializeField, Range(0f, 1f)] private float levelingStart = 0.65f;
+    [SerializeField, Range(0f, 0.99f)] private float boosterMovementStartsAt;
+    [SerializeField, Range(0.01f, 1f)] private float boosterMovementEndsAt = 0.8f;
+    [SerializeField, Range(0f, 0.99f)] private float levelingStart;
+    [SerializeField, Range(0.01f, 1f)] private float levelingEndsAt = 0.8f;
 
     [Header("Cover Angles")]
     [SerializeField] private float topOpenAngle = 45f;
@@ -34,14 +36,19 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     [SerializeField] private Vector3 backTrackOpenOffset = new Vector3(0f, 0.05f, 0f);
     [SerializeField] private Vector3 backTrackOpenEulerAngles = new Vector3(9.46f, 0f, 0f);
 
-    [Header("Engine Reveal")]
-    [SerializeField] private Vector3 ringSlideAxis = Vector3.left;
-    [SerializeField] private float ringSlideDistance = 0.12f;
-    [SerializeField, Range(0f, 1f)] private float ringUnlockAt = 0.73f;
-    [SerializeField, Range(0f, 1f)] private float ringSlideStartsAt = 0.76f;
-    [SerializeField, Range(0f, 1f)] private float ringSlideEndsAt = 0.84f;
-    [SerializeField, Range(0f, 1f)] private float ringSettlesAt = 0.88f;
-    [SerializeField, Range(0f, 1f)] private float fanAccelerationStartsAt = 0.84f;
+    [Header("Nozzle Extension")]
+    [SerializeField] private Vector3 ringRetractedLocalPosition = new Vector3(0.06299999f, -0.178f, -0.033f);
+    [SerializeField] private Vector3 ringExtendedLocalPosition = new Vector3(-0.057f, -0.178f, -0.033f);
+    [SerializeField] private Vector3 nozzleRetractedLocalPosition = new Vector3(0.0588f, -0.148f, -0.0348f);
+    [SerializeField] private Vector3 nozzleExtendedLocalPosition = new Vector3(-0.09f, -0.152f, -0.025f);
+    [SerializeField] private Vector3 petalGroupRetractedLocalPosition = new Vector3(-0.0202f, 0.0053f, -0.0308f);
+    [SerializeField] private Vector3 petalGroupExtendedLocalPosition = new Vector3(-0.169f, 0.0013f, -0.021f);
+    [SerializeField, Range(0f, 1f)] private float nozzleExtensionStartsAt = 0.8f;
+    [SerializeField, Range(0f, 1f)] private float nozzleExtensionImpactAt = 0.84f;
+    [SerializeField, Range(0f, 1f)] private float nozzleExtensionSettlesAt = 0.88f;
+    [SerializeField, Range(0f, 0.2f)] private float nozzleExtensionOvershoot = 0.04f;
+    [SerializeField, Range(0f, 1f)] private float fanIdleSpeedMultiplier = 0.12f;
+    [SerializeField, Range(0f, 1f)] private float fanAccelerationStartsAt = 0.94f;
 
     private readonly Transform[] coverPivots = new Transform[6];
     private readonly Vector3[] coverClosedPositions = new Vector3[6];
@@ -51,9 +58,11 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     private Quaternion backTrackClosedRotation;
     private Quaternion hiddenLocalRotation;
     private Quaternion deployedLocalRotation;
-    private readonly List<Transform> slidingRings = new List<Transform>();
-    private readonly List<Vector3> ringClosedPositions = new List<Vector3>();
+    private readonly List<Transform> nozzleExtensionParts = new List<Transform>();
+    private readonly List<Vector3> nozzleRetractedPositions = new List<Vector3>();
+    private readonly List<Vector3> nozzleExtendedPositions = new List<Vector3>();
     private ContinuousLocalRotation[] rotatingFans = new ContinuousLocalRotation[0];
+    private BoosterPetalPulse[] petalPulses = new BoosterPetalPulse[0];
     private bool initialized;
 
     public float DeployAmount => masterSequenceAmount;
@@ -78,6 +87,9 @@ public sealed class BoosterDeploymentController : MonoBehaviour
         hiddenLocalRotation = Quaternion.Euler(hiddenLocalEulerAngles);
         deployedLocalRotation = Quaternion.Euler(deployedLocalEulerAngles);
 
+        float sequence = Mathf.Clamp01(masterSequenceAmount);
+        float coverAmount = SmoothRange(0f, coversFullyOpenAt, sequence);
+
         Transform searchRoot = transform.root;
         for (int i = 0; i < coverPivots.Length; i++)
         {
@@ -85,27 +97,35 @@ public sealed class BoosterDeploymentController : MonoBehaviour
             if (coverPivots[i] == null)
                 continue;
 
-            coverClosedPositions[i] = coverPivots[i].localPosition;
-            coverClosedRotations[i] = coverPivots[i].localRotation;
+            GetCoverMotion(i, out float angle, out Vector3 offset);
+            coverClosedPositions[i] = coverPivots[i].localPosition - offset * coverAmount;
+            coverClosedRotations[i] = coverPivots[i].localRotation
+                * Quaternion.Inverse(Quaternion.AngleAxis(angle * coverAmount, Vector3.right));
         }
 
         backTrack = FindDescendant(searchRoot, "backTrack");
         if (backTrack != null)
         {
-            backTrackClosedPosition = backTrack.localPosition;
-            backTrackClosedRotation = backTrack.localRotation;
+            backTrackClosedPosition = backTrack.localPosition - backTrackOpenOffset * coverAmount;
+            backTrackClosedRotation = backTrack.localRotation
+                * Quaternion.Inverse(Quaternion.Euler(backTrackOpenEulerAngles * coverAmount));
         }
 
         foreach (Transform child in transform.GetComponentsInChildren<Transform>(true))
         {
-            if (child.name != "futuristic+turbine+ring+3d+model")
+            if (!TryGetNozzlePartPositions(
+                    child.name,
+                    out Vector3 retractedPosition,
+                    out Vector3 extendedPosition))
                 continue;
 
-            slidingRings.Add(child);
-            ringClosedPositions.Add(child.localPosition);
+            nozzleExtensionParts.Add(child);
+            nozzleRetractedPositions.Add(retractedPosition);
+            nozzleExtendedPositions.Add(extendedPosition);
         }
 
         rotatingFans = transform.GetComponentsInChildren<ContinuousLocalRotation>(true);
+        petalPulses = transform.GetComponentsInChildren<BoosterPetalPulse>(true);
 
         initialized = true;
     }
@@ -114,11 +134,11 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     {
         float sequence = Mathf.Clamp01(masterSequenceAmount);
         float coverAmount = SmoothRange(0f, coversFullyOpenAt, sequence);
-        float boosterAmount = SmoothRange(boosterMovementStartsAt, 1f, sequence);
-        float levelingAmount = SmoothRange(levelingStart, 1f, boosterAmount);
+        float boosterAmount = SmoothRange(boosterMovementStartsAt, boosterMovementEndsAt, sequence);
+        float levelingAmount = SmoothRange(levelingStart, levelingEndsAt, sequence);
 
-        transform.localPosition = Vector3.LerpUnclamped(deployedLocalPosition, hiddenLocalPosition, boosterAmount);
-        transform.localRotation = Quaternion.SlerpUnclamped(deployedLocalRotation, hiddenLocalRotation, levelingAmount);
+        transform.localPosition = Vector3.LerpUnclamped(hiddenLocalPosition, deployedLocalPosition, boosterAmount);
+        transform.localRotation = Quaternion.SlerpUnclamped(hiddenLocalRotation, deployedLocalRotation, levelingAmount);
 
         ApplyCover(0, topOpenAngle, topOpenOffset, coverAmount);
         ApplyCover(1, bottomOpenAngle, bottomLeftOpenOffset, coverAmount);
@@ -138,20 +158,21 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
     private void ApplyEngineReveal(float sequence)
     {
-        float unlock = Pulse(ringUnlockAt, ringSlideStartsAt, sequence);
-        float slide = SmoothRange(ringSlideStartsAt, ringSlideEndsAt, sequence);
-        float settle = Pulse(ringSlideEndsAt, ringSettlesAt, sequence);
-        float travel = slide + unlock * 0.035f + settle * 0.08f;
-        Vector3 direction = ringSlideAxis.sqrMagnitude > 0.000001f
-            ? ringSlideAxis.normalized
-            : Vector3.left;
+        float extension = GetNozzleExtensionAmount(sequence);
 
-        for (int i = 0; i < slidingRings.Count; i++)
-            slidingRings[i].localPosition = ringClosedPositions[i] + direction * ringSlideDistance * travel;
+        for (int i = 0; i < nozzleExtensionParts.Count; i++)
+            nozzleExtensionParts[i].localPosition = Vector3.LerpUnclamped(
+                nozzleRetractedPositions[i],
+                nozzleExtendedPositions[i],
+                extension);
 
-        float fanSpeed = SmoothRange(fanAccelerationStartsAt, 1f, sequence);
+        float fanAcceleration = SmoothRange(fanAccelerationStartsAt, 1f, sequence);
+        float fanSpeed = Mathf.Lerp(fanIdleSpeedMultiplier, 1f, fanAcceleration);
         for (int i = 0; i < rotatingFans.Length; i++)
             rotatingFans[i].SetSpeedMultiplier(fanSpeed);
+
+        for (int i = 0; i < petalPulses.Length; i++)
+            petalPulses[i].ApplyAmount(sequence);
     }
 
     private void ApplyCover(int index, float angle, Vector3 offset, float amount)
@@ -162,6 +183,67 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
         pivot.localPosition = coverClosedPositions[index] + offset * amount;
         pivot.localRotation = coverClosedRotations[index] * Quaternion.AngleAxis(angle * amount, Vector3.right);
+    }
+
+    private void GetCoverMotion(int index, out float angle, out Vector3 offset)
+    {
+        switch (index)
+        {
+            case 0:
+            case 2:
+                angle = topOpenAngle;
+                offset = topOpenOffset;
+                break;
+            case 1:
+                angle = bottomOpenAngle;
+                offset = bottomLeftOpenOffset;
+                break;
+            case 3:
+                angle = middleOpenAngle;
+                offset = middleLeftOpenOffset;
+                break;
+            case 4:
+                angle = middleOpenAngle;
+                offset = middleRightOpenOffset;
+                break;
+            default:
+                angle = bottomOpenAngle;
+                offset = bottomRightOpenOffset;
+                break;
+        }
+    }
+
+    private bool TryGetNozzlePartPositions(
+        string objectName,
+        out Vector3 retractedPosition,
+        out Vector3 extendedPosition)
+    {
+        switch (objectName)
+        {
+            case "futuristic+turbine+ring+3d+model":
+                retractedPosition = ringRetractedLocalPosition;
+                extendedPosition = ringExtendedLocalPosition;
+                return true;
+            case "rocket+nozzle+3d+model":
+                retractedPosition = nozzleRetractedLocalPosition;
+                extendedPosition = nozzleExtendedLocalPosition;
+                return true;
+            case "Nozzle_PetalGroup":
+                retractedPosition = petalGroupRetractedLocalPosition;
+                extendedPosition = petalGroupExtendedLocalPosition;
+                return true;
+            default:
+                retractedPosition = Vector3.zero;
+                extendedPosition = Vector3.zero;
+                return false;
+        }
+    }
+
+    private float GetNozzleExtensionAmount(float sequence)
+    {
+        float extension = SmoothRange(nozzleExtensionStartsAt, nozzleExtensionImpactAt, sequence);
+        float settle = Pulse(nozzleExtensionImpactAt, nozzleExtensionSettlesAt, sequence);
+        return extension + settle * nozzleExtensionOvershoot;
     }
 
     public void SetDeployAmount(float value)
