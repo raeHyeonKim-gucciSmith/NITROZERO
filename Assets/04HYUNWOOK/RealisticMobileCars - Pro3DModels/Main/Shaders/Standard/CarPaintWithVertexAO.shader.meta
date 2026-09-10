@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c6840512125bd1847806f8420c01cd56
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 305319
+  packageName: Realistic Mobile Car #26 (Demo)
+  packageVersion: 1.0
+  assetPath: Assets/RealisticMobileCars - Pro3DModels/Main/Shaders/Standard/CarPaintWithVertexAO.shader
+  uploadId: 717843
