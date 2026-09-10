@@ -1,0 +1,55 @@
+using System;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UIElements;
+
+public static class HudSafetyValidation
+{
+    static double started;
+    static VisualTreeAsset tps, fps;
+    static bool gotTps, gotFps;
+    static long peakBytes;
+    public static void Run()
+    {
+        try
+        {
+            PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.StandaloneWindows64, false);
+            PlayerSettings.SetGraphicsAPIs(BuildTarget.StandaloneWindows64, new[] { GraphicsDeviceType.Direct3D11 });
+            AssetDatabase.SaveAssets();
+            RacingHudDocumentTools.ValidateTps();
+            RacingHudDocumentTools.ValidateFps();
+            tps = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/04HYUNWOOK/UI Toolkit/RacingHUD/TPS.uxml");
+            fps = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/04HYUNWOOK/UI Toolkit/RacingHUD/FPS.uxml");
+            RenderPreview(tps, "TPS");
+            RenderPreview(fps, "FPS");
+            Finish(true, "Both UXML/custom elements and direct static previews passed.");
+        }
+        catch (Exception e) { Finish(false, e.ToString()); }
+    }
+    static void RenderPreview(VisualTreeAsset asset, string name)
+    {
+        var editor = UnityEditor.Editor.CreateEditor(asset);
+        Texture2D preview = null;
+        try
+        {
+            preview = editor.RenderStaticPreview(AssetDatabase.GetAssetPath(asset), new UnityEngine.Object[0], 960, 540);
+            peakBytes = Math.Max(peakBytes, UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong());
+            if (preview == null) throw new InvalidOperationException(name + " direct preview unavailable in batch mode.");
+            File.WriteAllBytes("Documentation/HUD-" + name + "-validated.png", preview.EncodeToPNG());
+        }
+        finally
+        {
+            if (preview != null) UnityEngine.Object.DestroyImmediate(preview);
+            UnityEngine.Object.DestroyImmediate(editor);
+        }
+    }
+    static void Finish(bool success, string message)
+    {
+        Directory.CreateDirectory("Documentation");
+        File.WriteAllText("Documentation/HUD-safety-validation.txt", (success ? "PASS" : "INCOMPLETE") + "\n" + message +
+            "\nGraphics API: " + SystemInfo.graphicsDeviceType + "\nPeak Unity allocated bytes during previews: " + peakBytes);
+        EditorApplication.Exit(success ? 0 : 1);
+    }
+}

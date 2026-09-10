@@ -1,0 +1,209 @@
+/* FPS only. Edit these selectors without changing the TPS document. */
+.photo-hud.fps-document .fps-frame {
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background-image:url("Textures/Reference/Helmet_Lines_Transparent_FHD.png");
+    -unity-background-scale-mode:stretch-to-fill;
+    -unity-background-image-tint-color:white;
+}
+
+/* Live values sit inside the empty frames in the 1920 x 1080 PNG. */
+.photo-hud.fps-document.first-person .timer {
+    left:43.8%; top:5%; width:12.4%; height:4.7%; overflow:hidden;
+}
+.photo-hud.fps-document.first-person .time {
+    left:3%; top:27%; width:94%; height:68%; font-size:30px;
+}
+.photo-hud.fps-document.first-person .timer .caption {
+    display:flex; position:absolute; left:3%; right:3%; top:0; height:24%;
+    margin:0; padding:0; font-size:10px; letter-spacing:1px; color:#ff6868;
+    white-space:nowrap; overflow:hidden;
+    -unity-text-align:middle-center;
+}
+.photo-hud.fps-document.first-person .minimap {
+    left:79.2%; right:auto; top:7.7%; width:14.7%; height:18.7%;
+}
+.photo-hud.fps-document.first-person .map-viewport {
+    left:0; top:0; width:100%; height:100%;
+    background-color:rgba(3,5,9,0.9);
+    border-radius:10px;
+    overflow:hidden;
+}
+.photo-hud.fps-document .map-road {
+    left:38%; top:0; bottom:0; width:24%;
+    background-color:rgba(64,68,75,0.94);
+    border-left-width:1px; border-right-width:1px;
+    border-color:rgba(235,239,245,0.85);
+}
+.photo-hud.fps-document .map-lane-markings {
+    position:absolute; left:49%; top:0; bottom:0; width:2px;
+    justify-content:space-around;
+}
+.photo-hud.fps-document .map-lane-dash {
+    width:100%; height:6%; flex-shrink:0;
+    background-color:rgba(235,239,245,0.55);
+}
+.photo-hud.fps-document .map-north {
+    position:absolute; top:5%; right:5%; width:23px; height:25px;
+    margin:0; padding:0; font-size:18px;
+    color:#ff3434; background-color:rgba(0,0,0,0.5);
+    border-width:1px; border-color:#ff3434;
+    -unity-text-align:middle-center;
+}
+.photo-hud.fps-document .fps-map-title {
+    position:absolute; top:5%; left:4%; width:33%; height:13%;
+    margin:0; padding:0; font-size:11px; color:#d9dfe8;
+    -unity-text-align:middle-left;
+}
+.photo-hud.fps-document .player-marker {
+    left:47%; top:80%;
+}
+
+/* Header and three rows fit the separators drawn at the top left of the PNG. */
+.photo-hud.fps-document.first-person .ranking {
+    left:5.9%; right:auto; top:6.4%; width:15.2%; height:15.2%;
+    overflow:hidden;
+    /* Match the PNG separators, which slope gently down toward the right. */
+    transform-origin:0% 0%;
+    rotate:2deg;
+}
+.photo-hud.fps-document.first-person .ranking .caption {
+    height:27%; flex-shrink:0; font-size:18px; letter-spacing:1px;
+    color:#ff3434; -unity-text-align:middle-left;
+}
+.photo-hud.fps-document .ranking-progress-caption {
+    top:0; height:27%; font-size:11px; letter-spacing:0;
+    -unity-text-align:middle-right;
+}
+.photo-hud.fps-document.first-person .ranking-row {
+    height:24.333%; flex-shrink:0;
+    background-color:rgba(0,0,0,0); border-width:0;
+}
+.photo-hud.fps-document.first-person .ranking-cell {
+    height:100%; font-size:21px; white-space:nowrap;
+    min-width:0; overflow:hidden; text-overflow:ellipsis;
+    -unity-text-align:middle-left;
+}
+.photo-hud.fps-document.first-person .rank-pos {
+    width:16%; flex-shrink:0; font-size:26px; color:#ff3434;
+}
+.photo-hud.fps-document.first-person .rank-driver {
+    width:52%; flex-grow:0; flex-shrink:0; font-size:20px;
+}
+.photo-hud.fps-document.first-person .rank-time {
+    width:32%; flex-shrink:0; font-size:25px;
+    -unity-text-align:middle-right;
+}
+
+/* The PNG already contains the instrument outline; do not stack the old artwork. */
+.photo-hud.fps-document.first-person .instrument {
+    left:28%; right:auto; top:79.5%; bottom:auto;
+    width:44%; height:15%; scale:1 1; translate:0 0; overflow:hidden;
+}
+.photo-hud.fps-document.first-person .speed {
+    left:34%; top:3%; width:36%; height:48%; font-size:74px;
+}
+.photo-hud.fps-document.first-person .unit {
+    left:72%; top:35%; width:12%; height:14%; font-size:16px;
+    white-space:nowrap; overflow:hidden;
+}
+.photo-hud.fps-document.first-person .gear-pod {
+    left:17%; top:8%; width:11%; height:44%;
+    padding:0; margin:0; min-width:0; min-height:0; overflow:hidden;
+}
+.photo-hud.fps-document.first-person .gear-caption {
+    position:absolute; left:0; top:0; width:100%; height:24%;
+    margin:0; padding:0; font-size:12px; letter-spacing:0;
+    white-space:nowrap; overflow:hidden; -unity-text-align:middle-center;
+}
+.photo-hud.fps-document.first-person .gear-number {
+    position:absolute; left:10%; top:30%; width:80%; height:64%;
+    min-width:0; min-height:0; margin:0; padding:0; font-size:42px;
+}
+/* One fuel readout, inside the slanted lower-right frame. */
+.photo-hud.fps-document .side-fuel-panel {
+    position:absolute; left:85.9%; top:68%; width:7.3%; height:14.8%;
+    overflow:hidden;
+}
+.photo-hud.fps-document .side-fuel-title {
+    position:absolute; left:37%; top:7%; width:50%; height:16%;
+    margin:0; padding:0; font-size:15px; letter-spacing:0; color:#ff3434;
+    white-space:nowrap; overflow:hidden;
+    -unity-text-align:middle-center;
+}
+.photo-hud.fps-document .side-fuel-percent-row {
+    position:absolute; left:20%; top:28%; width:55%; height:27%;
+    flex-direction:row; align-items:center; overflow:hidden;
+}
+.photo-hud.fps-document .side-fuel-percent {
+    width:82%; height:100%; flex-shrink:0; min-width:0; font-size:38px; color:#ff3434;
+}
+.photo-hud.fps-document .side-fuel-unit {
+    width:18%; height:100%; flex-shrink:0; min-width:0;
+    margin:0; padding:0; font-size:14px; color:#ff3434;
+    -unity-text-align:middle-center; overflow:hidden;
+}
+.photo-hud.fps-document .side-fuel-litres-row {
+    position:absolute; left:9%; top:64%; width:48%; height:13%;
+    flex-direction:row; align-items:center; overflow:hidden;
+}
+.photo-hud.fps-document .side-fuel-litres {
+    width:37%; height:100%; flex-shrink:0; min-width:0; font-size:16px; color:#ff6868;
+}
+.photo-hud.fps-document .side-fuel-slash {
+    width:12%; margin:0; padding:0; font-size:13px; -unity-text-align:middle-center;
+}
+.photo-hud.fps-document .side-fuel-litre-unit {
+    width:14%; margin:0; padding:0; font-size:12px;
+}
+.photo-hud.fps-document .side-fuel-rail {
+    position:absolute; left:7%; top:82%; width:47%; height:3%;
+    background-color:rgba(255,52,52,0.18); overflow:hidden;
+}
+.photo-hud.fps-document .side-fuel-fill {
+    width:100%; height:100%; background-color:#ff3434;
+}
+
+/* Editable reference scale labels, visible in UI Builder before entering Play mode. */
+.photo-hud.fps-document .fps-side-scale {
+    position:absolute; top:31%; width:3.5%; height:34%;
+    justify-content:space-between;
+}
+.photo-hud.fps-document .fps-left-scale { left:6%; }
+.photo-hud.fps-document .fps-right-scale { right:6.8%; }
+.photo-hud.fps-document .fps-scale-digit {
+    width:100%; height:26px; flex-shrink:0; font-size:23px; color:#f0f3f8;
+}
+.photo-hud.fps-document .fps-scale-title {
+    position:absolute; top:28.5%; width:6%; height:18px;
+    margin:0; padding:0; font-size:10px; letter-spacing:1px; color:#ff6868;
+    -unity-text-align:middle-center;
+}
+.photo-hud.fps-document .fps-left-scale-title { left:4.7%; }
+.photo-hud.fps-document .fps-right-scale-title { right:5.6%; }
+.photo-hud.fps-document.first-person .rpm-title {
+    left:15%; top:55%; width:28%; height:10%; font-size:11px;
+    white-space:nowrap; overflow:hidden;
+}
+.photo-hud.fps-document.first-person .rpm-bars {
+    left:15%; top:68%; width:70%; height:11%; overflow:hidden;
+}
+.photo-hud.fps-document.first-person .rpm-ticks {
+    left:15%; top:83%; width:70%; height:11%; overflow:hidden;
+}
+.photo-hud.fps-document.first-person .rpm-segment {
+    min-width:0; min-height:0; margin-right:1px;
+}
+.photo-hud.fps-document.first-person .rpm-tick {
+    height:100%; min-width:0; font-size:12px; overflow:hidden;
+}
+.photo-hud.fps-document .digital {
+    min-width:0; min-height:0; margin:0; padding:0; overflow:hidden;
+}
+.photo-hud.fps-document .digital-glyphs {
+    white-space:nowrap; letter-spacing:0;
+}
+.photo-hud.fps-document .theme-title { display:none; }

@@ -1,0 +1,36 @@
+{
+  "copied": [
+    "SportCar\\Models\\SportCar_1\\Materials\\glass1.mat",
+    "SportCar\\Models\\SportCar_1\\Materials\\mirror1.mat",
+    "SportCar\\Models\\SportCar_1\\Materials\\rearlight1.mat",
+    "SportCar\\Models\\SportCar_1\\Materials\\Body1.mat",
+    "SportCar\\Models\\SportCar_1\\Materials\\Wheel.mat",
+    "SportCar\\Models\\SportCar_1\\Materials\\frontlight1.mat",
+    "SportCar\\Models\\Wheels\\Ring\\Materials\\Ring_1.mat",
+    "SportCar\\Models\\SportCar_1\\Materials\\bottom_interior.mat",
+    "SportCar\\Models\\Wheels\\Tire\\Sport\\Materials\\Tire_LowPoly.mat",
+    "SportCar\\Models\\SportCar_1\\Materials\\Back_Light.mat",
+    "SportCar\\Models\\SportCar_1\\Materials\\Blacks1.mat",
+    "SportCar\\Prefabs\\Wheels\\Sport\\Sport_Wheel_1.prefab"
+  ],
+  "updated_references": [
+    "Prefab\\Car.prefab"
+  ],
+  "guid_remap": {
+    "017b2d353e7ef4a49b22ee7ae3f42384": "dd5519ce65164482acd35c4dcb7e739a",
+    "1862076b928f5094086500d901f493e9": "25c3f38d03214c7e968f17bb0f4c910c",
+    "261b7dbc59ac6c647bf9df60681f81a3": "bbef1661376a45e6adb4666765ade90c",
+    "2e57d0103cfcec24c9bdf2045c1d0f7a": "eb3cb023962141d7a7e741f2891d9ef7",
+    "7b1a17cded358cb4c90e6d5a55d2c1c2": "7901e4cd91d645969780d9695e4f54b2",
+    "8a9f7f3c439975a4396dbff47b950232": "1fdd7e99465d4d69b43d63a834725645",
+    "909bdda3c4f8c2f48bdc8b5c450e88b4": "4966efa4c27947aea0ce9fb236b65854",
+    "98f525e8b09c2c4418913b02b8d0c087": "ae5a058c0a7b40c68934a5f3f2a01e61",
+    "b2c8c8f3ca78d7b4da8bbf03e1d551a8": "b95dbef2ff0a4eff9ba1defeb7acfa77",
+    "dd8d17b2540681240bdbc142d191a676": "c71352bda7274ea2bcdf37cb99d15138",
+    "e891798fe8b43c24facf7cb3fba05595": "dd66494347744c11a5a0d229e03b74ef",
+    "8224bcb1849c44b408eea55795d2c285": "42337fb099264fae828bc0122fa88466"
+  },
+  "backup": "C:\\UnityProject\\NITROZERO\\Documentation\\HYUNWOOK-material-backup-20260910-101025",
+  "copied_bytes": 47922,
+  "missing_dependencies_before": []
+}

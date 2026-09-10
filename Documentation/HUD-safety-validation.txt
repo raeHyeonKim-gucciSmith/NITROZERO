@@ -1,0 +1,6 @@
+INCOMPLETE
+System.InvalidOperationException: TPS direct preview unavailable in batch mode.
+  at HudSafetyValidation.RenderPreview (UnityEngine.UIElements.VisualTreeAsset asset, System.String name) [0x00043] in C:\UnityProject\NITROZERO\Assets\04HYUNWOOK\Editor\HudSafetyValidation.cs:39 
+  at HudSafetyValidation.Run () [0x00046] in C:\UnityProject\NITROZERO\Assets\04HYUNWOOK\Editor\HudSafetyValidation.cs:25 
+Graphics API: Direct3D11
+Peak Unity allocated bytes during previews: 282831416
