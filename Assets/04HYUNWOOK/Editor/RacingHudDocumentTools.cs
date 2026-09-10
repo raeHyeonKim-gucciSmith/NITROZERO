@@ -43,9 +43,12 @@ public static class RacingHudDocumentTools
             throw new System.InvalidOperationException("Missing UXML custom element registration.");
         if (speed.pickingMode != PickingMode.Position || gear.pickingMode != PickingMode.Position)
             throw new System.InvalidOperationException("Digital readouts cannot be picked.");
-        var artwork = root.Q<RacingUI.HudArtworkPart>("art-timer-frame");
-        if (artwork == null || artwork.artwork == null || artwork.sourceWidth <= 1f)
-            throw new System.InvalidOperationException("Artwork part UXML/texture/crop did not deserialize.");
+        var artwork = root.Q<RacingUI.HudVectorPart>("art-timer-frame");
+        if (artwork == null || !artwork.IsPathValid || artwork.viewWidth <= 1f)
+            throw new System.InvalidOperationException("Vector artwork did not deserialize.");
+        root.Query<RacingUI.HudVectorPart>().ForEach(part => {
+            if (!part.IsPathValid) throw new System.InvalidOperationException("Invalid vector part: " + part.name);
+        });
         var rpmTitle = root.Q<Label>("rpm-title");
         if (rpmTitle == null || rpmTitle.pickingMode != PickingMode.Position)
             throw new System.InvalidOperationException("RPM title is not independently selectable.");

@@ -58,6 +58,8 @@ public class RacingHudController : MonoBehaviour
     Label gearLimitText;
     RacingUI.DigitalReadout fuelText, fuelPercentText, fuelCapacityText;
     VisualElement fuelFill;
+    RacingUI.DigitalReadout coolantText;
+    VisualElement coolantNeedle, coolantFill;
     [Header("Speed UI Shake")]
     public bool enableSpeedShake = true;
     [Tooltip("흔들림이 시작되는 속도(km/h)")]
@@ -155,6 +157,9 @@ public class RacingHudController : MonoBehaviour
         gearLimitText = boundRoot.Q<Label>("gear-limit");
         fuelFill = boundRoot.Q("fuel-fill");
         fuelCapacityText = boundRoot.Q<RacingUI.DigitalReadout>("fuel-capacity");
+        coolantText = boundRoot.Q<RacingUI.DigitalReadout>("coolant-value");
+        coolantNeedle = boundRoot.Q("coolant-needle");
+        coolantFill = boundRoot.Q("coolant-fill");
         for (int i = 0; i < rpmBars.Length; i++) rpmBars[i] = boundRoot.Q("rpm-bar-" + i);
         speedNeedle = boundRoot.Q("speed-needle");
         rpmNeedle = boundRoot.Q("rpm-needle");
@@ -174,6 +179,7 @@ public class RacingHudController : MonoBehaviour
         if (document.rootVisualElement != boundRoot || speedText == null || speedText.panel == null) Bind();
         if (car == null) car = FindFirstObjectByType<ArcadeCarController>();
         UpdateMapToggle();
+        UpdateCoolantDisplay();
         DisplayedSpeed = car != null ? car.SpeedKmh : 0f;
         UpdateStartup();
         if (StartupComplete) { UpdateSpeedShake(); ElapsedSeconds += Time.deltaTime; UpdateMinimap(); }
@@ -213,6 +219,26 @@ public class RacingHudController : MonoBehaviour
             needleStartAngle + needleSweep * Mathf.Clamp01(DisplayedSpeed / speedometerMaximum)));
         if (rpmNeedle != null) rpmNeedle.style.rotate = new Rotate(new Angle(
             needleStartAngle + needleSweep * rpmFill));
+    }
+
+    void UpdateCoolantDisplay()
+    {
+        if (coolantText == null && coolantNeedle == null && coolantFill == null) return;
+        // No smoothing or cached startup value: Inspector/telemetry changes are visible immediately.
+        float temperature = car != null ? car.CoolantTemperatureCelsius : 80f;
+        float ratio = Mathf.InverseLerp(0f, 100f, temperature);
+        if (coolantText != null) coolantText.text = Mathf.RoundToInt(temperature).ToString();
+        if (coolantNeedle != null)
+        {
+            // Follow the authored '(' rail, including its inward normal, at every temperature.
+            float t = 1f - ratio;
+            float angle = Mathf.Atan2(96f - 192f * t, 222f);
+            float x = 62f - 96f * t * (1f - t);
+            coolantNeedle.style.left = Length.Percent(100f * (x + 5f * Mathf.Cos(angle)) / 90f);
+            coolantNeedle.style.top = Length.Percent(100f * (t + 5f * Mathf.Sin(angle) / 222f));
+            coolantNeedle.style.rotate = new Rotate(new Angle(angle * Mathf.Rad2Deg));
+        }
+        if (coolantFill != null) coolantFill.style.width = Length.Percent(100f * ratio);
     }
 
     void AttachHelmetMask()
@@ -609,12 +635,26 @@ namespace RacingUI
     public partial class DigitalReadout : VisualElement
     {
         Label glyphs;
+        bool centerOnInk;
         string displayText = "000";
         float offOpacity = 0.055f, thickness = 0.11f, spacing = 0.17f;
         bool fitDigits, fitDirty = true;
         Vector2 fittedSize;
         float fittedFontSize;
         IVisualElementScheduledItem glyphFitTask;
+
+        [UxmlAttribute]
+        public bool opticalCenter
+        {
+            get => centerOnInk;
+            set
+            {
+                centerOnInk = value;
+                if (glyphs != null) glyphs.style.display = value ? DisplayStyle.None : DisplayStyle.Flex;
+                fitDirty = true;
+                MarkDirtyRepaint();
+            }
+        }
 
         [UxmlAttribute]
         public bool fitToBounds
@@ -700,7 +740,13 @@ namespace RacingUI
                 glyphFitTask = schedule.Execute(FitGlyphs).Every(100);
                 glyphFitTask.Pause();
             }
-            else generateVisualContent += Draw;
+            generateVisualContent += context =>
+            {
+                if (centerOnInk)
+                    HudGlyphRenderer.Draw(context, contentRect, displayText,
+                        resolvedStyle.fontSize, resolvedStyle.color, fitDigits);
+                else if (glyphs == null) Draw(context);
+            };
             RegisterCallback<GeometryChangedEvent>(_ => { FitGlyphs(); MarkDirtyRepaint(); });
             RegisterCallback<CustomStyleResolvedEvent>(_ => { fitDirty = true; FitGlyphs(); MarkDirtyRepaint(); });
         }
@@ -709,12 +755,20 @@ namespace RacingUI
         {
             if (!fitDigits || glyphs == null || panel == null) return;
             Vector2 size = contentRect.size;
-            float fontSize = glyphs.resolvedStyle.fontSize;
+            float fontSize = centerOnInk ? resolvedStyle.fontSize : glyphs.resolvedStyle.fontSize;
             if (float.IsNaN(fontSize) || float.IsInfinity(fontSize) ||
                 float.IsNaN(size.x) || float.IsNaN(size.y) ||
                 float.IsInfinity(size.x) || float.IsInfinity(size.y)) return;
             if (!(size.x > 4f) || !(size.y > 4f) || !(fontSize > 0f)) return;
             if (!fitDirty && fittedSize == size && Mathf.Approximately(fittedFontSize, fontSize)) return;
+            if (centerOnInk)
+            {
+                fittedSize = size;
+                fittedFontSize = fontSize;
+                fitDirty = false;
+                MarkDirtyRepaint();
+                return;
+            }
             Vector2 measured = glyphs.MeasureTextSize(displayText,
                 0f, MeasureMode.Undefined, 0f, MeasureMode.Undefined);
             if (!(measured.x > 0f) || !(measured.y > 0f)) return;

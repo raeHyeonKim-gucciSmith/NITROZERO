@@ -7,8 +7,8 @@ namespace RacingUI
     [UxmlElement]
     public partial class NavigationMap : VisualElement
     {
-        float roadWidthValue = .78f, horizonValue = .22f, hazeValue = .9f;
-        float lateral, heading, travelled;
+        float roadWidthValue = .55f, horizonValue = .22f, hazeValue = 1f;
+        float lateral, heading;
         [UxmlAttribute]
         public float roadWidth { get => roadWidthValue; set { roadWidthValue = Mathf.Clamp(value, .3f, 1.2f); MarkDirtyRepaint(); } }
         [UxmlAttribute]
@@ -26,15 +26,15 @@ namespace RacingUI
         {
             lateral = Mathf.Clamp(lane, -.65f, .65f);
             heading = Mathf.Clamp(angle, -45f, 45f);
-            travelled = distance;
             MarkDirtyRepaint();
         }
         Vector2 Project(float side, float depth)
         {
             Rect r = contentRect;
-            float near = depth * depth;
+            // Both boundaries and the road center meet at the same vanishing point.
+            float near = Mathf.Clamp01(depth);
             float center = Mathf.Lerp(.5f - heading * .002f, .5f - lateral * .6f, near);
-            float width = Mathf.Lerp(.045f, roadWidthValue, near);
+            float width = roadWidthValue * near;
             return new Vector2((center + side * width) * r.width,
                 Mathf.Lerp(horizonValue, 1.1f, depth) * r.height);
         }
@@ -43,8 +43,58 @@ namespace RacingUI
             p.fillColor = color; p.BeginPath(); p.MoveTo(a); p.LineTo(b);
             p.LineTo(c); p.LineTo(d); p.ClosePath(); p.Fill();
         }
-        void Strip(Painter2D p, Color color, float left, float right, float from, float to)
-        { Quad(p, color, Project(left, from), Project(right, from), Project(right, to), Project(left, to)); }
+        void DrawRoad(MeshGenerationContext context)
+        {
+            // Shared vertices avoid the antialiasing seams between separately painted strips.
+            const int steps = 80, columns = 4;
+            var mesh = context.Allocate((steps + 1) * columns, steps * 18);
+            for (int i = 0; i <= steps; i++)
+            {
+                float depth = i / (float)steps;
+                float visibility = Mathf.SmoothStep(0f, 1f,
+                    Mathf.InverseLerp(0f, Mathf.Lerp(.18f, .46f, hazeValue), depth));
+                float shade = Mathf.Lerp(.44f, .56f, depth);
+                for (int column = 0; column < columns; column++)
+                {
+                    float side = column == 0 ? -.516f : column == 1 ? -.5f : column == 2 ? .5f : .516f;
+                    Vector2 point = Project(side, depth);
+                    mesh.SetNextVertex(new Vertex {
+                        position = new Vector3(point.x, point.y, Vertex.nearZ),
+                        tint = new Color(shade, shade * 1.01f, shade * .98f,
+                            column == 0 || column == 3 ? 0f : visibility),
+                        uv = Vector2.zero
+                    });
+                }
+            }
+            for (int row = 0; row < steps; row++)
+                for (int column = 0; column < columns - 1; column++)
+                {
+                    ushort a = (ushort)(row * columns + column), b = (ushort)(a + 1);
+                    ushort d = (ushort)(a + columns), c = (ushort)(d + 1);
+                    mesh.SetNextIndex(a); mesh.SetNextIndex(b); mesh.SetNextIndex(c);
+                    mesh.SetNextIndex(c); mesh.SetNextIndex(d); mesh.SetNextIndex(a);
+                }
+        }
+        void DrawLaneDashes(Painter2D painter)
+        {
+            // Equal road-space intervals project to shorter, tighter dashes in the distance.
+            // Use the road projection for every corner so both lanes share its vanishing point.
+            for (int lane = -1; lane <= 1; lane += 2)
+            {
+                float side = lane / 6f;
+                for (int dash = 0; dash < 36; dash++)
+                {
+                    float distance = 1f + dash * .65f;
+                    float near = 1f / distance;
+                    float far = 1f / (distance + .32f);
+                    float visibility = Mathf.SmoothStep(0f, 1f,
+                        Mathf.InverseLerp(0f, Mathf.Lerp(.18f, .46f, hazeValue), (near + far) * .5f));
+                    Quad(painter, new Color(.86f, .87f, .85f, visibility * .8f),
+                        Project(side - .007f, far), Project(side + .007f, far),
+                        Project(side + .007f, near), Project(side - .007f, near));
+                }
+            }
+        }
         void Draw(MeshGenerationContext context)
         {
             Rect r = contentRect;
@@ -59,25 +109,8 @@ namespace RacingUI
                     new Vector2(0, a*r.height), new Vector2(r.width, a*r.height),
                     new Vector2(r.width, b*r.height+.5f), new Vector2(0, b*r.height+.5f));
             }
-            for (int i = 0; i < 24; i++)
-            {
-                float a=i/24f, b=(i+1)/24f;
-                float shade=Mathf.Lerp(.10f,.23f,b);
-                Strip(p,new Color(shade,shade,shade*1.04f,1),-.5f,.5f,a,b);
-            }
-            Strip(p,new Color(.83f,.86f,.89f,.8f),-.505f,-.487f,0,1);
-            Strip(p,new Color(.83f,.86f,.89f,.8f),.487f,.505f,0,1);
-            // Soft red route glow, then the crisp guidance line.
-            for (int i=6;i>=1;i--)
-                Strip(p,new Color(1f,.08f,.08f,.035f),-.012f-i*.012f,.012f+i*.012f,0,.88f);
-            Strip(p,new Color(1f,.18f,.18f,.9f),-.015f,.015f,0,.88f);
-            float phase=Mathf.Repeat(travelled/100f,1f);
-            for(int i=0;i<10;i++)
-            {
-                float a=Mathf.Repeat(i/10f+phase,1f),b=Mathf.Min(1f,a+.038f);
-                Strip(p,new Color(.93f,.94f,.95f,.75f),-.26f,-.245f,a,b);
-                Strip(p,new Color(.93f,.94f,.95f,.75f),.245f,.26f,a,b);
-            }
+            DrawRoad(context);
+            DrawLaneDashes(p);
             Vector2 at=new Vector2(r.width*.5f,r.height*.78f);
             float size=Mathf.Min(r.width,r.height)*.075f;
             Quad(p,new Color(0,0,0,.6f),at+new Vector2(-size*1.25f,size*.9f),

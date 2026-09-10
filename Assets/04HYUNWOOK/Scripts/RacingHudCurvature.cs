@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 [DisallowMultipleComponent, RequireComponent(typeof(UIDocument))]
 public sealed class RacingHudCurvature : MonoBehaviour
 {
-    [Range(0f, .12f)] public float curvature = .035f;
+    [Range(0f, .12f)] public float curvature = .095f;
     public Shader curvedShader;
     UIDocument document;
     RacingHudController hudController;

@@ -138,5 +138,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c2324a085612d4ab0362341f6693d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RacingHudCurvature
-  curvature: 0.035
+  curvature: 0.095
   curvedShader: {fileID: 4800000, guid: 36faa7bd742bb204582ce79c7493cbf5, type: 3}

@@ -12,6 +12,13 @@ public class ArcadeCarController : MonoBehaviour
     [Min(1f)] public float maxForwardSpeed = 160f;
     [Min(1f)] public float maxReverseSpeed = 30f;
 
+    [Header("Coolant Temperature")]
+    [Tooltip("현재 냉각수 온도(°C). 예열된 차량의 기본값은 80이며, 플레이 중 변경하면 HUD에 즉시 반영됩니다.")]
+    [Range(-40f, 160f)] public float coolantTemperatureCelsius = 80f;
+    // Telemetry value, independent of RPM. A future cooling simulation can write this field.
+    public float CoolantTemperatureCelsius => float.IsNaN(coolantTemperatureCelsius) || float.IsInfinity(coolantTemperatureCelsius)
+        ? 80f : Mathf.Clamp(coolantTemperatureCelsius, -40f, 160f);
+
     [Header("Manual Gearbox - Q / E")]
     [Tooltip("1~6단의 최고 속도(km/h). 전체 최고 속도 이하로 적용됩니다.")]
     public float[] gearSpeedLimits = { 50f, 100f, 150f, 200f, 250f, 300f };
