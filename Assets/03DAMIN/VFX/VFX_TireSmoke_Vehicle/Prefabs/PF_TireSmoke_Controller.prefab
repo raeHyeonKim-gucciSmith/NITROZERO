@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8294612584642375854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7083781882263612073}
+  - component: {fileID: 3942428393725379908}
+  m_Layer: 0
+  m_Name: PF_TireSmoke_Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7083781882263612073
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8294612584642375854}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3942428393725379908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8294612584642375854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caea2244b129dd944bbc5b77f0113fb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.VFX.TireSmoke.TireSmokeWheelController
+  vehicleRoot: {fileID: 0}
+  smokePrefab: {fileID: 2998450302801893818, guid: 8feee2180b533b14989ea12b2cc6769f, type: 3}
+  frontLeft:
+    wheel: {fileID: 0}
+    centerPoint: {fileID: 0}
+    useRendererCenter: 1
+    directionReference: {fileID: 0}
+    radius: 0.35
+    positionOffset: {x: 0, y: 0, z: 0}
+    intensity: 1
+    emit: 1
+  frontRight:
+    wheel: {fileID: 0}
+    centerPoint: {fileID: 0}
+    useRendererCenter: 1
+    directionReference: {fileID: 0}
+    radius: 0.35
+    positionOffset: {x: 0, y: 0, z: 0}
+    intensity: 1
+    emit: 1
+  rearLeft:
+    wheel: {fileID: 0}
+    centerPoint: {fileID: 0}
+    useRendererCenter: 1
+    directionReference: {fileID: 0}
+    radius: 0.35
+    positionOffset: {x: 0, y: 0, z: 0}
+    intensity: 1
+    emit: 1
+  rearRight:
+    wheel: {fileID: 0}
+    centerPoint: {fileID: 0}
+    useRendererCenter: 1
+    directionReference: {fileID: 0}
+    radius: 0.35
+    positionOffset: {x: 0, y: 0, z: 0}
+    intensity: 1
+    emit: 1
+  vehicleForwardAxis: {x: 0, y: 0, z: 1}
+  vehicleUpAxis: {x: 0, y: 1, z: 0}
+  worldUp: 1
+  emitSmoke: 1
+  intensity: 1
+  fadeTime: 0.3
+  referenceWheelRadius: 0.65
+  sizeMultiplier: 1
+  useControllerLayer: 1

@@ -1,0 +1,6 @@
+{
+ "name":"Damin.VFX.HoodMissile",
+ "rootNamespace":"Damin.VFX.HoodMissile",
+ "references":["Unity.InputSystem"],
+ "autoReferenced":true
+}
