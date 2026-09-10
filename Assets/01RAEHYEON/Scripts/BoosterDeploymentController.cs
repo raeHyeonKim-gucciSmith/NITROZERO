@@ -641,6 +641,43 @@ public sealed class BoosterDeploymentController : MonoBehaviour
         ApplySequence();
     }
 
+#if UNITY_EDITOR
+    public void PreviewRetractedInEditor()
+    {
+        if (Application.isPlaying)
+            return;
+
+        InitializeOnce();
+        masterSequenceAmount = 0f;
+        targetSequenceAmount = 0f;
+        startDeployed = false;
+        ApplySequence();
+        MarkPreviewDirty();
+    }
+
+    public void PreviewDeployedInEditor()
+    {
+        if (Application.isPlaying)
+            return;
+
+        InitializeOnce();
+        masterSequenceAmount = 1f;
+        targetSequenceAmount = 1f;
+        ApplySequence();
+        MarkPreviewDirty();
+    }
+
+    private void MarkPreviewDirty()
+    {
+        UnityEditor.EditorUtility.SetDirty(this);
+
+        foreach (Transform child in transform.root.GetComponentsInChildren<Transform>(true))
+            UnityEditor.EditorUtility.SetDirty(child);
+
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
+    }
+#endif
+
     private static float SmoothRange(float start, float end, float value)
     {
         float t = Mathf.InverseLerp(start, end, value);
