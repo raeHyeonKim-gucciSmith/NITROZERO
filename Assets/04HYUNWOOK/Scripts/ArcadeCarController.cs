@@ -15,15 +15,26 @@ public class ArcadeCarController : MonoBehaviour
     [Header("Manual Gearbox - Q / E")]
     [Tooltip("1~6단의 최고 속도(km/h). 전체 최고 속도 이하로 적용됩니다.")]
     public float[] gearSpeedLimits = { 50f, 100f, 150f, 200f, 250f, 300f };
+    [Tooltip("Q/E는 전진 1~6단만 선택합니다. S는 감속 후 후진, Space는 브레이크입니다.")]
     [Range(1, 6)] public int startingGear = 1;
+    [Header("Automatic clutch / engine RPM")]
+    [Min(500f)] public float idleRpm = 850f;
+    [Min(1000f)] public float redlineRpm = 8000f;
+    [Min(1000f)] public float launchRpm = 1800f;
+    [Min(100f)] public float rpmResponse = 16000f;
+    [Min(0f)] public float engineBraking = 3f;
+    public float EngineRpm { get; private set; } = 850f;
+    public bool IsShifting => Time.time < nextShiftTime;
+    public string GearLabel => CurrentGear < 0 ? "R" : CurrentGear.ToString();
+    public string LastShiftMessage { get; private set; } = "";
     [Min(0.01f)] public float shiftCooldown = 0.15f;
     [Min(1f)] public float gearLimitDeceleration = 20f;
     public AudioClip gearShiftSound;
     [Range(0f,1f)] public float gearShiftVolume = 0.45f;
     public int CurrentGear { get; private set; } = 1;
     public bool ControlsLocked { get; set; }
-    public float CurrentGearSpeedLimit => GetGearSpeedLimit(CurrentGear);
-    public float EngineSpeedRatio => Mathf.Clamp01(SpeedKmh / Mathf.Max(1f, CurrentGearSpeedLimit));
+    public float CurrentGearSpeedLimit => CurrentGear < 0 ? maxReverseSpeed : GetGearSpeedLimit(CurrentGear);
+    public float EngineSpeedRatio => Mathf.Clamp01((EngineRpm - idleRpm) / Mathf.Max(1f, redlineRpm - idleRpm));
     float nextShiftTime;
     AudioSource shiftAudio;
 
@@ -42,9 +53,22 @@ public class ArcadeCarController : MonoBehaviour
 
     public bool ShiftGear(int direction)
     {
-        if (ControlsLocked || Time.timeScale <= 0f || direction == 0 || Time.time < nextShiftTime) return false;
-        int gear = Mathf.Clamp(CurrentGear + (direction > 0 ? 1 : -1), 1, 6);
+        if (CurrentGear < 1 || direction == 0) return false;
+        return SelectGear(ManualTransmissionRules.NextGear(CurrentGear, direction));
+    }
+
+    bool SelectGear(int gear)
+    {
+        if (ControlsLocked || Time.timeScale <= 0f || Time.time < nextShiftTime) return false;
         if (gear == CurrentGear) return false;
+        float speed = body != null ? Vector3.Dot(body.linearVelocity, transform.forward) * 3.6f : 0f;
+        float limit = gear < 0 ? maxReverseSpeed : GetGearSpeedLimit(gear);
+        if (!ManualTransmissionRules.CanSelectGear(gear, speed, limit, redlineRpm))
+        {
+            LastShiftMessage = gear < 0 || speed < -1f ? "STOP TO CHANGE DIRECTION" : "SLOW DOWN TO DOWNSHIFT";
+            return false;
+        }
+        LastShiftMessage = "";
         CurrentGear = gear;
         nextShiftTime = Time.time + Mathf.Max(0.01f, shiftCooldown);
         if (shiftAudio != null && gearShiftSound != null) shiftAudio.PlayOneShot(gearShiftSound, gearShiftVolume);
@@ -97,9 +121,7 @@ public class ArcadeCarController : MonoBehaviour
 
     public bool IsGrounded { get; private set; }
     // Explicit brake or opposing throttle, excluding passive coasting resistance.
-    public bool IsBraking => body != null && (brakeInput ||
-        (throttleInput * Vector3.Dot(body.linearVelocity, transform.forward) < 0f
-         && Mathf.Abs(Vector3.Dot(body.linearVelocity, transform.forward)) > 0.5f));
+    public bool IsBraking => brakeInput;
 
     // 1 Unity unit = 1 m 기준. 수직 낙하 속도를 제외한 지면 방향 속도입니다.
     public float SpeedKmh => body == null ? 0f :
@@ -121,6 +143,7 @@ public class ArcadeCarController : MonoBehaviour
 
     private void OnValidate()
     {
+        startingGear = Mathf.Clamp(startingGear, 1, 6);
         ResolveGroundSettings();
     }
 
@@ -129,6 +152,7 @@ public class ArcadeCarController : MonoBehaviour
         ResolveGroundSettings();
         body = GetComponent<Rigidbody>();
         CurrentGear = Mathf.Clamp(startingGear, 1, 6);
+        EngineRpm = idleRpm;
         shiftAudio = gameObject.AddComponent<AudioSource>();
         shiftAudio.playOnAwake = false;
         shiftAudio.spatialBlend = 0f;
@@ -164,20 +188,26 @@ public class ArcadeCarController : MonoBehaviour
         if (keyboard.qKey.wasPressedThisFrame) ShiftGear(-1);
         else if (keyboard.eKey.wasPressedThisFrame) ShiftGear(1);
 
-        throttleInput = (keyboard.wKey.isPressed ? 1f : 0f)
-                      - (keyboard.sKey.isPressed ? 1f : 0f);
+        ApplyPedals(keyboard.wKey.isPressed, keyboard.sKey.isPressed, keyboard.spaceKey.isPressed);
         steeringInput = (keyboard.dKey.isPressed ? 1f : 0f)
                       - (keyboard.aKey.isPressed ? 1f : 0f);
-        brakeInput = keyboard.spaceKey.isPressed;
 #elif ENABLE_LEGACY_INPUT_MANAGER
         if (Input.GetKeyDown(KeyCode.Q)) ShiftGear(-1);
         else if (Input.GetKeyDown(KeyCode.E)) ShiftGear(1);
-        throttleInput = (Input.GetKey(KeyCode.W) ? 1f : 0f)
-                      - (Input.GetKey(KeyCode.S) ? 1f : 0f);
+        ApplyPedals(Input.GetKey(KeyCode.W), Input.GetKey(KeyCode.S), Input.GetKey(KeyCode.Space));
         steeringInput = (Input.GetKey(KeyCode.D) ? 1f : 0f)
                       - (Input.GetKey(KeyCode.A) ? 1f : 0f);
-        brakeInput = Input.GetKey(KeyCode.Space);
 #endif
+    }
+
+    void ApplyPedals(bool forward, bool reverse, bool brake)
+    {
+        float speed = body != null ? Vector3.Dot(body.linearVelocity, transform.forward) * 3.6f : 0f;
+        var pedals = ManualTransmissionRules.ResolvePedals(CurrentGear, speed, forward, reverse, brake);
+        if (pedals.Gear != CurrentGear) SelectGear(pedals.Gear);
+        // During a direction change, do not apply throttle through the previous gear.
+        throttleInput = pedals.Throttle && pedals.Gear == CurrentGear ? 1f : 0f;
+        brakeInput = pedals.Brake;
     }
 
     private void FixedUpdate()
@@ -189,9 +219,7 @@ public class ArcadeCarController : MonoBehaviour
         }
 
         if (ControlsLocked) { throttleInput = steeringInput = 0f; brakeInput = true; }
-        // Smooth engine limiting also handles downhill overspeed and downshifts.
-        body.linearVelocity = LimitForwardVelocity(body.linearVelocity, transform.forward,
-            CurrentGearSpeedLimit, gearLimitDeceleration, Time.fixedDeltaTime);
+        UpdateEngineRpm(Time.fixedDeltaTime);
 
         // WheelCollider 차량은 바퀴의 토크/조향으로 구동합니다.
         // AddForce만 적용하면 구동 토크가 없는 바퀴의 정지 마찰에 막힐 수 있습니다.
@@ -271,9 +299,9 @@ public class ArcadeCarController : MonoBehaviour
             body.linearVelocity -= lateral * (1f - keep);
         }
         float speed = Vector3.Dot(body.linearVelocity, transform.forward);
-        bool oppositeInput = throttleInput * speed < 0f && Mathf.Abs(speed) > 0.5f;
-        bool braking = brakeInput || oppositeInput || Mathf.Approximately(throttleInput, 0f);
-        float deceleration = brakeInput || oppositeInput ? brakeDeceleration : coastDeceleration;
+        bool coasting = throttleInput <= 0f || IsShifting;
+        bool braking = brakeInput || coasting;
+        float deceleration = brakeInput ? brakeDeceleration : CoastingDeceleration;
         float driveAcceleration = braking ? 0f : CalculateDriveAcceleration(speed, Time.fixedDeltaTime);
         float speedRatio = Mathf.Clamp01(Mathf.Abs(speed) / (maxForwardSpeed / 3.6f));
         float steerAngle = steeringInput * maxWheelSteerAngle
@@ -309,6 +337,7 @@ public class ArcadeCarController : MonoBehaviour
         if (body == null || spawnPoint == null) return;
 
         CurrentGear = Mathf.Clamp(startingGear, 1, 6);
+        EngineRpm = idleRpm;
         nextShiftTime = 0f;
         Vector3 positionDelta = spawnPoint.position - body.position;
         ClearWheelForces();
@@ -325,32 +354,39 @@ public class ArcadeCarController : MonoBehaviour
         Unity.Cinemachine.CinemachineCore.OnTargetObjectWarped(transform, positionDelta);
     }
 
+    float CoastingDeceleration => coastDeceleration +
+        (!IsShifting ? engineBraking *
+            (float)ManualTransmissionRules.TorqueRatio(GetGearSpeedLimit(1), CurrentGearSpeedLimit) * EngineSpeedRatio : 0f);
+
+    void UpdateEngineRpm(float dt)
+    {
+        float speed = Mathf.Abs(Vector3.Dot(body.linearVelocity, transform.forward)) * 3.6f;
+        float target;
+        if (IsShifting)
+            // Automatic clutch disconnects drive and matches the next gear's engine speed.
+            target = (float)ManualTransmissionRules.CoupledRpm(speed, CurrentGearSpeedLimit, idleRpm, redlineRpm);
+        else
+        {
+            target = (float)ManualTransmissionRules.CoupledRpm(speed, CurrentGearSpeedLimit, idleRpm, redlineRpm);
+            if (throttleInput > 0f && !brakeInput) target = Mathf.Max(target, Mathf.Min(launchRpm, redlineRpm));
+        }
+        EngineRpm = Mathf.MoveTowards(EngineRpm, target, rpmResponse * dt);
+    }
+
     private float CalculateDriveAcceleration(float speed, float dt)
     {
-        // 진행 방향과 반대 키를 누르면 먼저 제동하고, 이후 반대 방향으로 출발합니다.
-        bool oppositeInput = throttleInput * speed < 0f && Mathf.Abs(speed) > 0.5f;
+        if (brakeInput)
+            return -Mathf.Sign(speed) * Mathf.Min(brakeDeceleration, Mathf.Abs(speed) / dt);
+        if (throttleInput <= 0f || IsShifting)
+            return -Mathf.Sign(speed) * Mathf.Min(CoastingDeceleration, Mathf.Abs(speed) / dt);
 
-        if (brakeInput || oppositeInput)
-        {
-            return -Mathf.Sign(speed)
-                 * Mathf.Min(brakeDeceleration, Mathf.Abs(speed) / dt);
-        }
-
-        if (throttleInput > 0f)
-        {
-            float remainingSpeed = Mathf.Max(0f, CurrentGearSpeedLimit / 3.6f - speed);
-            return Mathf.Min(acceleration, remainingSpeed / dt);
-        }
-
-        if (throttleInput < 0f)
-        {
-            float remainingSpeed = Mathf.Max(0f, maxReverseSpeed / 3.6f + speed);
-            return -Mathf.Min(reverseAcceleration, remainingSpeed / dt);
-        }
-
-        // 가속 키를 놓으면 서서히 감속합니다.
-        return -Mathf.Sign(speed)
-             * Mathf.Min(coastDeceleration, Mathf.Abs(speed) / dt);
+        float direction = CurrentGear < 0 ? -1f : 1f;
+        float remaining = Mathf.Max(0f, CurrentGearSpeedLimit / 3.6f - speed * direction);
+        // Redline limits engine torque, never directly snaps the rigidbody to a gear speed.
+        float ratio = (float)ManualTransmissionRules.TorqueRatio(GetGearSpeedLimit(1), CurrentGearSpeedLimit);
+        float torqueCurve = Mathf.Lerp(0.8f, 1f, Mathf.Sin(EngineSpeedRatio * Mathf.PI));
+        float drive = (CurrentGear < 0 ? reverseAcceleration : acceleration * ratio) * torqueCurve;
+        return direction * Mathf.Min(drive * throttleInput, remaining / dt);
     }
 
     private void OnDisable()

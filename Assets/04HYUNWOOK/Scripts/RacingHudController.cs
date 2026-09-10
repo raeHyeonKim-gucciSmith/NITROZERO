@@ -77,7 +77,7 @@ public class RacingHudController : MonoBehaviour
     public Vector2 mapEnd = new Vector2(126f, 52f);
     [Min(1f)] public float mapRoadWidth = 20f;
     public float ElapsedSeconds { get; private set; }
-    // The controller has no combustion-engine simulation: this is an indicated RPM.
+    // Follow the drivetrain RPM so the gauge, shifts and engine sound agree.
     public float IndicatedRpm { get; private set; }
     public float DisplayedSpeed { get; private set; }
     public float LapProgressPercent { get; private set; }
@@ -175,7 +175,7 @@ public class RacingHudController : MonoBehaviour
         DisplayedSpeed = car != null ? car.SpeedKmh : 0f;
         UpdateStartup();
         if (StartupComplete) { UpdateSpeedShake(); ElapsedSeconds += Time.deltaTime; UpdateMinimap(); }
-        if (gearText != null) gearText.text = (car != null ? car.CurrentGear : 1).ToString();
+        if (gearText != null) gearText.text = car != null ? car.GearLabel : "1";
         if (gearLimitText != null) gearLimitText.text = "LIMIT " + (car != null ? car.CurrentGearSpeedLimit : 50f).ToString("000");
         if (StartupComplete && car != null)
             remainingFuelPercent = ConsumeFuelPercent(remainingFuelPercent, DisplayedSpeed,
@@ -186,15 +186,17 @@ public class RacingHudController : MonoBehaviour
         if (fuelCapacityText != null) fuelCapacityText.text = Mathf.Max(1f,fuelCapacityLitres).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
         if (fuelPercentText != null) fuelPercentText.text = Math.Max(0, (int)Math.Ceiling(remainingFuelPercent - 0.000001)).ToString();
         if (fuelFill != null) fuelFill.style.width = Length.Percent(100f * fuel / Mathf.Max(1f, fuelCapacityLitres));
-        float topSpeed = car != null ? car.CurrentGearSpeedLimit : 50f;
-        float targetRpm = Mathf.Lerp(850f, 7500f, Mathf.Clamp01(DisplayedSpeed / Mathf.Max(1f, topSpeed)));
+        float engineMaximum = car != null ? car.redlineRpm : tachometerMaximum;
+        float targetRpm = car != null ? car.EngineRpm : 850f;
         IndicatedRpm = Mathf.Lerp(IndicatedRpm, targetRpm, 1f - Mathf.Exp(-needleResponse * Time.deltaTime));
         if (speedText != null) speedText.text = Mathf.RoundToInt(DisplayedSpeed).ToString("000");
         int milliseconds = Mathf.FloorToInt(ElapsedSeconds * 1000f);
         if (timeText != null) timeText.text = $"{milliseconds / 60000:00}:{milliseconds / 1000 % 60:00}.{milliseconds % 1000:000}";
         speedText?.MarkDirtyRepaint(); timeText?.MarkDirtyRepaint();
+        float rpmFill = Mathf.Clamp01(IndicatedRpm / Mathf.Max(1f, engineMaximum));
+        if (targetRpm >= engineMaximum * 0.98f) rpmFill = 1f;
         for (int i = 0; i < rpmBars.Length; i++) if (rpmBars[i] != null)
-            rpmBars[i].style.opacity = IndicatedRpm / tachometerMaximum * rpmBars.Length > i ? 1f : 0.12f;
+            rpmBars[i].style.opacity = rpmFill * rpmBars.Length > i ? 1f : 0.12f;
         if (hud != null && viewCamera != null)
         {
             bool first = viewCamera.ViewBlend >= 0.5f;
@@ -204,11 +206,11 @@ public class RacingHudController : MonoBehaviour
             hud.style.opacity = StartupOpacity * (1f - 0.45f * Mathf.Sin(viewCamera.ViewBlend * Mathf.PI));
         }
         var status = boundRoot.Q<Label>("drive-status");
-        if (status != null) status.text = car != null && car.IsBraking ? "BRAKING" : DisplayedSpeed > 1f ? "DRIVE" : "READY";
+        if (status != null) status.text = car != null && car.IsShifting ? "SHIFTING" : car != null && car.IsBraking ? "BRAKING" : DisplayedSpeed > 1f ? "DRIVE" : "READY";
         if (speedNeedle != null) speedNeedle.style.rotate = new Rotate(new Angle(
             needleStartAngle + needleSweep * Mathf.Clamp01(DisplayedSpeed / speedometerMaximum)));
         if (rpmNeedle != null) rpmNeedle.style.rotate = new Rotate(new Angle(
-            needleStartAngle + needleSweep * Mathf.Clamp01(IndicatedRpm / tachometerMaximum)));
+            needleStartAngle + needleSweep * rpmFill));
     }
 
     void AttachHelmetMask()

@@ -12,12 +12,10 @@ public sealed class FirstPersonVignette : MonoBehaviour
     [Tooltip("헬멧 착용과 UI 전원 연출을 담당합니다. 비워두면 같은 씬에서 자동으로 찾습니다.")]
     public RacingHudController helmetHud;
 
-    Volume volume;
-    VolumeProfile previousProfile, runtimeProfile;
-    Vignette vignette;
-    LensDistortion helmetLens;
-    float firstPersonIntensity;
-    float helmetLensIntensity, helmetLensScale;
+    Volume volume, viewOverrides;
+    VolumeProfile previousProfile, runtimeProfile, overrideProfile;
+    LensDistortion lensBlocker;
+    Vignette vignetteOverride;
 
 #if UNITY_EDITOR
     // Preview uses the same temporary profile as play mode and never edits the authored asset.
@@ -25,7 +23,7 @@ public sealed class FirstPersonVignette : MonoBehaviour
     {
         if (Application.isPlaying) return;
         if (runtimeProfile == null) OnEnable();
-        ApplyVignette(firstPerson ? 1f : 0f);
+        ApplyVignette(firstPerson ? 1f : 0f, firstPerson);
     }
 
     public void EndHelmetPreview()
@@ -36,31 +34,44 @@ public sealed class FirstPersonVignette : MonoBehaviour
 
     void OnEnable()
     {
+        if (runtimeProfile != null) OnDisable();
         volume = GetComponent<Volume>();
         previousProfile = volume.HasInstantiatedProfile() ? volume.profile : null;
         var source = previousProfile != null ? previousProfile : volume.sharedProfile;
         if (source == null) return;
-        firstPersonIntensity = source.TryGet<Vignette>(out var authoredVignette) ? authoredVignette.intensity.value : 0f;
-        // Deep-copy all components: Vignette changes must never modify the shared project asset.
+
+        // Inspector edits this private copy. Never write animation values into it.
         runtimeProfile = ScriptableObject.CreateInstance<VolumeProfile>();
-        runtimeProfile.name = source.name + " (first-person runtime)";
-        runtimeProfile.hideFlags = HideFlags.HideAndDontSave;
+        runtimeProfile.name = source.name + " (Play Mode Settings)";
+        runtimeProfile.hideFlags = HideFlags.DontSave;
         foreach (var component in source.components)
         {
             if (component == null) continue;
             var copy = Instantiate(component);
-            copy.hideFlags = HideFlags.HideAndDontSave;
+            copy.hideFlags = HideFlags.DontSave;
             runtimeProfile.components.Add(copy);
         }
-        runtimeProfile.TryGet(out vignette);
-        // Use the user's Volume settings; do not create or tune an additional lens effect.
-        if (runtimeProfile.TryGet(out helmetLens))
-        {
-            helmetLensIntensity = helmetLens.intensity.overrideState ? helmetLens.intensity.value : 0f;
-            helmetLensScale = helmetLens.scale.overrideState ? helmetLens.scale.value : 1f;
-        }
         volume.profile = runtimeProfile;
-        ApplyVignette(0f);
+
+        // A separate higher-priority volume suppresses effects in TPS. It is never
+        // exposed as the editable Global Volume profile and is destroyed on exit.
+        var gate = new GameObject("Helmet View Overrides") { hideFlags = HideFlags.HideAndDontSave };
+        gate.SetActive(false);
+        gate.transform.SetParent(transform, false);
+        gate.layer = gameObject.layer;
+        viewOverrides = gate.AddComponent<Volume>();
+        viewOverrides.isGlobal = true;
+        viewOverrides.weight = 1f;
+        viewOverrides.priority = volume.priority + 1f;
+        overrideProfile = ScriptableObject.CreateInstance<VolumeProfile>();
+        overrideProfile.hideFlags = HideFlags.HideAndDontSave;
+        lensBlocker = overrideProfile.Add<LensDistortion>();
+        lensBlocker.intensity.Override(0f);
+        lensBlocker.scale.Override(1f);
+        vignetteOverride = overrideProfile.Add<Vignette>();
+        viewOverrides.sharedProfile = overrideProfile;
+        ApplyVignette(0f, false);
+        gate.SetActive(true);
     }
 
     void LateUpdate()
@@ -88,39 +99,56 @@ public sealed class FirstPersonVignette : MonoBehaviour
                 }
             }
         }
-        // Wait for the shield to close, then fade in with HUD power. T still blends both ways.
+        // Vignette follows the helmet animation; lens distortion follows the selected view
+        // immediately, independently of camera interpolation and HUD startup opacity.
         float amount = viewCamera != null && viewCamera.isActiveAndEnabled ? viewCamera.ViewBlend : 0f;
         amount *= helmetHud != null && helmetHud.isActiveAndEnabled ? helmetHud.StartupOpacity : 0f;
-        ApplyVignette(amount);
+        bool firstPerson = viewCamera != null && viewCamera.isActiveAndEnabled && viewCamera.IsFirstPerson;
+        ApplyVignette(amount, firstPerson);
     }
 
-    void ApplyVignette(float amount)
+    void ApplyVignette(float amount, bool firstPerson)
     {
-        if (runtimeProfile == null) return;
-        // Keep the override at zero in TPS so the authored intensity cannot leak back in.
-        float blend = Mathf.Clamp01(amount);
-        if (vignette != null) vignette.intensity.Override(firstPersonIntensity * blend);
-        if (helmetLens != null)
+        if (runtimeProfile == null || viewOverrides == null) return;
+        // Only the hidden blocker is animated. Global Volume's editable values stay
+        // exactly as entered, including edits to zero and edits made while in TPS.
+        viewOverrides.enabled = volume.isActiveAndEnabled;
+        viewOverrides.gameObject.layer = gameObject.layer;
+        viewOverrides.priority = volume.priority + 1f;
+        lensBlocker.active = !firstPerson;
+        var settings = volume.HasInstantiatedProfile() ? volume.profile : volume.sharedProfile;
+        if (settings != null && settings.TryGet<Vignette>(out var vignette) && vignette.active)
         {
-            // An active zero override suppresses the authored distortion in third person.
-            // Reset zoom as well, so TPS keeps its normal framing.
-            helmetLens.intensity.Override(helmetLensIntensity * blend);
-            helmetLens.scale.Override(Mathf.Lerp(1f, helmetLensScale, blend));
+            vignetteOverride.active = true;
+            float intensity = vignette.intensity.overrideState ? vignette.intensity.value : 0f;
+            vignetteOverride.intensity.Override(intensity * Mathf.Clamp01(amount) * volume.weight);
         }
+        else vignetteOverride.active = false;
     }
 
     void OnDisable()
     {
-        if (runtimeProfile == null) return;
+        if (viewOverrides != null)
+        {
+            viewOverrides.enabled = false;
+            viewOverrides.sharedProfile = null;
+            Release(viewOverrides.gameObject);
+        }
+        viewOverrides = null;
         if (volume != null && volume.HasInstantiatedProfile() && volume.profile == runtimeProfile)
             volume.profile = previousProfile;
+        ReleaseProfile(overrideProfile);
+        ReleaseProfile(runtimeProfile);
+        overrideProfile = runtimeProfile = previousProfile = null;
+        lensBlocker = null;
+        vignetteOverride = null;
+    }
 
-        foreach (var component in runtimeProfile.components) Release(component);
-        Release(runtimeProfile);
-        runtimeProfile = null;
-        previousProfile = null;
-        vignette = null;
-        helmetLens = null;
+    static void ReleaseProfile(VolumeProfile profile)
+    {
+        if (profile == null) return;
+        foreach (var component in profile.components) Release(component);
+        Release(profile);
     }
 
     static void Release(Object value)

@@ -119,6 +119,12 @@
             <ui:VisualElement name="warning-stem-2" picking-mode="Position" class="warning-stem"/>
             <ui:VisualElement name="warning-dot-2" picking-mode="Position" class="warning-dot"/>
         </ui:VisualElement>
+        <ui:VisualElement name="warning-overlay" picking-mode="Ignore" class="warning-overlay">
+            <ui:VisualElement name="missile-warning" picking-mode="Position" class="missile-warning">
+                <ui:Label text="MISSILE INCOMING" name="missile-title" picking-mode="Position" class="missile-title"/>
+                <ui:Label name="missile-distance" text="TAKE EVASIVE ACTION" picking-mode="Position" class="missile-subtitle"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="startup-shield" picking-mode="Ignore" class="startup-shield"/>
 </ui:UXML>
