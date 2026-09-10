@@ -175,5 +175,44 @@ namespace YUJEONG
                 "- B 키 / 화면 버튼: [초고속] 바퀴 회전 (2520 deg/s)\n\n" +
                 "세 가지 기능이 모두 독립되어 있어 원하시는 동작을 원하는 타이밍에 자유롭게 따로 조작하실 수 있습니다!", "확인");
         }
+
+        [MenuItem("Tools/YUJEONG/드리프트 모션 컨트롤러(VehicleDriftMotionController) 자동 장착")]
+        public static void AttachDriftControllerToCar()
+        {
+            GameObject car = GameObject.Find("SportCar_4change_2");
+            if (car == null)
+            {
+                EditorUtility.DisplayDialog("알림", "씬에서 'SportCar_4change_2' 차량을 찾을 수 없습니다.", "확인");
+                return;
+            }
+
+            VehicleDriftMotionController driftController = car.GetComponent<VehicleDriftMotionController>();
+            if (driftController == null)
+            {
+                driftController = car.AddComponent<VehicleDriftMotionController>();
+                Undo.RegisterCreatedObjectUndo(driftController, "Add VehicleDriftMotionController");
+            }
+
+            driftController.targetCarRoot = car.transform;
+            driftController.AutoBindWheels();
+            driftController.SaveInitialRotations();
+
+            EditorUtility.SetDirty(car);
+            EditorUtility.SetDirty(driftController);
+
+            Selection.activeGameObject = car;
+
+            EditorUtility.DisplayDialog("드리프트 컨트롤러 장착 완료!",
+                $"'{car.name}' 차량에 드리프트 모션 컨트롤러(VehicleDriftMotionController)가 완벽히 장착되었습니다!\n\n" +
+                $"• FL: {(driftController.wheelFL != null ? driftController.wheelFL.name : "미연결")}\n" +
+                $"• FR: {(driftController.wheelFR != null ? driftController.wheelFR.name : "미연결")}\n" +
+                $"• RL: {(driftController.wheelRL != null ? driftController.wheelRL.name : "미연결")}\n" +
+                $"• RR: {(driftController.wheelRR != null ? driftController.wheelRR.name : "미연결")}\n\n" +
+                "★ [드리프트 조작 안내 (토글 방식)]\n" +
+                "- Q 키 / 화면 버튼: [왼쪽 드리프트] (뒷바퀴 정지 + 앞바퀴 우측 카운터 조향 회전)\n" +
+                "- E 키 / 화면 버튼: [오른쪽 드리프트] (뒷바퀴 정지 + 앞바퀴 좌측 카운터 조향 회전)\n" +
+                "- 다시 누르거나 ESC 키: 드리프트 해제 (앞바퀴 정면 복귀 및 정지)\n\n" +
+                "플레이 모드에서 Q, E 키를 눌러 멋진 드리프트 연출을 확인해보세요!", "확인");
+        }
     }
 }
