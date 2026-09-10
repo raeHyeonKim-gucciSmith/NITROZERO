@@ -5,9 +5,9 @@ public sealed class BoosterPetalPulse : MonoBehaviour
     [SerializeField] private BoosterDeploymentController deployment;
     [SerializeField] private VariableNozzleController nozzleController;
     [SerializeField, Range(-1f, 0f)] private float maximumOpenClosure = -0.5f;
-    [SerializeField, Range(0f, 1f)] private float openingStart = 0.88f;
-    [SerializeField, Range(0f, 1f)] private float fullyOpenAt = 0.9f;
-    [SerializeField, Range(0f, 1f)] private float neutralAgainAt = 0.94f;
+    [SerializeField, Range(0f, 1f)] private float openingStart = 0.77f;
+    [SerializeField, Range(0f, 1f)] private float fullyOpenAt = 0.84f;
+    [SerializeField, Range(0f, 1f)] private float neutralAgainAt = 0.92f;
     [SerializeField, Range(0f, 1f)] private float closedAgainAt = 1f;
     [SerializeField, HideInInspector] private Quaternion[] storedNeutralRotations = new Quaternion[0];
 
