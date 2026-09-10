@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6461654280933138413}
   - component: {fileID: 2748832458481113038}
   - component: {fileID: 2342058729020817483}
-  - component: {fileID: 5965732566926232921}
   - component: {fileID: 5290447982830600919}
   m_Layer: 5
   m_Name: UI
@@ -102,30 +101,6 @@ MonoBehaviour:
   lapStartPoint: {fileID: 0}
   playerName: PLAYER
   finishAtRoadEnd: 1
---- !u!114 &5965732566926232921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6005321131793931914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91061a2d69ab0e640bfdd2da4b740c2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RacingThreatHud
-  enemyWarningDistance: 30
-  rearmDistancePadding: 5
-  centerDirectionWidth: 0.75
-  mirrorCameraOffset: {x: 1.2, y: 1.6, z: -0.4}
-  mirrorFieldOfView: 65
-  mirrorOutwardAngle: 12
-  mirrorFramesPerSecond: 24
-  missileWarningDistance: 120
-  proximityAlarm: {fileID: 8300000, guid: 1327fe2da7c223f4784f41e4fd982693, type: 3}
-  missileAlarm: {fileID: 8300000, guid: d036269c881a9394c9bdd8ec237aa829, type: 3}
-  warningVolume: 0.65
-  enableWarningShortcuts: 1
 --- !u!114 &5290447982830600919
 MonoBehaviour:
   m_ObjectHideFlags: 0

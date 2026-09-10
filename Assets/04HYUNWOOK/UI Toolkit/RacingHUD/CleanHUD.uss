@@ -1,118 +1,361 @@
-/* Crisp vector artwork. Shared layout and live labels remain independently editable. */
-.clean-hud .artwork-part, .clean-hud .map-artwork, .clean-hud .group-art,
-.clean-hud .fps-frame { background-image:none; }
-.clean-hud .warning-symbol { text-shadow:0 0 0 rgba(0,0,0,0); }
-.clean-hud.fps-document.first-person .ranking { rotate:4.8998662deg; }
+.clean-hud .artwork-part,
+.clean-hud .map-artwork,
+.clean-hud .group-art,
+.clean-hud .fps-frame {
+    background-image: none;
+}
+
+.clean-hud .warning-symbol {
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.clean-hud.fps-document.first-person .ranking {
+    rotate: 2.4112809deg;
+}
+
 .clean-hud.tps-document .ranking-row {
-    border-bottom-width:1px; border-bottom-color:rgba(185,202,214,0.16);
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(185, 202, 214, 0.16);
 }
+
 .clean-hud.tps-document .ranking .rank-pos {
-    background-color:rgba(2,6,10,0.84); border-radius:2px;
+    background-color: rgba(0,0,0,0);
+    border-radius: 2px;
 }
 
-/* Departure Mono captions; primary numerical readouts keep DS-Digital. */
 .clean-hud Label {
-    -unity-font: url("../../Resources/RacingHud/DepartureMono-Regular.otf");
-    -unity-font-definition: url("../../Resources/RacingHud/DepartureMono-Regular.otf");
-    letter-spacing:0;
-}
-.clean-hud .digital-glyphs, .clean-hud .rank-pos,
-.clean-hud .rank-time, .clean-hud .rpm-tick {
-    -unity-font: url("../../Resources/RacingHud/DS-DIGI.TTF");
-    -unity-font-definition: url("../../Resources/RacingHud/DS-DIGI.TTF");
+    -unity-font: url("project://database/Assets/04HYUNWOOK/Resources/RacingHud/DepartureMono-Regular.otf?fileID=12800000&guid=75b4d49a793f4a848792f3b6f2b644e0&type=3#DepartureMono-Regular");
+    -unity-font-definition: url("project://database/Assets/04HYUNWOOK/Resources/RacingHud/DepartureMono-Regular.otf?fileID=12800000&guid=75b4d49a793f4a848792f3b6f2b644e0&type=3#DepartureMono-Regular");
+    letter-spacing: 0;
 }
 
-/* Single authored ranking contour and separators; no duplicate USS borders. */
+.clean-hud .digital-glyphs,
+.clean-hud .rank-pos,
+.clean-hud .rank-time,
+.clean-hud .rpm-tick {
+    -unity-font: url("project://database/Assets/04HYUNWOOK/Resources/RacingHud/DS-DIGI.TTF?fileID=12800000&guid=fbf16cb84ebbc944baf39a0dfcce53f3&type=3#DS-DIGI");
+    -unity-font-definition: url("project://database/Assets/04HYUNWOOK/Resources/RacingHud/DS-DIGI.TTF?fileID=12800000&guid=fbf16cb84ebbc944baf39a0dfcce53f3&type=3#DS-DIGI");
+}
+
 .clean-hud.fps-document.first-person .ranking-row,
-.clean-hud.fps-document.first-person .ranking .caption { border-width:0; }
-.clean-hud.fps-document.first-person .ranking { transform-origin:50% 50%; }
-.clean-hud.tps-document .unit, .clean-hud.tps-document .drive-status,
-.clean-hud.tps-document .gear-caption, .clean-hud.tps-document .fuel-caption,
-.clean-hud.tps-document .fuel-percent-unit { -unity-text-align:middle-center; }
+.clean-hud.fps-document.first-person .ranking .caption {
+    border-width: 0;
+}
+
+.clean-hud.fps-document.first-person .ranking {
+    transform-origin: 50% 50%;
+}
+
+.clean-hud.tps-document .unit,
+.clean-hud.tps-document .drive-status,
+.clean-hud.tps-document .gear-caption,
+.clean-hud.tps-document .fuel-caption,
+.clean-hud.tps-document .fuel-percent-unit {
+    -unity-text-align: middle-center;
+}
 
 .clean-hud.fps-document .side-fuel-slash,
-.clean-hud.fps-document .side-fuel-litre-unit { margin:0; padding:0; }
-.clean-hud.fps-document .side-fuel-slash { font-size:10px; }
+.clean-hud.fps-document .side-fuel-litre-unit {
+    margin: 0;
+    padding: 0;
+}
 
-/* Coolant: 0-100 C scale; the normal 80 C mark is 80% from the cold end. */
+.clean-hud.fps-document .side-fuel-slash {
+    font-size: 10px;
+}
+
 .clean-hud.fps-document .coolant-panel {
-    position:absolute; left:7.291667%; top:31.481481%; width:170px; height:338px;
+    position: absolute;
+    left: 7.291667%;
+    top: 31.48148%;
+    width: 170px;
+    height: 338px;
 }
-.clean-hud.fps-document .coolant-panel Label { margin:0; padding:0; }
-.clean-hud.fps-document .coolant-symbol { position:absolute; left:34px; top:0; width:34px; height:38px; }
+
+.clean-hud.fps-document .coolant-panel Label {
+    margin: 0;
+    padding: 0;
+}
+
+.clean-hud.fps-document .coolant-symbol {
+    position: absolute;
+    left: 34px;
+    top: 0;
+    width: 34px;
+    height: 38px;
+}
+
 .clean-hud.fps-document .coolant-title {
-    position:absolute; left:78px; top:8px; width:90px; height:24px;
-    font-size:13px; color:rgba(212,224,230,0.8); -unity-text-align:middle-left;
+    position: absolute;
+    left: 78px;
+    top: 8px;
+    width: 90px;
+    height: 24px;
+    font-size: 13px;
+    color: rgba(212, 224, 230, 0.8);
+    -unity-text-align: middle-left;
 }
-.clean-hud.fps-document .coolant-gauge-track { position:absolute; left:0; top:62px; width:90px; height:222px; }
-.clean-hud.fps-document .coolant-track-art { position:absolute; left:0; top:0; width:100%; height:100%; }
+
+.clean-hud.fps-document .coolant-gauge-track {
+    position: absolute;
+    left: 0;
+    top: 62px;
+    width: 90px;
+    height: 222px;
+}
+
+.clean-hud.fps-document .coolant-track-art {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .clean-hud.fps-document .coolant-needle {
-    position:absolute; left:51.479749px; top:20.565639%; rotate:14.545203deg; width:20px; height:14px; translate:0 -50%; transform-origin:1px 7px;
+    position: absolute;
+    left: 51.47975px;
+    top: 20.56564%;
+    rotate: 14.5452deg;
+    width: 20px;
+    height: 14px;
+    translate: 0 -50%;
+    transform-origin: 1px 7px;
 }
+
 .clean-hud.fps-document .coolant-end-label {
-    position:absolute; left:42px; width:40px; height:24px; font-size:23px;
-    color:rgba(212,224,230,0.8); -unity-text-align:middle-center;
+    position: absolute;
+    left: 42px;
+    width: 40px;
+    height: 24px;
+    font-size: 23px;
+    color: rgba(212, 224, 230, 0.8);
+    -unity-text-align: middle-center;
 }
-.clean-hud.fps-document .coolant-hot-label { top:33px; }
-.clean-hud.fps-document .coolant-cold-label { top:289px; }
+
+.clean-hud.fps-document .coolant-hot-label {
+    top: 33px;
+}
+
+.clean-hud.fps-document .coolant-cold-label {
+    top: 289px;
+}
+
 .clean-hud.fps-document .coolant-normal-tick {
-    position:absolute; left:70.64px; top:94.4px; width:32px; height:24px; font-size:23px; color:rgba(212,224,230,0.85);
+    position: absolute;
+    left: 70.64px;
+    top: 94.4px;
+    width: 32px;
+    height: 24px;
+    font-size: 23px;
+    color: rgba(212, 224, 230, 0.85);
 }
 
-/* Mirror the fuel module's geometry and row positions; keep text reading normally. */
-.clean-hud.fps-document .side-coolant-panel { left:6.8%; }
-.clean-hud.fps-document .side-coolant-title { left:13%; font-size:13px; }
-.clean-hud.fps-document .side-coolant-value-row { left:20%; width:51%; }
-.clean-hud.fps-document .side-coolant-value { width:75%; }
-.clean-hud.fps-document .side-coolant-unit { width:25%; height:18px; font-size:12px; }
+.clean-hud.fps-document .side-coolant-panel {
+    left: 6.8%;
+}
+
+.clean-hud.fps-document .side-coolant-title {
+    left: 13%;
+    font-size: 13px;
+}
+
+.clean-hud.fps-document .side-coolant-value-row {
+    left: 25%;
+    width: 55%;
+}
+
+.clean-hud.fps-document .side-coolant-value {
+    width: 75%;
+}
+
+.clean-hud.fps-document .side-coolant-unit {
+    width: 25%;
+    height: 18px;
+    font-size: 12px;
+}
+
 .clean-hud.fps-document .side-coolant-reference {
-    position:absolute; left:43%; top:64%; width:48%; height:13%; margin:0; padding:0;
-    font-size:9px; color:#ff6868; -unity-text-align:middle-center; white-space:nowrap;
+    position: absolute;
+    left: 43%;
+    top: 64%;
+    width: 48%;
+    height: 13%;
+    margin: 0;
+    padding: 0;
+    font-size: 9px;
+    color: rgb(255, 104, 104);
+    -unity-text-align: middle-center;
+    white-space: nowrap;
 }
-.clean-hud.fps-document .side-coolant-rail { left:46%; align-items:flex-end; rotate:180deg; transform-origin:50% 50%; }
-.clean-hud.fps-document .side-coolant-fill { width:80%; }
 
-/* One continuous curved black background behind the dormant dashboard symbols. */
+.clean-hud.fps-document .side-coolant-rail {
+    left: 46%;
+    align-items: flex-end;
+    rotate: 180deg;
+    transform-origin: 50% 50%;
+}
+
+.clean-hud.fps-document .side-coolant-fill {
+    width: 80%;
+}
+
 .clean-hud.fps-document .vehicle-indicators {
-    position:absolute; right:7.8125%; top:35.37037%; width:80px; height:262px;
+    position: absolute;
+    right: 7.8125%;
+    top: 35.37037%;
+    width: 80px;
+    height: 262px;
 }
+
 .clean-hud.fps-document .vehicle-indicator {
-    width:56px; height:40px; flex-shrink:0;
-    background-color:rgba(0,0,0,0); border-radius:0;
+    width: 56px;
+    height: 40px;
+    flex-shrink: 0;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
 }
+
 .clean-hud.fps-document .vehicle-indicator-background {
-    position:absolute; left:-10px; top:-10px; width:100px; height:282px;
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    width: 100px;
+    height: 282px;
 }
-.clean-hud.fps-document .indicator-abs-outline { position:absolute; left:0; top:0; width:100%; height:100%; }
+
+.clean-hud.fps-document .indicator-abs-outline {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .clean-hud.fps-document .indicator-abs-label {
-    position:absolute; left:0; top:0; width:100%; height:100%; margin:0; padding:0;
-    font-size:12px; color:rgba(148,161,168,0.42); -unity-text-align:middle-center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    color: rgba(148, 161, 168, 0.42);
+    -unity-text-align: middle-center;
 }
 
-/* Warnings must be rooted to the viewport, never a decorative instrument part. */
-.clean-hud.fps-document .warning-overlay { position:absolute; left:0; right:0; top:0; bottom:0; }
-.clean-hud.fps-document .missile-warning { left:33%; top:42.5%; width:34%; height:15%; }
+.clean-hud.fps-document .warning-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.clean-hud.fps-document .missile-warning {
+    left: 33%;
+    top: 42.5%;
+    width: 34%;
+    height: 15%;
+}
+
 .clean-hud.fps-document .missile-direction-marks {
-    position:absolute; left:0; top:0; width:100%; height:100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
 }
+
 .clean-hud.fps-document .warning-symbol {
-    position:absolute; top:50%; width:32px; height:9%; margin:0; translate:-50% -50%;
+    position: absolute;
+    top: 50%;
+    width: 32px;
+    height: 9%;
+    margin: 0;
+    translate: -50% -50%;
 }
-.clean-hud.fps-document.first-person .warning-left { left:22.5%; right:auto; }
-.clean-hud.fps-document.first-person .warning-right { left:77.5%; right:auto; }
 
-/* Match the FPS alert positions when switching to the third-person document. */
-.clean-hud.tps-document .missile-warning { left:33%; top:42.5%; width:34%; height:15%; }
+.clean-hud.fps-document.first-person .warning-left {
+    left: 22.5%;
+    right: auto;
+}
+
+.clean-hud.fps-document.first-person .warning-right {
+    left: 77.5%;
+    right: auto;
+}
+
+.clean-hud.tps-document .missile-warning {
+    left: 33%;
+    top: 42.5%;
+    width: 34%;
+    height: 15%;
+}
+
 .clean-hud.tps-document .warning-symbol {
-    position:absolute; top:50%; width:32px; height:9%; margin:0; translate:-50% -50%;
+    position: absolute;
+    top: 50%;
+    width: 32px;
+    height: 9%;
+    margin: 0;
+    translate: -50% -50%;
 }
-.clean-hud.tps-document .warning-left { left:22.5%; right:auto; }
-.clean-hud.tps-document .warning-right { left:77.5%; right:auto; }
 
-/* Forty equal 14 px segments, separated by 1 px, inside the authored brackets. */
+.clean-hud.tps-document .warning-left {
+    left: 22.5%;
+    right: auto;
+}
+
+.clean-hud.tps-document .warning-right {
+    left: 77.5%;
+    right: auto;
+}
+
 .clean-hud.fps-document.first-person .rpm-segment {
-    flex-grow:0; flex-shrink:0; flex-basis:14px; width:14px; height:100%; margin:0 1px 0 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 14px;
+    width: 14px;
+    height: 100%;
+    margin: 0 1px 0 0;
 }
-.clean-hud.fps-document.first-person .rpm-ticks { left:112px; width:599px; }
 
-.clean-hud.fps-document .coolant-intermediate-tick { position:absolute; width:32px; height:20px; font-size:20px; color:rgba(212,224,230,0.8); }
+.clean-hud.fps-document.first-person .rpm-ticks {
+    left: 112px;
+    width: 599px;
+}
+
+.clean-hud.fps-document .coolant-intermediate-tick {
+    position: absolute;
+    width: 32px;
+    height: 20px;
+    font-size: 20px;
+    color: rgba(212, 224, 230, 0.8);
+}
+
+.clean-hud.fps-document.first-person .panel,
+.clean-hud.fps-document.first-person .minimap {
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Keep raised speed digits visible without moving the user's number positions. */
+.clean-hud.fps-document.first-person .instrument,
+.clean-hud.fps-document.first-person .speed { overflow:visible; }
+.clean-hud.fps-document.first-person .rpm-segment { background-color:#D4E0E6; }
+.clean-hud.fps-document.first-person .rpm-segment.rpm-hot { background-color:#FF2020; }
+
+/* TPS: one vector contour per panel, and forty equally spaced RPM cells. */
+.clean-hud.tps-document .panel { border-width:0; background-color:rgba(0,0,0,0); }
+.clean-hud.tps-document .instrument,
+.clean-hud.tps-document .speed { overflow:visible; }
+.clean-hud.tps-document .rpm-bars { padding:0; border-width:0; }
+.clean-hud.tps-document .rpm-segment {
+    flex-grow:0; flex-shrink:0; flex-basis:10.2px; width:10.2px;
+    min-width:0; height:100%; margin:0 1px 0 0; background-color:#D4E0E6;
+}
+.clean-hud.tps-document #rpm-bar-39 { margin-right:0; }
+.clean-hud.tps-document .rpm-segment.rpm-hot { background-color:#FF2020; }
+.clean-hud.tps-document .rpm-ticks { left:97px; width:447px; padding:0; border-width:0; }

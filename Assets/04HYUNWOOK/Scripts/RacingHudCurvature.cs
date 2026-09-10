@@ -25,7 +25,7 @@ public sealed class RacingHudCurvature : MonoBehaviour
         if (runtimeSettings == null) return;
         int w = Mathf.Max(64, Screen.width), h = Mathf.Max(64, Screen.height);
         if (surface == null || w != width || h != height) Resize(w, h);
-        material.SetFloat("_Curvature", curvature);
+        material.SetFloat("_Curvature", hudController != null && hudController.IsFirstPersonHud ? curvature : 0f);
         bool activeHud = hudController != null && hudController.isActiveAndEnabled;
         material.SetFloat("_OutsideOpacity", activeHud && hudController.IsFirstPersonHud ? hudController.StartupOpacity : 0f);
         material.SetFloat("_ShieldCoverage", activeHud ? hudController.StartupShieldCoverage : 0f);

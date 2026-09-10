@@ -9,6 +9,10 @@ namespace RacingUI
     {
         float roadWidthValue = .55f, horizonValue = .22f, hazeValue = 1f;
         float lateral, heading;
+        Color mapTintValue = Color.clear;
+        [UxmlAttribute]
+        public Color mapTint { get => mapTintValue; set { mapTintValue = value; MarkDirtyRepaint(); } }
+
         [UxmlAttribute]
         public float roadWidth { get => roadWidthValue; set { roadWidthValue = Mathf.Clamp(value, .3f, 1.2f); MarkDirtyRepaint(); } }
         [UxmlAttribute]
@@ -75,26 +79,6 @@ namespace RacingUI
                     mesh.SetNextIndex(c); mesh.SetNextIndex(d); mesh.SetNextIndex(a);
                 }
         }
-        void DrawLaneDashes(Painter2D painter)
-        {
-            // Equal road-space intervals project to shorter, tighter dashes in the distance.
-            // Use the road projection for every corner so both lanes share its vanishing point.
-            for (int lane = -1; lane <= 1; lane += 2)
-            {
-                float side = lane / 6f;
-                for (int dash = 0; dash < 36; dash++)
-                {
-                    float distance = 1f + dash * .65f;
-                    float near = 1f / distance;
-                    float far = 1f / (distance + .32f);
-                    float visibility = Mathf.SmoothStep(0f, 1f,
-                        Mathf.InverseLerp(0f, Mathf.Lerp(.18f, .46f, hazeValue), (near + far) * .5f));
-                    Quad(painter, new Color(.86f, .87f, .85f, visibility * .8f),
-                        Project(side - .007f, far), Project(side + .007f, far),
-                        Project(side + .007f, near), Project(side - .007f, near));
-                }
-            }
-        }
         void Draw(MeshGenerationContext context)
         {
             Rect r = contentRect;
@@ -105,12 +89,11 @@ namespace RacingUI
             {
                 float a = i / 40f, b = (i + 1) / 40f;
                 float mist = .025f + .055f * Mathf.Exp(-Mathf.Pow((a - horizonValue) / .23f, 2));
-                Quad(p, new Color(mist, mist * 1.08f, mist * 1.15f, Mathf.Lerp(.75f, 1f, hazeValue)),
+                Quad(p, mapTintValue.a > 0 ? mapTintValue : new Color(mist, mist * 1.08f, mist * 1.15f, Mathf.Lerp(.75f, 1f, hazeValue)),
                     new Vector2(0, a*r.height), new Vector2(r.width, a*r.height),
                     new Vector2(r.width, b*r.height+.5f), new Vector2(0, b*r.height+.5f));
             }
             DrawRoad(context);
-            DrawLaneDashes(p);
             Vector2 at=new Vector2(r.width*.5f,r.height*.78f);
             float size=Mathf.Min(r.width,r.height)*.075f;
             Quad(p,new Color(0,0,0,.6f),at+new Vector2(-size*1.25f,size*.9f),

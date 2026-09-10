@@ -15,7 +15,16 @@ public class ArcadeCarController : MonoBehaviour
     [Header("Coolant Temperature")]
     [Tooltip("현재 냉각수 온도(°C). 예열된 차량의 기본값은 80이며, 플레이 중 변경하면 HUD에 즉시 반영됩니다.")]
     [Range(-40f, 160f)] public float coolantTemperatureCelsius = 80f;
-    // Telemetry value, independent of RPM. A future cooling simulation can write this field.
+    [Tooltip("게임용 냉각수 온도 변화. 끄면 위 온도 값을 직접 지정할 수 있습니다.")]
+    public bool simulateCoolantTemperature = true;
+    [Min(1f)] public float idleSecondsPerDegree = 30f;
+    [Min(1f)] public float drivingSecondsPerDegree = 17.5f;
+    [Min(1f)] public float highLoadSecondsPerDegree = 9f;
+    [Min(1f)] public float coolingSecondsPerDegree = 25f;
+    [Range(60f, 100f)] public float normalCoolantTemperature = 90f;
+    [Range(80f, 110f)] public float highLoadCoolantTemperature = 95f;
+    float initialCoolantTemperature;
+
     public float CoolantTemperatureCelsius => float.IsNaN(coolantTemperatureCelsius) || float.IsInfinity(coolantTemperatureCelsius)
         ? 80f : Mathf.Clamp(coolantTemperatureCelsius, -40f, 160f);
 
@@ -40,6 +49,8 @@ public class ArcadeCarController : MonoBehaviour
     [Range(0f,1f)] public float gearShiftVolume = 0.45f;
     public int CurrentGear { get; private set; } = 1;
     public bool ControlsLocked { get; set; }
+    public bool FinishBraking { get; set; }
+    public float FinishSpeedRatio { get; set; } = 1f;
     public float CurrentGearSpeedLimit => CurrentGear < 0 ? maxReverseSpeed : GetGearSpeedLimit(CurrentGear);
     public float EngineSpeedRatio => Mathf.Clamp01((EngineRpm - idleRpm) / Mathf.Max(1f, redlineRpm - idleRpm));
     float nextShiftTime;
@@ -158,6 +169,7 @@ public class ArcadeCarController : MonoBehaviour
     {
         ResolveGroundSettings();
         body = GetComponent<Rigidbody>();
+        initialCoolantTemperature = CoolantTemperatureCelsius;
         CurrentGear = Mathf.Clamp(startingGear, 1, 6);
         EngineRpm = idleRpm;
         shiftAudio = gameObject.AddComponent<AudioSource>();
@@ -227,6 +239,7 @@ public class ArcadeCarController : MonoBehaviour
 
         if (ControlsLocked) { throttleInput = steeringInput = 0f; brakeInput = true; }
         UpdateEngineRpm(Time.fixedDeltaTime);
+        if (!ControlsLocked) UpdateCoolantTemperature(Time.fixedDeltaTime);
 
         // WheelCollider 차량은 바퀴의 토크/조향으로 구동합니다.
         // AddForce만 적용하면 구동 토크가 없는 바퀴의 정지 마찰에 막힐 수 있습니다.
@@ -346,6 +359,7 @@ public class ArcadeCarController : MonoBehaviour
         CurrentGear = Mathf.Clamp(startingGear, 1, 6);
         EngineRpm = idleRpm;
         nextShiftTime = 0f;
+        if (simulateCoolantTemperature) coolantTemperatureCelsius = initialCoolantTemperature;
         Vector3 positionDelta = spawnPoint.position - body.position;
         ClearWheelForces();
         throttleInput = steeringInput = 0f;
@@ -364,6 +378,24 @@ public class ArcadeCarController : MonoBehaviour
     float CoastingDeceleration => coastDeceleration +
         (!IsShifting ? engineBraking *
             (float)ManualTransmissionRules.TorqueRatio(GetGearSpeedLimit(1), CurrentGearSpeedLimit) * EngineSpeedRatio : 0f);
+
+    void UpdateCoolantTemperature(float dt)
+    {
+        if (!simulateCoolantTemperature || dt <= 0f) return;
+        bool moving = SpeedKmh > 3f;
+        bool highLoad = moving && throttleInput > .5f && !brakeInput && !IsShifting && EngineSpeedRatio >= .65f;
+        float target = highLoad ? Mathf.Max(normalCoolantTemperature, highLoadCoolantTemperature) : normalCoolantTemperature;
+        float secondsPerDegree = CoolantTemperatureCelsius > target ? coolingSecondsPerDegree :
+            highLoad ? highLoadSecondsPerDegree : moving ? drivingSecondsPerDegree : idleSecondsPerDegree;
+        coolantTemperatureCelsius = StepCoolantTemperature(CoolantTemperatureCelsius, target, secondsPerDegree, dt);
+    }
+
+    public static float StepCoolantTemperature(float current, float target, float secondsPerDegree, float dt)
+    {
+        // Taper only near equilibrium, rather than oscillating around the target.
+        float taper = Mathf.Clamp01(Mathf.Abs(target - current) / 2f);
+        return Mathf.MoveTowards(current, target, Mathf.Max(0f, dt) * taper / Mathf.Max(1f, secondsPerDegree));
+    }
 
     void UpdateEngineRpm(float dt)
     {

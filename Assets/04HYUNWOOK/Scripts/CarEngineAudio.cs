@@ -62,10 +62,11 @@ public class CarEngineAudio : MonoBehaviour
             if (skid != null) skid.Pause();
             return;
         }
-        float speedRatio = Mathf.Clamp01(car.EngineSpeedRatio);
+        float finishRatio = car.FinishBraking ? Mathf.Clamp01(car.FinishSpeedRatio) : 1f;
+        float speedRatio = Mathf.Clamp01(car.EngineSpeedRatio) * finishRatio;
         float blend = 1f - Mathf.Exp(-5f * Time.deltaTime);
         engine.pitch = Mathf.Lerp(engine.pitch, Mathf.Lerp(idlePitch, topSpeedPitch, speedRatio), blend);
-        engine.volume = Mathf.Lerp(engine.volume, Mathf.Lerp(idleVolume, drivingVolume, Mathf.Sqrt(speedRatio)), blend);
+        engine.volume = Mathf.Lerp(engine.volume, Mathf.Lerp(idleVolume, drivingVolume, Mathf.Sqrt(speedRatio)) * finishRatio, blend);
         // Pause with Unity's time scale, while retaining the correct loop position.
         if (!engine.isPlaying && engine.clip != null) engine.UnPause();
         UpdateSkid();

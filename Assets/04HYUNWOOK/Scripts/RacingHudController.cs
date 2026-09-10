@@ -94,9 +94,18 @@ public class RacingHudController : MonoBehaviour
     public string playerName = "PLAYER";
     [Tooltip("현재 직선 Road의 끝을 통과하면 플레이어 완주 기록을 저장합니다.")]
     public bool finishAtRoadEnd = true;
+    [Tooltip("Goal-line braking is planned for at least 300 km/h.")]
+    [Min(300f)] public float finishApproachSpeedKmh = 300f;
+    [Min(2f)] public float finishEdgeMargin = 8f;
+    bool finishSequence;
+    float finishRoadZ;
+    bool finishLinePrepared;
+    Rigidbody finishBody;
+    bool finishWasKinematic;
+    bool finishCarEnabled;
+    float finishSpeed;
+
     readonly RaceFinishResults results = new RaceFinishResults();
-    bool hasPreviousRoadPosition;
-    Vector3 previousRoadPosition;
     VisualElement speedNeedle, rpmNeedle;
     CarCinemachineSetup viewCamera;
     VisualElement hud;
@@ -121,7 +130,6 @@ public class RacingHudController : MonoBehaviour
         results.Clear();
         LapProgressPercent = 0f;
         lapStartResolved = false;
-        hasPreviousRoadPosition = false;
         startupClock = 0f;
         StartupShieldCoverage = 0f;
         shieldSoundPlayed = powerSoundPlayed = false;
@@ -180,9 +188,9 @@ public class RacingHudController : MonoBehaviour
         if (car == null) car = FindFirstObjectByType<ArcadeCarController>();
         UpdateMapToggle();
         UpdateCoolantDisplay();
-        DisplayedSpeed = car != null ? car.SpeedKmh : 0f;
+        DisplayedSpeed = finishSequence ? finishSpeed * 3.6f : car != null ? car.SpeedKmh : 0f;
         UpdateStartup();
-        if (StartupComplete) { UpdateSpeedShake(); ElapsedSeconds += Time.deltaTime; UpdateMinimap(); }
+        if (StartupComplete) { UpdateSpeedShake(); if (!finishSequence) ElapsedSeconds += Time.deltaTime; UpdateMinimap(); }
         if (gearText != null) gearText.text = car != null ? car.GearLabel : "1";
         if (gearLimitText != null) gearLimitText.text = "LIMIT " + (car != null ? car.CurrentGearSpeedLimit : 50f).ToString("000");
         if (StartupComplete && car != null)
@@ -335,6 +343,13 @@ public class RacingHudController : MonoBehaviour
 
     void OnDisable()
     {
+        StopAllCoroutines();
+        if (car != null) { car.FinishBraking = false; car.FinishSpeedRatio = 1f; }
+        if (finishBody != null) { finishBody.isKinematic = finishWasKinematic; if (car != null) car.enabled = finishCarEnabled; }
+        finishBody = null;
+        finishSequence = false;
+        finishLinePrepared = false;
+
         ResetShake();
         SetStartupLocks(false);
         if (startupAudio != null) startupAudio.Stop();
@@ -345,6 +360,7 @@ public class RacingHudController : MonoBehaviour
 
     void SetStartupLocks(bool locked)
     {
+        locked |= finishSequence;
         if (car != null) car.ControlsLocked = locked;
         if (viewCamera != null) viewCamera.ViewInputLocked = locked;
     }
@@ -398,6 +414,7 @@ public class RacingHudController : MonoBehaviour
 
     public void ToggleMap()
     {
+        if (finishSequence) return;
         MapVisible = !MapVisible;
         ApplyMapVisibility();
     }
@@ -424,7 +441,7 @@ public class RacingHudController : MonoBehaviour
         {
             foreach (var mesh in minimapRoad.GetComponentsInChildren<MeshFilter>())
             {
-                if (mesh.sharedMesh == null) continue;
+                if (mesh.sharedMesh == null || mesh.name == "Finish Line (automatic safe braking distance)") continue;
                 Bounds bounds = mesh.sharedMesh.bounds;
                 for (int i = 0; i < 8; i++)
                 {
@@ -439,22 +456,17 @@ public class RacingHudController : MonoBehaviour
         if (!hasRoadBounds) return;
 
         Vector3 local = minimapRoad.InverseTransformPoint(car.transform.position);
-        if (finishAtRoadEnd && hasPreviousRoadPosition &&
-            previousRoadPosition.z < roadBounds.max.z && local.z >= roadBounds.max.z &&
-            Mathf.Abs(local.x - roadBounds.center.x) <= roadBounds.extents.x && car.IsGrounded)
-        {
-            float fraction = Mathf.InverseLerp(previousRoadPosition.z, local.z, roadBounds.max.z);
-            RecordFinish(playerName, ElapsedSeconds - Time.deltaTime * (1f - fraction));
-        }
-        previousRoadPosition = local;
-        hasPreviousRoadPosition = true;
+        PrepareFinishLine();
+        if (finishAtRoadEnd && finishLinePrepared && !finishSequence && local.z >= finishRoadZ &&
+            Mathf.Abs(local.x - roadBounds.center.x) <= roadBounds.extents.x)
+            StartCoroutine(FinishAndRespawn());
         if (!lapStartResolved)
         {
             if (lapStartPoint == null) { var spawn = GameObject.Find("SpawnPoint"); if (spawn != null) lapStartPoint = spawn.transform; }
             lapStartRoadZ = Mathf.Clamp(lapStartPoint != null ? minimapRoad.InverseTransformPoint(lapStartPoint.position).z : local.z, roadBounds.min.z, roadBounds.max.z - 0.001f);
             lapStartResolved = true;
         }
-        float progress = Mathf.InverseLerp(lapStartRoadZ, roadBounds.max.z, local.z);
+        float progress = Mathf.InverseLerp(lapStartRoadZ, finishAtRoadEnd ? finishRoadZ : roadBounds.max.z, local.z);
         LapProgressPercent = CalculateLapProgressPercent(progress);
         RefreshRanking();
         var navigation = boundRoot.Q<RacingUI.NavigationMap>("navigation-road");
@@ -465,8 +477,8 @@ public class RacingHudController : MonoBehaviour
                 Mathf.Atan2(roadForward.x, roadForward.z) * Mathf.Rad2Deg,
                 local.z * Mathf.Abs(minimapRoad.lossyScale.z));
             var remainingLabel = boundRoot.Q<Label>("route-distance");
-            float remaining = Mathf.Max(0f, roadBounds.max.z - local.z) * Mathf.Abs(minimapRoad.lossyScale.z);
-            if (remainingLabel != null) remainingLabel.text = remaining >= 1000f ? $"STRAIGHT  {remaining / 1000f:0.0} KM" : $"STRAIGHT  {remaining:0} M";
+            float remaining = Mathf.Max(0f, (finishAtRoadEnd ? finishRoadZ : roadBounds.max.z) - local.z) * Mathf.Abs(minimapRoad.lossyScale.z);
+            if (remainingLabel != null) remainingLabel.text = remaining >= 1000f ? $"DISTANCE LEFT  {remaining / 1000f:0.0} KM" : $"DISTANCE LEFT  {remaining:0} M";
             return;
         }
         if (playerMarker == null) return;
@@ -478,13 +490,91 @@ public class RacingHudController : MonoBehaviour
             end = new Vector2(start.x, 24f);
         }
         var distance = boundRoot.Q<Label>("route-distance");
-        if (distance != null) distance.text = $"STRAIGHT  {roadBounds.size.z * minimapRoad.lossyScale.z / 1000f:0.00} KM";
+        if (distance != null) distance.text = $"DISTANCE LEFT  {roadBounds.size.z * minimapRoad.lossyScale.z / 1000f:0.00} KM";
         Vector2 position = Vector2.Lerp(start, end, progress);
         position.x += Mathf.Clamp((local.x - roadBounds.center.x) / Mathf.Max(0.01f, roadBounds.size.x), -2f, 2f) * mapRoadWidth;
         playerMarker.style.left = position.x - 8f;
         playerMarker.style.top = position.y - 8f;
         Vector3 forward = minimapRoad.InverseTransformDirection(car.transform.forward);
         playerMarker.style.rotate = new Rotate(new Angle(Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg));
+    }
+
+    void PrepareFinishLine()
+    {
+        if (!finishAtRoadEnd || finishLinePrepared) return;
+        var oldMarker = minimapRoad.Find("Finish Line (automatic safe braking distance)");
+        if (oldMarker != null) Destroy(oldMarker.gameObject);
+        if (car.spawnPoint == null)
+        {
+            var spawn = GameObject.Find("SpawnPoint");
+            if (spawn == null)
+            {
+                spawn = new GameObject("SpawnPoint");
+                spawn.transform.SetPositionAndRotation(car.transform.position, car.transform.rotation);
+            }
+            car.spawnPoint = spawn.transform;
+        }
+        lapStartPoint = car.spawnPoint;
+        float scale = Mathf.Max(.001f, Mathf.Abs(minimapRoad.lossyScale.z));
+        float speed = Mathf.Max(300f, finishApproachSpeedKmh, car.maxForwardSpeed) / 3.6f;
+        float margin = Mathf.Max(finishEdgeMargin, 8f);
+        foreach (var collider in car.GetComponentsInChildren<Collider>())
+            if (!collider.isTrigger) margin = Mathf.Max(margin, collider.bounds.size.magnitude + 3f);
+        finishEdgeMargin = margin;
+        float reserve = speed * speed / (2f * Mathf.Max(1f, car.brakeDeceleration)) + speed * .1f + margin;
+        finishRoadZ = Mathf.Max(roadBounds.min.z + roadBounds.size.z * .5f, roadBounds.max.z - reserve / scale);
+        finishLinePrepared = true;
+    }
+
+    System.Collections.IEnumerator FinishAndRespawn()
+    {
+        finishSequence = true;
+        FinishPlayer();
+        SetStartupLocks(true);
+        finishBody = car.GetComponent<Rigidbody>();
+        finishWasKinematic = finishBody.isKinematic;
+        finishCarEnabled = car.enabled;
+        float speed = finishBody.linearVelocity.magnitude;
+        finishSpeed = speed;
+        float initialFinishSpeed = Mathf.Max(.001f, speed);
+        car.FinishBraking = true;
+        car.FinishSpeedRatio = 1f;
+        car.enabled = false;
+        finishBody.linearVelocity = Vector3.zero;
+        finishBody.angularVelocity = Vector3.zero;
+        finishBody.isKinematic = true;
+        float scale = Mathf.Max(.001f, Mathf.Abs(minimapRoad.lossyScale.z));
+        Vector3 local = minimapRoad.InverseTransformPoint(finishBody.position);
+        float safeEnd = roadBounds.max.z - finishEdgeMargin / scale;
+        local.z = Mathf.Min(local.z, safeEnd);
+        float available = Mathf.Max(.01f, (safeEnd - local.z) * scale);
+        float deceleration = Mathf.Max(Mathf.Max(1f, car.brakeDeceleration), speed * speed / (2f * available));
+        // Deterministic braking on the road, independent of wheel friction or player input.
+        while (speed > .001f)
+        {
+            yield return new WaitForFixedUpdate();
+            float nextSpeed = Mathf.MoveTowards(speed, 0f, deceleration * Time.fixedDeltaTime);
+            local.z = Mathf.Min(safeEnd, local.z + (speed + nextSpeed) * .5f * Time.fixedDeltaTime / scale);
+            finishBody.position = minimapRoad.TransformPoint(local);
+            car.transform.position = finishBody.position;
+            speed = nextSpeed;
+            finishSpeed = speed;
+            car.FinishSpeedRatio = speed / initialFinishSpeed;
+        }
+        finishSpeed = 0f;
+        car.FinishSpeedRatio = 0f;
+        // The countdown begins only after the car is completely stationary.
+        yield return new WaitForSeconds(3f);
+        finishBody.isKinematic = finishWasKinematic;
+        car.enabled = finishCarEnabled;
+        car.Respawn();
+        car.FinishBraking = false;
+        car.FinishSpeedRatio = 1f;
+        ResetRace();
+        finishSequence = false;
+        finishBody = null;
+        SetStartupLocks(false);
+        UpdateMinimap();
     }
 
     // Pass elapsed race time, not Time.time. Repeated finish notifications are ignored.
@@ -501,7 +591,6 @@ public class RacingHudController : MonoBehaviour
         results.Clear();
         LapProgressPercent = 0f;
         lapStartResolved = false;
-        hasPreviousRoadPosition = false;
         RefreshRanking();
     }
 

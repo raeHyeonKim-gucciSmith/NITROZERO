@@ -94,7 +94,7 @@ public static class CleanHudValidation
             if (repaint == null) throw new Exception("Runtime panel repaint is unavailable.");
             repaint.Invoke(panel, new object[] { new Event { type = EventType.Repaint } });
             Inspect(); SaveImage(mode == 0 ? "TPS" : mode == 1 ? "FPS" : mode == 2 ? "FPS-alert" : "TPS-alert");
-            if (++mode < 4) { LoadMode(); return; }
+            if (++mode < 2) { LoadMode(); return; }
             File.WriteAllLines(Folder + "/report.txt", details);
             File.WriteAllText(Folder + "/status.txt", "PASS: imported UXML, vector registration, full-HD layout and native rendering.");
             Cleanup();
@@ -148,9 +148,8 @@ public static class CleanHudValidation
     {
         var root = document.rootVisualElement;
         var hud = root.Q("racing-hud");
-        var overlay = root.Q("warning-overlay");
-        if (overlay == null || overlay.parent != hud || Vector2.Distance(overlay.worldBound.center, new Vector2(960, 540)) > 1f)
-            throw new Exception("Warning overlay must fill the viewport and belong directly to the HUD.");
+        foreach (string id in new[] { "warning-overlay", "missile-warning", "enemy-warning-left", "enemy-warning-right" })
+            if (root.Q(id) != null) throw new Exception("Removed missile UI remains: " + id);
         foreach (string removed in new[] { "art-cooling-frame", "helmet-cooling-vent-leaders", "left-scale", "right-scale", "helmet-temple-vents", "helmet-top-machining" })
             if (root.Q(removed) != null) throw new Exception("Obsolete decoration/scale remains: " + removed);
         foreach (string id in new[] { "coolant-panel", "vehicle-indicators" })
@@ -275,7 +274,7 @@ public static class CleanHudValidation
             if (shader == null) throw new Exception("HUD curvature shader is missing.");
             var curved = RenderTexture.GetTemporary(1920, 1080, 0, RenderTextureFormat.ARGB32);
             var material = new Material(shader);
-            material.SetFloat("_Curvature", .095f);
+            material.SetFloat("_Curvature", IsTps ? 0f : .095f);
             material.SetFloat("_OutsideOpacity", IsTps ? 0 : 1);
             try
             {

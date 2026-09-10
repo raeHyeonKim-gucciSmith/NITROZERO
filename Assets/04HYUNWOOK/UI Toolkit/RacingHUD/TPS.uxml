@@ -1,201 +1,131 @@
 <ui:UXML xmlns:racing="RacingUI" xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/RacingHUD.uss?fileID=7433441132597879392&amp;guid=f0c18a5d2ce8e4246b959e3a571d02ad&amp;type=3#RacingHUD"/>
-    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/Red.uss?fileID=7433441132597879392&amp;guid=e4a49e798626a64489bfa8d0679442e6&amp;type=3#Red"/>
-    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/ReferenceHUD.uss?fileID=7433441132597879392&amp;guid=bee82a9ed742484ea75df4acee2d6179&amp;type=3#ReferenceHUD"/>
+    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/RacingHUD.uss?fileID=7433441132597879392&amp;guid=f0c18a5d2ce8e4246b959e3a571d02ad&amp;type=3"/>
+    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/Red.uss?fileID=7433441132597879392&amp;guid=e4a49e798626a64489bfa8d0679442e6&amp;type=3"/>
+    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/ReferenceHUD.uss?fileID=7433441132597879392&amp;guid=bee82a9ed742484ea75df4acee2d6179&amp;type=3"/>
     <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/CleanHUD.uss?fileID=7433441132597879392&amp;guid=97a185a2a06c49d482285e1d62273b8e&amp;type=3#CleanHUD"/>
-    <ui:VisualElement name="racing-hud" picking-mode="Position" class="hud photo-hud tps-document clean-hud">
-        <racing:HudVectorPart name="art-title-frame" path-data="M 20 37 L 35 23 L 294 23 L 245 74 L 28 74 L 20 66 Z" view-width="435" view-height="132" stroke-width="2.5" stroke-color="#FF3434FF" fill-color="#10182099" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="title-lower-accent-plate" path-data="M 32 64 L 77 64 L 84 70 L 33 70 Z" view-width="435" view-height="132" stroke-width="0" stroke-color="#ADC3D14F" fill-color="#FF343427" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="title-recess-fasteners" path-data="M 25 49 L 26.0 47 L 28.0 47 L 29 49 L 28.0 51 L 26.0 51 Z M 26.2 49 L 27.8 49 M 249 53 L 250.0 51 L 252.0 51 L 253 53 L 252.0 55 L 250.0 55 Z M 250.2 53 L 251.8 53" view-width="435" view-height="132" stroke-width="0.9" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="title-connector-tips" path-data="M 317 37 L 325 37 L 329 33 M 393 33 L 400 33 L 404 29" view-width="435" view-height="132" stroke-width="1.6" stroke-color="#FF343480" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="title-inner-bezel" path-data="M 27 42 L 39 30 L 276 30 L 238 67 L 32 67 L 27 62 Z" view-width="435" view-height="132" stroke-width="1.1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="title-corner-reinforcement" path-data="M 21 43 L 21 36 L 35 23 L 101 23 M 220 74 L 245 74 L 267 52" view-width="435" view-height="132" stroke-width="4" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="title-edge-markers" path-data="M 38 29 L 71 29 M 208 69 L 233 69 M 281 25 L 269 38" view-width="435" view-height="132" stroke-width="1.8" stroke-color="#DFEAF2C4" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="title-machined-tabs" path-data="M 119 25 L 122.5 28.5 M 127 25 L 130.5 28.5 M 135 25 L 138.5 28.5 M 143 25 L 146.5 28.5 M 302 38 L 345 38 L 352 31 M 357 33 L 390 33" view-width="435" view-height="132" stroke-width="1" stroke-color="#FF34348C" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="art-title-extension" path-data="M 300 29 L 404 29 L 413 21" view-width="435" view-height="132" stroke-width="1.5" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01667%; height: 14.02778%;"/>
-        <racing:HudVectorPart name="art-timer-frame" path-data="M 112 20 L 483 20 L 404 100 L 114 100 L 79 65 L 35 65 L 42 55 L 78 55 Z" view-width="535" view-height="132" stroke-width="2.5" stroke-color="#FF3434FF" fill-color="#10182099" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-readout-well" path-data="M 177 41 L 371 41 L 389 59 L 366 84 L 177 84 L 161 67 Z" view-width="535" view-height="132" stroke-width="0.7" stroke-color="#ADC3D130" fill-color="#060D168C" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-support-tabs" path-data="M 87 48 L 103 33 L 132 33 M 410 80 L 436 54 L 451 54" view-width="535" view-height="132" stroke-width="1.6" stroke-color="#FF343480" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-readout-corner-tabs" path-data="M 178 43 L 194 43 M 365 82 L 352 82" view-width="535" view-height="132" stroke-width="1" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-rail-fasteners" path-data="M 105.8 50 L 106.9 47.8 L 109.1 47.8 L 110.2 50 L 109.1 52.2 L 106.9 52.2 Z M 107.12 50 L 108.88 50 M 410.8 75 L 411.9 72.8 L 414.1 72.8 L 415.2 75 L 414.1 77.2 L 411.9 77.2 Z M 412.12 75 L 413.88 75" view-width="535" view-height="132" stroke-width="0.9" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-chamfer-shadows" path-data="M 116 91 L 397 91 L 402 96 L 116 96 L 93 72 Z" view-width="535" view-height="132" stroke-width="0" stroke-color="#ADC3D14F" fill-color="#070B1277" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-inner-bezel" path-data="M 220 28 L 116 28 L 87 61 L 118 92 L 400 92 L 464 28 L 320 28" view-width="535" view-height="132" stroke-width="1.1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-corner-reinforcement" path-data="M 82 55 L 112 20 L 179 20 M 431 74 L 404 100 L 348 100" view-width="535" view-height="132" stroke-width="4" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-edge-markers" path-data="M 119 27 L 149 27 M 362 94 L 396 94 M 464 27 L 450 41" view-width="535" view-height="132" stroke-width="1.8" stroke-color="#DFEAF2C4" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-left-outrigger" path-data="M 39 60 L 69 60 M 91 77 L 107 93" view-width="535" view-height="132" stroke-width="1.1" stroke-color="#FF34348C" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="timer-bezel-vents" path-data="M 201 22 L 204 25 M 210 22 L 213 25 M 219 22 L 222 25 M 228 22 L 231 25 M 237 22 L 240 25 M 303 95 L 306 98 M 312 95 L 315 98 M 321 95 L 324 98 M 330 95 L 333 98 M 339 95 L 342 98" view-width="535" view-height="132" stroke-width="1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
-        <racing:HudVectorPart name="art-map-frame" path-data="M 23 39 L 37 22 L 162 22 L 174 29 L 222 29 L 236 43 L 236 397 L 221 409 L 37 409 L 23 395 Z" view-width="385" view-height="423" stroke-width="2.5" stroke-color="#FF3434FF" fill-color="#10182099" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-header-inset-face" path-data="M 38 36 L 157 36 L 165 45 L 220 45 L 220 62 L 35 62 L 35 44 Z" view-width="385" view-height="423" stroke-width="0" stroke-color="#ADC3D14F" fill-color="#06101975" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-footer-inset-face" path-data="M 39 347 L 216 347 L 221 352 L 221 387 L 212 394 L 43 394 L 35 386 L 35 352 Z" view-width="385" view-height="423" stroke-width="0.8" stroke-color="#ADC3D138" fill-color="#060D1677" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-rim-fasteners" path-data="M 24.5 70 L 25.5 68 L 27.5 68 L 28.5 70 L 27.5 72 L 25.5 72 Z M 25.7 70 L 27.3 70 M 230.5 68 L 231.5 66 L 233.5 66 L 234.5 68 L 233.5 70 L 231.5 70 Z M 231.7 68 L 233.3 68 M 25 344 L 26.0 342 L 28.0 342 L 29 344 L 28.0 346 L 26.0 346 Z M 26.2 344 L 27.8 344 M 230 344 L 231.0 342 L 233.0 342 L 234 344 L 233.0 346 L 231.0 346 Z M 231.2 344 L 232.8 344" view-width="385" view-height="423" stroke-width="0.8" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-side-port-indices" path-data="M 24 123 L 28 123 M 24 136 L 28 136 M 24 149 L 28 149 M 231 257 L 235 257 M 231 270 L 235 270 M 231 283 L 235 283" view-width="385" view-height="423" stroke-width="1" stroke-color="#FF343480" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-footer-segmented-tab" path-data="M 44 400 L 64 400 M 70 400 L 90 400 M 167 400 L 187 400 M 193 400 L 212 400" view-width="385" view-height="423" stroke-width="2" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-inner-bezel" path-data="M 30 43 L 42 29 L 158 29 L 170 36 L 217 36 L 229 47 L 229 392 L 216 401 L 42 401 L 30 390 Z" view-width="385" view-height="423" stroke-width="1.1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-corner-reinforcement" path-data="M 23 66 L 23 39 L 37 22 L 91 22 M 236 364 L 236 397 L 221 409 L 177 409" view-width="385" view-height="423" stroke-width="4" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-corner-highlights" path-data="M 31 53 L 31 43 L 43 30 L 62 30 M 206 400 L 217 400 L 228 391 L 228 378" view-width="385" view-height="423" stroke-width="1.8" stroke-color="#DFEAF2C4" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-viewport-brackets" path-data="M 33 100 L 33 75 L 51 75 M 225 100 L 225 75 L 207 75 M 33 321 L 33 335 L 51 335 M 225 321 L 225 335 L 207 335" view-width="385" view-height="423" stroke-width="1.5" stroke-color="#FF34348C" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-header-machined-tabs" path-data="M 179 39 L 185 45 M 186 39 L 192 45 M 193 39 L 199 45 M 200 39 L 206 45 M 207 39 L 213 45 M 109 35 L 148 35" view-width="385" view-height="423" stroke-width="1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="map-footer-inset" path-data="M 36 354 L 218 354 M 41 393 L 82 393 M 170 393 L 214 393" view-width="385" view-height="423" stroke-width="1" stroke-color="#FF34348C" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <racing:HudVectorPart name="art-map-footer-divider" path-data="M 33 339 L 226 339" view-width="385" view-height="423" stroke-width="1" stroke-color="#87959D66" fill-color="#00000000" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
-        <ui:VisualElement name="warning-overlay" picking-mode="Ignore" class="warning-overlay" style="top: 0; bottom: 2px; right: 0; left: 2px;">
-            <ui:VisualElement name="missile-warning" picking-mode="Position" class="missile-warning">
-                <ui:Label text="MISSILE INCOMING" name="missile-title" picking-mode="Position" class="missile-title"/>
-                <ui:Label name="missile-distance" text="TAKE EVASIVE ACTION" picking-mode="Position" class="missile-subtitle"/>
+    <ui:VisualElement name="racing-hud" picking-mode="Position" class="hud photo-hud tps-document clean-hud" style="top: 0; bottom: 1px; right: 0; left: 0;">
+        <ui:VisualElement name="tps-scale-title" picking-mode="Ignore" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; scale: 1.08 1.08; transform-origin: 0% 0%;">
+            <racing:HudVectorPart name="art-title-frame" path-data="M 20 37 L 35 23 L 294 23 L 245 74 L 28 74 L 20 66 Z" view-width="435" view-height="132" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
+            <ui:Label text="TEAM RED / X-01" name="theme-title" picking-mode="Position" class="theme-title" style="top: 38px; left: 50px; width: 221px; -unity-text-align: upper-center; font-size: 18px;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="tps-scale-timer" picking-mode="Ignore" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; scale: 1.08 1.08; transform-origin: 50% 0%;">
+            <racing:HudVectorPart name="art-timer-frame" path-data="M 112 20 L 483 20 L 404 100 L 114 100 L 79 65 L 35 65 L 42 55 L 78 55 Z" view-width="535" view-height="132" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
+            <ui:VisualElement name="timer-panel" picking-mode="Position" class="timer panel">
+                <ui:Label text="TIME" name="caption" picking-mode="Position" class="caption"/>
+                <racing:DigitalReadout name="time-value" text="00:00.000" picking-mode="Position" fit-to-bounds="true" optical-center="true" class="time digital" style="top: 24px; left: 64px;"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:Label text="RED" name="theme-title" picking-mode="Position" class="theme-title" style="top: 38px; left: 39px; width: 221px; -unity-text-align: upper-center;"/>
-        <ui:VisualElement name="timer-panel" picking-mode="Position" class="timer panel">
-            <ui:Label text="TIMER" name="caption" picking-mode="Position" class="caption"/>
-            <racing:DigitalReadout name="time-value" text="00:00.000" picking-mode="Position" fit-to-bounds="true" optical-center="true" class="time digital" style="top: 24px; left: 64px;"/>
+        <ui:VisualElement name="tps-scale-map" picking-mode="Ignore" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; scale: 1.08 1.08; transform-origin: 0% 100%;">
+            <racing:HudVectorPart name="art-map-frame" path-data="M 23 39 L 37 22 L 162 22 L 174 29 L 222 29 L 236 43 L 236 397 L 221 409 L 37 409 L 23 395 Z" view-width="385" view-height="423" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#000000FF" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
+            <ui:VisualElement name="minimap-panel" picking-mode="Position" class="minimap panel">
+                <ui:Label text="ROUTE MAP" name="caption-3" picking-mode="Position" class="caption" style="position: absolute; left: 18.6px; top: 13.6px; width: 186px; height: 24px; font-size: 16px; margin: 0; padding: 0; border-width: 0; -unity-text-align: middle-left;"/>
+                <ui:VisualElement name="map-viewport" picking-mode="Position" class="map-viewport">
+                    <racing:NavigationMap map-tint="#000000FF" name="navigation-road" road-width="0.55" horizon="0.22" haze="1" picking-mode="Position" class="navigation-road"/>
+                </ui:VisualElement>
+                <ui:Label name="route-distance" text="DISTANCE LEFT" picking-mode="Position" class="route-distance" style="position: absolute; left: 5.263162%; top: 97.47904%; right: auto; bottom: auto; width: 83.73207%; height: 9.151022%; margin: 0; padding: 0; font-size: 14px; -unity-text-align: middle-center; overflow: hidden;"/>
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="ranking-panel" picking-mode="Position" class="ranking panel" style="top: 10%;">
-            <racing:HudVectorPart name="group-art" path-data="M 18 18 L 31 5 L 181 5 L 192 12 L 389 12 L 404 28 L 404 181 L 392 193 L 33 193 L 18 178 Z" view-width="409" view-height="198" stroke-width="2.5" stroke-color="#FF3434FF" fill-color="#10182099" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-row-inset-trays" path-data="M 48 58 L 365 58 L 373 66 L 373 87 L 48 87 Z M 48 95 L 365 95 L 373 103 L 373 124 L 48 124 Z M 48 132 L 365 132 L 373 140 L 373 161 L 48 161 Z" view-width="409" view-height="198" stroke-width="0.6" stroke-color="#ADC3D123" fill-color="#060D1638" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-header-accent-cell" path-data="M 43 23 L 126 23 L 132 29 L 40 29 Z" view-width="409" view-height="198" stroke-width="0" stroke-color="#ADC3D14F" fill-color="#FF343425" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-rim-fasteners" path-data="M 19.5 57 L 20.5 55 L 22.5 55 L 23.5 57 L 22.5 59 L 20.5 59 Z M 20.7 57 L 22.3 57 M 398.5 57 L 399.5 55 L 401.5 55 L 402.5 57 L 401.5 59 L 399.5 59 Z M 399.7 57 L 401.3 57 M 19.5 159 L 20.5 157 L 22.5 157 L 23.5 159 L 22.5 161 L 20.5 161 Z M 20.7 159 L 22.3 159 M 398.5 159 L 399.5 157 L 401.5 157 L 402.5 159 L 401.5 161 L 399.5 161 Z M 399.7 159 L 401.3 159" view-width="409" view-height="198" stroke-width="0.9" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-footer-connector" path-data="M 211 181 L 252 181 L 258 187 L 311 187 M 305 178 L 347 178" view-width="409" view-height="198" stroke-width="1" stroke-color="#FF343480" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-vertical-side-slots" path-data="M 387 66 L 387 76 M 387 103 L 387 113 M 387 140 L 387 150" view-width="409" view-height="198" stroke-width="1.8" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-inner-bezel" path-data="M 25 22 L 35 12 L 178 12 L 189 19 L 385 19 L 397 32 L 397 177 L 388 186 L 37 186 L 25 174 Z" view-width="409" view-height="198" stroke-width="1.1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-corner-reinforcement" path-data="M 18 53 L 18 18 L 31 5 L 95 5 M 404 150 L 404 181 L 392 193 L 338 193" view-width="409" view-height="198" stroke-width="4" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-top-rule" path-data="M 43 53 L 365 53 L 375 44 M 43 169 L 372 169" view-width="409" view-height="198" stroke-width="1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-active-row-marker" path-data="M 43 64 L 43 79" view-width="409" view-height="198" stroke-width="3" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-edge-markers" path-data="M 34 12 L 64 12 M 366 186 L 386 186 L 397 176" view-width="409" view-height="198" stroke-width="1.8" stroke-color="#DFEAF2C4" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <racing:HudVectorPart name="ranking-bezel-vents" path-data="M 205 14 L 208 17 M 214 14 L 217 17 M 223 14 L 226 17 M 232 14 L 235 17 M 241 14 L 244 17 M 250 14 L 253 17 M 259 14 L 262 17 M 268 14 L 271 17 M 71 180 L 74 183 M 79 180 L 82 183 M 87 180 L 90 183 M 95 180 L 98 183" view-width="409" view-height="198" stroke-width="1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="group-art ranking-art"/>
-            <ui:VisualElement name="ranking-content" picking-mode="Ignore" class="ranking-content">
-                <ui:Label text="POSITION" name="caption-2" picking-mode="Position" class="caption"/>
-                <ui:Label text="PROGRESS" name="ranking-progress-caption" picking-mode="Position" class="ranking-progress-caption"/>
-                <ui:VisualElement name="ranking-row-1" picking-mode="Position" class="ranking-row ranking-player">
-                    <ui:Label text="01" name="rank-pos" picking-mode="Position" class="rank-pos ranking-cell" style="align-self: center; -unity-text-align: upper-center;"/>
-                    <ui:Label text=" PLAYER" name="rank-driver" picking-mode="Position" class="rank-driver ranking-cell"/>
-                    <ui:Label text="0%" name="rank-time" picking-mode="Position" class="rank-time ranking-cell"/>
-                </ui:VisualElement>
-                <ui:VisualElement name="ranking-row-2" picking-mode="Position" class="ranking-row">
-                    <ui:Label text="02" name="rank-pos-2" picking-mode="Position" class="rank-pos ranking-cell" style="-unity-text-align: upper-center;"/>
-                    <ui:Label text=" ---" name="rank-driver-2" picking-mode="Position" class="rank-driver ranking-cell"/>
-                    <ui:Label text="--%" name="rank-time-2" picking-mode="Position" class="rank-time ranking-cell"/>
-                </ui:VisualElement>
-                <ui:VisualElement name="ranking-row-3" picking-mode="Position" class="ranking-row">
-                    <ui:Label text="03" name="rank-pos-3" picking-mode="Position" class="rank-pos ranking-cell" style="-unity-text-align: upper-center;"/>
-                    <ui:Label text=" ---" name="rank-driver-3" picking-mode="Position" class="rank-driver ranking-cell"/>
-                    <ui:Label text="--%" name="rank-time-3" picking-mode="Position" class="rank-time ranking-cell"/>
+        <ui:VisualElement name="tps-scale-ranking" picking-mode="Ignore" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; scale: 1.08 1.08; transform-origin: 100% 0%;">
+            <ui:VisualElement name="ranking-panel" picking-mode="Position" class="ranking panel" style="top: 10%;">
+                <racing:HudVectorPart name="group-art" path-data="M 18 18 L 31 5 L 181 5 L 192 12 L 389 12 L 404 28 L 404 181 L 392 193 L 33 193 L 18 178 Z" view-width="409" view-height="198" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="group-art ranking-art"/>
+                <ui:VisualElement name="ranking-content" picking-mode="Ignore" class="ranking-content">
+                    <ui:Label text="POSITION" name="caption-2" picking-mode="Position" class="caption"/>
+                    <ui:Label text="PROGRESS" name="ranking-progress-caption" picking-mode="Position" class="ranking-progress-caption"/>
+                    <ui:VisualElement name="ranking-row-1" picking-mode="Position" class="ranking-row ranking-player">
+                        <ui:Label text="01" name="rank-pos" picking-mode="Position" class="rank-pos ranking-cell" style="align-self: center; -unity-text-align: upper-center;"/>
+                        <ui:Label text=" PLAYER" name="rank-driver" picking-mode="Position" class="rank-driver ranking-cell"/>
+                        <ui:Label text="0%" name="rank-time" picking-mode="Position" class="rank-time ranking-cell"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="ranking-row-2" picking-mode="Position" class="ranking-row">
+                        <ui:Label text="02" name="rank-pos-2" picking-mode="Position" class="rank-pos ranking-cell" style="-unity-text-align: upper-center;"/>
+                        <ui:Label text=" ---" name="rank-driver-2" picking-mode="Position" class="rank-driver ranking-cell"/>
+                        <ui:Label text="--%" name="rank-time-2" picking-mode="Position" class="rank-time ranking-cell"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="ranking-row-3" picking-mode="Position" class="ranking-row">
+                        <ui:Label text="03" name="rank-pos-3" picking-mode="Position" class="rank-pos ranking-cell" style="-unity-text-align: upper-center;"/>
+                        <ui:Label text=" ---" name="rank-driver-3" picking-mode="Position" class="rank-driver ranking-cell"/>
+                        <ui:Label text="--%" name="rank-time-3" picking-mode="Position" class="rank-time ranking-cell"/>
+                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="minimap-panel" picking-mode="Position" class="minimap panel">
-            <ui:Label text="ROUTE MAP" name="caption-3" picking-mode="Position" class="caption" style="position: absolute; left: 18.6px; top: 13.6px; width: 186px; height: 24px; font-size: 16px; margin: 0; padding: 0; border-width: 0; -unity-text-align: middle-left;"/>
-            <ui:VisualElement name="map-viewport" picking-mode="Position" class="map-viewport">
-                <racing:NavigationMap name="navigation-road" road-width="0.55" horizon="0.22" haze="1" picking-mode="Position" class="navigation-road"/>
+        <ui:VisualElement name="tps-scale-instrument" picking-mode="Ignore" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; scale: 1.08 1.08; transform-origin: 100% 100%;">
+            <ui:VisualElement name="instrument-panel" picking-mode="Position" class="instrument panel">
+                <racing:HudVectorPart name="group-art-2" path-data="M 87 108 L 158 37 L 190 37 L 199 31 L 385 31 L 405 70 L 495 70 L 500 79 L 500 193 L 483 208 L 438 208 L 413 235 L 64 235 L 38 207 L 13 207 L 6 197 L 14 161 L 35 141 L 94 141 L 87 132 Z" view-width="505" view-height="242" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="group-art instrument-art"/>
+                <racing:HudVectorPart name="art-gear-frame" path-data="M 389 35 L 412 12 L 476 12 L 495 30 L 495 60 L 485 70 L 407 70 L 389 52 Z" view-width="505" view-height="242" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="group-art instrument-art"/>
+                <ui:VisualElement name="gear-pod" picking-mode="Position" class="gear-pod" style="position: absolute; left: 80.74945%; top: -6.16015%; width: 17.72795%; height: 25.58015%; margin: 0; padding: 0; overflow: hidden;">
+                    <ui:Label text="GEAR" name="gear-caption" picking-mode="Position" class="gear-caption" style="position: absolute; left: 0; top: 1.886792%; width: 100%; height: 26.41509%; font-size: 12.96296px; margin: 0; padding: 0; -unity-text-align: middle-center; color: #FFFFFF;"/>
+                    <racing:DigitalReadout name="gear-value" text="1" picking-mode="Position" fit-to-bounds="true" optical-center="true" class="gear-number digital" style="position: absolute; left: 1.162791%; top: 32.07547%; width: 97.67442%; height: 62.26415%; font-size: 44.44444px; margin: 0; padding: 0; -unity-text-align: middle-center;"/>
+                </ui:VisualElement>
+                <racing:DigitalReadout name="speed-value" text="000" segment-thickness="0.16" digit-spacing="0.12" picking-mode="Position" fit-to-bounds="true" optical-center="true" class="speed digital" style="width: 163px; left: 41%; height: 101px; top: 29px; font-size: 117px;"/>
+                <ui:Label text="km/h" name="unit" picking-mode="Position" class="unit" style="position: absolute; left: 78.68806%; top: 34.38198%; width: 13.81131%; height: 15.44462%; margin: 0; padding: 0; overflow: hidden; font-size: 14.81481px; -unity-text-align: middle-center;"/>
+                <ui:VisualElement name="fuel-pod" picking-mode="Position" class="fuel-pod" style="top: 86.50758%; left: 50.85931%; position: absolute; width: 32.98222%; height: 10.13553%; margin: 0; padding: 0; overflow: hidden; flex-direction: row; align-items: center; justify-content: center;">
+                    <ui:Label text="FUEL" name="fuel-caption" picking-mode="Position" class="fuel-caption" style="width: 43px; height: 100%; position: relative; left: auto; top: auto; font-size: 13.88889px; flex-shrink: 0; margin: 0; padding: 0; margin-right: 6px; -unity-text-align: middle-center; color: #FFFFFF;"/>
+                    <racing:DigitalReadout name="fuel-percent" text="100" picking-mode="Position" fit-to-bounds="true" optical-center="true" class="fuel-percent digital" style="position: relative; left: auto; top: auto; width: 42px; height: 100%; font-size: 25px; flex-shrink: 0; margin: 0; padding: 0; margin-right: 6px;"/>
+                    <ui:Label text="%" name="fuel-percent-unit" picking-mode="Position" class="fuel-percent-unit" style="position: relative; left: auto; top: auto; width: 12px; height: 100%; font-size: 13.88889px; flex-shrink: 0; margin: 0; padding: 0; -unity-text-align: middle-center;"/>
+                </ui:VisualElement>
+                <ui:Label text="RPM x1000" name="rpm-title" picking-mode="Position" class="rpm-title" style="width: 60px; top: 145px; left: 31px;"/>
+                <ui:VisualElement name="rpm-bars" picking-mode="Position" class="rpm-bars" style="height: 24px; top: 140px; width: 447px; left: 97px;">
+                    <ui:VisualElement name="rpm-bar-0" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-1" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-2" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-3" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-4" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-5" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-6" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-7" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-8" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-9" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-10" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-11" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-12" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-13" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-14" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-15" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-16" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-17" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-18" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-19" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-20" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-21" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-22" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-23" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-24" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-25" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-26" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-27" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-28" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-29" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-30" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-31" picking-mode="Position" class="rpm-segment"/>
+                    <ui:VisualElement name="rpm-bar-32" picking-mode="Position" class="rpm-segment rpm-hot"/>
+                    <ui:VisualElement name="rpm-bar-33" picking-mode="Position" class="rpm-segment rpm-hot"/>
+                    <ui:VisualElement name="rpm-bar-34" picking-mode="Position" class="rpm-segment rpm-hot"/>
+                    <ui:VisualElement name="rpm-bar-35" picking-mode="Position" class="rpm-segment rpm-hot"/>
+                    <ui:VisualElement name="rpm-bar-36" picking-mode="Position" class="rpm-segment rpm-hot"/>
+                    <ui:VisualElement name="rpm-bar-37" picking-mode="Position" class="rpm-segment rpm-hot"/>
+                    <ui:VisualElement name="rpm-bar-38" picking-mode="Position" class="rpm-segment rpm-hot"/>
+                    <ui:VisualElement name="rpm-bar-39" picking-mode="Position" class="rpm-segment rpm-hot"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="rpm-ticks" picking-mode="Position" class="rpm-ticks" style="top: 74%;">
+                    <ui:Label text="0" name="rpm-tick" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 0; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
+                    <ui:Label text="1" name="rpm-tick-2" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 48.53333px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
+                    <ui:Label text="2" name="rpm-tick-3" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 97.06667px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
+                    <ui:Label text="3" name="rpm-tick-4" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 145.6px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
+                    <ui:Label text="4" name="rpm-tick-5" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 194.1333px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
+                    <ui:Label text="5" name="rpm-tick-6" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 242.6667px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
+                    <ui:Label text="6" name="rpm-tick-7" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 291.2px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
+                    <ui:Label text="7" name="rpm-tick-8" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 339.7333px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
+                    <ui:Label text="8" name="rpm-tick-9" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 388.2667px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(255, 32, 32);"/>
+                    <ui:Label text="9" name="rpm-tick-10" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 436.8px; width: 10.2px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(255, 32, 32);"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="coolant-status" picking-mode="Position" class="drive-status" style="top: 86.50758%; left: 11.69292%; position: absolute; width: 30.50856%; height: 10.13553%; margin: 0; padding: 0; flex-direction: row; align-items: center; justify-content: center;">
+                    <ui:Label name="coolant-caption" text="COOLANT" style="width: 64px; height: 100%; font-size: 13.88889px; flex-shrink: 0; margin: 0 6px 0 0; padding: 0; -unity-text-align: middle-center; color: #FFFFFF;"/>
+                    <racing:DigitalReadout name="coolant-value" text="80" fit-to-bounds="true" optical-center="true" picking-mode="Position" class="digital" style="position: relative; left: auto; top: auto; width: 28px; height: 100%; font-size: 25px; flex-shrink: 0; margin: 0 6px 0 0; padding: 0;"/>
+                    <ui:Label name="coolant-unit" text="°C" style="width: 20px; height: 100%; font-size: 13.88889px; flex-shrink: 0; margin: 0; padding: 0; -unity-text-align: middle-center;"/>
+                </ui:VisualElement>
+                <ui:Label name="gear-limit" text="LIMIT 050" picking-mode="Position" class="gear-limit"/>
             </ui:VisualElement>
-            <ui:Label name="route-distance" text="STRAIGHT" picking-mode="Position" class="route-distance" style="position: absolute; left: 5.263162%; top: 97.47904%; right: auto; bottom: auto; width: 83.73207%; height: 9.151022%; margin: 0; padding: 0; font-size: 14px; -unity-text-align: middle-center; overflow: hidden;"/>
-        </ui:VisualElement>
-        <ui:VisualElement name="instrument-panel" picking-mode="Position" class="instrument panel">
-            <racing:HudVectorPart name="group-art-2" path-data="M 87 108 L 158 37 L 190 37 L 199 31 L 385 31 L 405 70 L 495 70 L 500 79 L 500 193 L 483 208 L 438 208 L 413 235 L 64 235 L 38 207 L 13 207 L 6 197 L 14 161 L 35 141 L 94 141 L 87 132 Z" view-width="505" view-height="242" stroke-width="2.5" stroke-color="#FF3434FF" fill-color="#10182099" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-speed-recess" path-data="M 171 60 L 365 60 L 381 76 L 381 124 L 364 133 L 166 133 L 153 120 L 153 80 Z" view-width="505" view-height="242" stroke-width="0.9" stroke-color="#ADC3D14F" fill-color="#040B14A8" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-speed-edge-tabs" path-data="M 171 64 L 194 64 M 354 129 L 369 121 M 159 89 L 159 106" view-width="505" view-height="242" stroke-width="1.1" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-left-bevel-face" path-data="M 101 111 L 166 49 L 181 49 L 115 116 L 115 133 L 103 133 Z" view-width="505" view-height="242" stroke-width="0" stroke-color="#ADC3D14F" fill-color="#AFC8D80D" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-diagonal-connector" path-data="M 105 121 L 111 121 L 145 86 L 145 72" view-width="505" view-height="242" stroke-width="1.1" stroke-color="#FF343480" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-shoulder-joint" path-data="M 212 40 L 218 47 L 254 47 L 262 40 M 283 40 L 293 47 L 332 47" view-width="505" view-height="242" stroke-width="1" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-body-fasteners" path-data="M 145.5 58 L 146.75 55.5 L 149.25 55.5 L 150.5 58 L 149.25 60.5 L 146.75 60.5 Z M 147.0 58 L 149.0 58 M 90.5 132 L 91.75 129.5 L 94.25 129.5 L 95.5 132 L 94.25 134.5 L 91.75 134.5 Z M 92.0 132 L 94.0 132 M 490.5 86 L 491.75 83.5 L 494.25 83.5 L 495.5 86 L 494.25 88.5 L 491.75 88.5 Z M 492.0 86 L 494.0 86 M 480.5 196 L 481.75 193.5 L 484.25 193.5 L 485.5 196 L 484.25 198.5 L 481.75 198.5 Z M 482.0 196 L 484.0 196 M 428.5 215 L 429.75 212.5 L 432.25 212.5 L 433.5 215 L 432.25 217.5 L 429.75 217.5 Z M 430.0 215 L 432.0 215 M 63.5 229 L 64.75 226.5 L 67.25 226.5 L 68.5 229 L 67.25 231.5 L 64.75 231.5 Z M 65.0 229 L 67.0 229" view-width="505" view-height="242" stroke-width="0.9" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-status-ports" path-data="M 460 84 L 486 84 L 489 87 L 489 94 L 486 97 L 460 97 Z M 460 99 L 486 99 L 489 102 L 489 109 L 486 112 L 460 112 Z M 460 114 L 486 114 L 489 117 L 489 124 L 486 127 L 460 127 Z" view-width="505" view-height="242" stroke-width="0.75" stroke-color="#ADC3D154" fill-color="#050C124D" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-lower-chamfer" path-data="M 52 211 L 67 227 L 406 227 L 422 211 L 414 232 L 64 232 Z" view-width="505" view-height="242" stroke-width="0" stroke-color="#ADC3D14F" fill-color="#040B1466" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-lower-label-pocket" path-data="M 64 208 L 208 208 L 212 212 L 212 226 L 72 226 L 64 218 Z" view-width="505" view-height="242" stroke-width="0.7" stroke-color="#ADC3D14F" fill-color="#050C1655" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-fuel-pocket" path-data="M 254 208 L 421 208 L 414 226 L 254 226 Z" view-width="505" view-height="242" stroke-width="0.7" stroke-color="#ADC3D14F" fill-color="#050C1655" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-unit-pocket" path-data="M 392 100 L 451 100 L 454 104 L 454 128 L 389 128 L 389 105 Z" view-width="505" view-height="242" stroke-width="0.7" stroke-color="#ADC3D14F" fill-color="#050C1655" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-inner-bezel" path-data="M 95 128 L 95 111 L 162 45 L 194 45 L 203 39 L 380 39 L 400 78 L 487 78 L 492 86 L 492 189 L 479 200 L 434 200 L 408 227 L 68 227 L 43 200 L 20 200 L 14 194 L 21 164 L 40 149" view-width="505" view-height="242" stroke-width="1.1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-corner-reinforcement" path-data="M 87 128 L 87 108 L 158 37 L 190 37 M 500 161 L 500 193 L 483 208 L 438 208 L 413 235 L 359 235 M 64 235 L 40 210" view-width="505" view-height="242" stroke-width="4" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-edge-highlights" path-data="M 96 111 L 164 44 L 190 44 M 437 201 L 476 201 L 490 188 M 72 228 L 117 228" view-width="505" view-height="242" stroke-width="1.8" stroke-color="#DFEAF2C4" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-speed-guide" path-data="M 128 87 L 128 119 L 141 132" view-width="505" view-height="242" stroke-width="1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-right-status-slots" path-data="M 470 91 L 482 91 M 470 106 L 482 106 M 470 121 L 482 121" view-width="505" view-height="242" stroke-width="3" stroke-color="#FF34348C" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-right-status-highlights" path-data="M 471 90 L 478 90 M 471 105 L 478 105 M 471 120 L 478 120" view-width="505" view-height="242" stroke-width="1" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="instrument-footer-machining" path-data="M 208 231 L 211 234 M 216 231 L 219 234 M 224 231 L 227 234 M 232 231 L 235 234 M 240 231 L 243 234 M 248 231 L 251 234 M 256 231 L 259 234 M 264 231 L 267 234 M 272 231 L 275 234" view-width="505" view-height="242" stroke-width="1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="art-gear-frame" path-data="M 389 35 L 412 12 L 476 12 L 495 30 L 495 60 L 485 70 L 407 70 L 389 52 Z" view-width="505" view-height="242" stroke-width="2.5" stroke-color="#FF3434FF" fill-color="#101820BB" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="gear-side-grips" path-data="M 392 38 L 395 38 M 392 43 L 395 43 M 490 39 L 493 39 M 490 44 L 493 44" view-width="505" view-height="242" stroke-width="1.3" stroke-color="#FF343480" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="gear-base-ruler" path-data="M 433 65 L 433 68 M 442 65 L 442 68 M 451 65 L 451 68 M 460 65 L 460 68" view-width="505" view-height="242" stroke-width="0.8" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="gear-inner-bezel" path-data="M 418 19 L 415 19 L 397 37 L 397 49 L 411 63 L 482 63 L 488 57 L 488 33 L 473 19 L 462 19" view-width="505" view-height="242" stroke-width="1.1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="gear-corner-highlights" path-data="M 412 12 L 445 12 M 495 43 L 495 59" view-width="505" view-height="242" stroke-width="3" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="gear-edge-markers" path-data="M 400 35 L 412 23 M 478 64 L 486 56" view-width="505" view-height="242" stroke-width="1.5" stroke-color="#DFEAF2C4" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="art-rpm-frame" path-data="M 35 143 L 483 143 L 487 147 L 487 179 L 19 179 L 19 158 Z" view-width="505" view-height="242" stroke-width="1" stroke-color="#87959D88" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="rpm-recessed-bed" path-data="M 89 147 L 480 147 L 483 150 L 483 175 L 89 175 Z" view-width="505" view-height="242" stroke-width="0.75" stroke-color="#ADC3D145" fill-color="#03070BAA" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="rpm-redline-reference" path-data="M 437 138 L 479 138 L 483 142" view-width="505" view-height="242" stroke-width="1.5" stroke-color="#FF3434FF" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="rpm-reference-tabs" path-data="M 88 140 L 92 140 M 136 140 L 140 140 M 184 140 L 188 140 M 232 140 L 236 140 M 280 140 L 284 140 M 328 140 L 332 140 M 376 140 L 380 140" view-width="505" view-height="242" stroke-width="1" stroke-color="#ADC3D14F" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="rpm-frame-corner-markers" path-data="M 38 143 L 92 143 M 465 143 L 483 143 L 487 147 L 487 158 M 19 172 L 19 179 L 32 179" view-width="505" view-height="242" stroke-width="2" stroke-color="#FF34348C" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="rpm-label-divider" path-data="M 88 149 L 88 173" view-width="505" view-height="242" stroke-width="1" stroke-color="#AEC6D56B" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art"/>
-            <racing:HudVectorPart name="art-status-divider" path-data="M 18 202 L 480 202" view-width="505" view-height="242" stroke-width="1" stroke-color="#87959D66" fill-color="#00000000" picking-mode="Position" class="group-art instrument-art" style="top: -32px; left: -7px;"/>
-            <ui:VisualElement name="gear-pod" picking-mode="Position" class="gear-pod" style="position: absolute; left: 80.74945%; top: -6.16015%; width: 17.72795%; height: 25.58015%; margin: 0; padding: 0; overflow: hidden;">
-                <ui:Label text="GEAR" name="gear-caption" picking-mode="Position" class="gear-caption" style="position: absolute; left: 0; top: 1.886792%; width: 100%; height: 26.41509%; font-size: 12.96296px; margin: 0; padding: 0; -unity-text-align: middle-center;"/>
-                <racing:DigitalReadout name="gear-value" text="1" picking-mode="Position" fit-to-bounds="true" optical-center="true" class="gear-number digital" style="position: absolute; left: 1.162791%; top: 32.07547%; width: 97.67442%; height: 62.26415%; font-size: 44.44444px; margin: 0; padding: 0; -unity-text-align: middle-center;"/>
-            </ui:VisualElement>
-            <racing:DigitalReadout name="speed-value" text="000" segment-thickness="0.16" digit-spacing="0.12" picking-mode="Position" fit-to-bounds="true" optical-center="true" class="speed digital"/>
-            <ui:Label text="km/h" name="unit" picking-mode="Position" class="unit" style="position: absolute; left: 78.68806%; top: 34.38198%; width: 13.81131%; height: 15.44462%; margin: 0; padding: 0; overflow: hidden; font-size: 14.81481px; -unity-text-align: middle-center;"/>
-            <ui:VisualElement name="fuel-pod" picking-mode="Position" class="fuel-pod" style="top: 86.50758%; left: 50.85931%; position: absolute; width: 32.98222%; height: 10.13553%; margin: 0; padding: 0; overflow: hidden; flex-direction: row; align-items: center; justify-content: center;">
-                <ui:Label text="FUEL" name="fuel-caption" picking-mode="Position" class="fuel-caption" style="width: 43px; height: 100%; position: relative; left: auto; top: auto; font-size: 13.88889px; flex-shrink: 0; margin: 0; padding: 0; margin-right: 6px; -unity-text-align: middle-center;"/>
-                <racing:DigitalReadout name="fuel-percent" text="100" picking-mode="Position" fit-to-bounds="true" optical-center="true" class="fuel-percent digital" style="position: relative; left: auto; top: auto; width: 42px; height: 100%; font-size: 25px; flex-shrink: 0; margin: 0; padding: 0; margin-right: 6px;"/>
-                <ui:Label text="%" name="fuel-percent-unit" picking-mode="Position" class="fuel-percent-unit" style="position: relative; left: auto; top: auto; width: 12px; height: 100%; font-size: 13.88889px; flex-shrink: 0; margin: 0; padding: 0; -unity-text-align: middle-center;"/>
-            </ui:VisualElement>
-            <ui:Label text="RPM x1000" name="rpm-title" picking-mode="Position" class="rpm-title" style="width: 60px; top: 145px; left: 31px;"/>
-            <ui:VisualElement name="rpm-bars" picking-mode="Position" class="rpm-bars" style="height: 24px; top: 140px; width: 447px; left: 97px;">
-                <ui:VisualElement name="rpm-bar-0" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-1" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-2" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-3" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-4" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-5" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-6" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-7" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-8" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-9" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-10" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-11" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-12" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-13" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-14" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-15" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-16" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-17" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-18" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-19" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-20" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-21" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-22" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-23" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-24" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-25" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-26" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-27" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-28" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-29" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-30" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-31" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-32" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-33" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-34" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-35" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-36" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-37" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-38" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-39" picking-mode="Position" class="rpm-segment"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="rpm-ticks" picking-mode="Position" class="rpm-ticks" style="top: 74%;">
-                <ui:Label text="0" name="rpm-tick" picking-mode="Position" class="rpm-tick"/>
-                <ui:Label text="1" name="rpm-tick-2" picking-mode="Position" class="rpm-tick"/>
-                <ui:Label text="2" name="rpm-tick-3" picking-mode="Position" class="rpm-tick"/>
-                <ui:Label text="3" name="rpm-tick-4" picking-mode="Position" class="rpm-tick"/>
-                <ui:Label text="4" name="rpm-tick-5" picking-mode="Position" class="rpm-tick"/>
-                <ui:Label text="5" name="rpm-tick-6" picking-mode="Position" class="rpm-tick"/>
-                <ui:Label text="6" name="rpm-tick-7" picking-mode="Position" class="rpm-tick"/>
-                <ui:Label text="7" name="rpm-tick-8" picking-mode="Position" class="rpm-tick"/>
-                <ui:Label text="8" name="rpm-tick-9" picking-mode="Position" class="rpm-tick"/>
-            </ui:VisualElement>
-            <ui:Label name="drive-status" text="READY" picking-mode="Position" class="drive-status" style="top: 86.50758%; left: 11.69292%; position: absolute; width: 30.50856%; height: 10.13553%; margin: 0; padding: 0; overflow: hidden; font-size: 14.81481px; -unity-text-align: middle-center;"/>
-            <ui:Label name="gear-limit" text="LIMIT 050" picking-mode="Position" class="gear-limit"/>
-        </ui:VisualElement>
-        <ui:VisualElement name="enemy-warning-left" picking-mode="Position" class="warning-symbol warning-left">
-            <ui:VisualElement name="warning-stem" picking-mode="Position" class="warning-stem"/>
-            <ui:VisualElement name="warning-dot" picking-mode="Position" class="warning-dot"/>
-        </ui:VisualElement>
-        <ui:VisualElement name="enemy-warning-right" picking-mode="Position" class="warning-symbol warning-right">
-            <ui:VisualElement name="warning-stem-2" picking-mode="Position" class="warning-stem"/>
-            <ui:VisualElement name="warning-dot-2" picking-mode="Position" class="warning-dot"/>
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="startup-shield" picking-mode="Ignore" class="startup-shield"/>
