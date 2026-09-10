@@ -31,6 +31,16 @@ public static class MoonSceneAsphaltRoadGenerator
         Debug.Log("[NITRO ZERO] highQualityAsphalt applied to all four moon-road scenes.");
     }
 
+    [MenuItem("NITRO ZERO/Moon Terrain/Restore Avoid Missile Asphalt Road")]
+    public static void ApplyAvoidMissileOnly()
+    {
+        Material asphalt = CreateHighQualityAsphalt();
+        BuildStraightRoad("Assets/Scenes/avoidMissile.unity", "Avoid Missile Asphalt Road",
+            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 100f, asphalt);
+        AssetDatabase.SaveAssets();
+        Debug.Log("[NITRO ZERO] avoidMissile asphalt road restored without changing other scenes.");
+    }
+
     private static Material CreateHighQualityAsphalt()
     {
         ConfigureTexture(ColorPath, false, true);
