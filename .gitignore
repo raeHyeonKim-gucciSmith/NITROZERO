@@ -12,6 +12,27 @@
 /[Uu]ser[Ss]ettings/
 *.log
 
+# Local one-off Unity import/verification outputs.
+/InterfererCarImport.request
+/InterfererCarImportReport.json
+/InterfererCarValidation.png
+/Assets/ImportedBlenderAsset/import_report.json
+/Assets/ImportedBlenderAsset/import_report.json.meta
+/Assets/ImportedBlenderAsset/verification_report.json
+/Assets/ImportedBlenderAsset/verification_report.json.meta
+
+# Local backups and Blender optimization analysis; never push these.
+/LocalBackups/
+/LocalOptimization/
+
+# Local source FBX and one-off vehicle import helpers; the optimized FBX is committed instead.
+/Assets/ImportedBlenderAsset/Models/Interferer_Car_Wasteland_v24.fbx
+/Assets/ImportedBlenderAsset/Models/Interferer_Car_Wasteland_v24.fbx.meta
+/Assets/ImportedBlenderAsset/Editor/
+/Assets/ImportedBlenderAsset/Editor.meta
+/Assets/InterfererCar/
+/Assets/InterfererCar.meta
+
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
