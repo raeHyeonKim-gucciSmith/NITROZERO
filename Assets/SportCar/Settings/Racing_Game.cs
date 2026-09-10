@@ -7,12 +7,16 @@ public class Startup
 {
     static Startup()    
     {
-        EditorPrefs.SetInt("showCounts_sportcarcgb14", EditorPrefs.GetInt("showCounts_sportcarcgb14") + 1);
+        EditorPrefs.SetInt("showCounts_sportcarcgbr10", EditorPrefs.GetInt("showCounts_sportcarcgbr10") + 1);
 
-        if (EditorPrefs.GetInt("showCounts_sportcarcgb14") == 1)       
+        if (EditorPrefs.GetInt("showCounts_sportcarcgbr10") == 1)       
         {
-            Application.OpenURL("https://assetstore.unity.com/packages/slug/359718");
-            // System.IO.File.Delete("Assets/SportCar/Racing_Game.cs");
+            int randomLink = Random.Range(0, 2);
+
+            if(randomLink == 1)            
+                Application.OpenURL("https://assetstore.unity.com/publishers/23606");
+            else
+                Application.OpenURL("https://assetstore.unity.com/packages/slug/358482");
         }
     }     
 }
