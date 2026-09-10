@@ -1,0 +1,9 @@
+{
+  "prefab": "Assets/04HYUNWOOK/Prefab/Car.prefab",
+  "localReferences": "PASS",
+  "wheelColliders": 4,
+  "chassisBoxColliders": 1,
+  "legacyMeshComponentsRemoved": 11,
+  "wheelAxesForward": "PASS",
+  "runtimeDrivingTest": "not run; user editor open"
+}

@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "Front/rear wheel axles symmetric and left/right longitudinal positions equal",
+    "Road uses non-convex surface collision",
+    "Ground mask scene override set to Ground",
+    "No-steer correction preserves forward/reverse velocity component; decays lateral/yaw instead of snapping heading",
+    "Modified controller compiles against installed Unity assemblies"
+  ],
+  "limitations": "Full Unity Play forward/reverse driving reproduction not performed."
+}
