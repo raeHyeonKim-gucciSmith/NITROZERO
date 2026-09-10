@@ -50,6 +50,16 @@ public static class HelmetLensValidation
                     throw new Exception($"Rendered lens {actual.intensity.value}/{actual.scale.value}, expected {intensity}/{scale}.");
             };
             check(-0.35f, 1.05f);
+            var apply = typeof(FirstPersonVignette).GetMethod("ApplyVignette",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            foreach (float coverage in new[] { 0f, 0.25f, 0.5f, 0.9999f, 1f })
+            {
+                apply.Invoke(effect, new object[] { 0f, true, coverage });
+                check(coverage >= 1f ? -0.35f : 0f, coverage >= 1f ? 1.05f : 1f);
+            }
+            apply.Invoke(effect, new object[] { 1f, false, 0.5f });
+            check(0f, 1f);
+            effect.PreviewHelmetEffects(true);
             editable.intensity.value = -0.65f;
             editable.scale.value = 1.15f;
             for (int i = 0; i < 10; i++)
@@ -73,7 +83,7 @@ public static class HelmetLensValidation
             effect.PreviewHelmetEffects(true);
             check(-0.35f, 1.05f);
             effect.EndHelmetPreview();
-            File.WriteAllText("Library/HelmetLensValidation-result.txt", "PASS v2: editable Inspector flags; private profile; actual VolumeStack evaluation; 10 FPS/TPS round trips; edits to zero; pre-play values restored on stop/restart.");
+            File.WriteAllText("Library/HelmetLensValidation-result.txt", "PASS v4: distortion zero until shield fully closed; full restoration at black hold; TPS suppression; editable Inspector; actual VolumeStack evaluation; 10 FPS/TPS round trips; pre-play values restored.");
         }
         catch (Exception e)
         {

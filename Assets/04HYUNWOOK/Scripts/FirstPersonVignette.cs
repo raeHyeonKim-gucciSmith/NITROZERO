@@ -99,15 +99,17 @@ public sealed class FirstPersonVignette : MonoBehaviour
                 }
             }
         }
-        // Vignette follows the helmet animation; lens distortion follows the selected view
-        // immediately, independently of camera interpolation and HUD startup opacity.
+        // Keep distortion off until the shield is fully closed, during the black hold.
+        // Once dressed, T switches distortion immediately with the selected view.
         float amount = viewCamera != null && viewCamera.isActiveAndEnabled ? viewCamera.ViewBlend : 0f;
         amount *= helmetHud != null && helmetHud.isActiveAndEnabled ? helmetHud.StartupOpacity : 0f;
         bool firstPerson = viewCamera != null && viewCamera.isActiveAndEnabled && viewCamera.IsFirstPerson;
-        ApplyVignette(amount, firstPerson);
+        float lensCoverage = helmetHud != null && helmetHud.isActiveAndEnabled && !helmetHud.StartupComplete
+            ? (helmetHud.StartupShieldClosed ? 1f : 0f) : 1f;
+        ApplyVignette(amount, firstPerson, lensCoverage);
     }
 
-    void ApplyVignette(float amount, bool firstPerson)
+    void ApplyVignette(float amount, bool firstPerson, float lensCoverage = 1f)
     {
         if (runtimeProfile == null || viewOverrides == null) return;
         // Only the hidden blocker is animated. Global Volume's editable values stay
@@ -115,8 +117,13 @@ public sealed class FirstPersonVignette : MonoBehaviour
         viewOverrides.enabled = volume.isActiveAndEnabled;
         viewOverrides.gameObject.layer = gameObject.layer;
         viewOverrides.priority = volume.priority + 1f;
-        lensBlocker.active = !firstPerson;
         var settings = volume.HasInstantiatedProfile() ? volume.profile : volume.sharedProfile;
+        lensBlocker.active = !firstPerson || lensCoverage < 1f;
+        if (lensBlocker.active)
+        {
+            lensBlocker.intensity.Override(0f);
+            lensBlocker.scale.Override(1f);
+        }
         if (settings != null && settings.TryGet<Vignette>(out var vignette) && vignette.active)
         {
             vignetteOverride.active = true;

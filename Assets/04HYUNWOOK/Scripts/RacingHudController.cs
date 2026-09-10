@@ -44,6 +44,8 @@ public class RacingHudController : MonoBehaviour
     public AudioClip shieldCloseSound;
     [Range(0f,1f)] public float startupVolume = 0.4f;
     public bool StartupComplete { get; private set; }
+    public bool StartupShieldClosed => StartupComplete ||
+        startupClock >= Mathf.Max(0f, startupClearTime) + Mathf.Max(0.01f, shieldCloseTime);
     public float StartupOpacity { get; private set; }
     public float StartupShieldCoverage { get; private set; }
     public float StartupShieldOpacity => StartupComplete ? 0f : 1f - StartupOpacity;
