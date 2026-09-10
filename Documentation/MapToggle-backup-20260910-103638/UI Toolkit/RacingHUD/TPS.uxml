@@ -1,0 +1,163 @@
+<ui:UXML xmlns:racing="RacingUI" xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/RacingHUD/RacingHUD.uss?fileID=7433441132597879392&amp;guid=f0c18a5d2ce8e4246b959e3a571d02ad&amp;type=3#RacingHUD" />
+    <Style src="project://database/Assets/UI%20Toolkit/RacingHUD/Red.uss?fileID=7433441132597879392&amp;guid=e4a49e798626a64489bfa8d0679442e6&amp;type=3#Red" />
+    <Style src="project://database/Assets/UI%20Toolkit/RacingHUD/ReferenceHUD.uss?fileID=7433441132597879392&amp;guid=bee82a9ed742484ea75df4acee2d6179&amp;type=3#ReferenceHUD" />
+    <ui:VisualElement name="racing-hud" class="hud photo-hud tps-document">
+        <ui:VisualElement name="reference-chase-art" class="photo-art photo-third" picking-mode="Ignore" />
+        <ui:Label text="RED / RACING" class="theme-title" />
+        <ui:VisualElement name="timer-panel" class="timer panel">
+            <ui:Label text="TIMER" class="caption" />
+            <racing:DigitalReadout name="time-value" text="00:00.000" class="time digital" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ranking-panel" class="ranking panel">
+            <ui:VisualElement class="group-art ranking-art" />
+            <ui:Label text="POSITION" class="caption" />
+            <ui:Label text="PROGRESS" class="ranking-progress-caption" />
+            <ui:VisualElement name="ranking-row-1" class="ranking-row ranking-player">
+                <ui:Label text="01" class="rank-pos ranking-cell" />
+                <ui:Label text="PLAYER" class="rank-driver ranking-cell" />
+                <ui:Label text="0%" class="rank-time ranking-cell" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ranking-row-2" class="ranking-row">
+                <ui:Label text="02" class="rank-pos ranking-cell" />
+                <ui:Label text="---" class="rank-driver ranking-cell" />
+                <ui:Label text="--%" class="rank-time ranking-cell" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ranking-row-3" class="ranking-row">
+                <ui:Label text="03" class="rank-pos ranking-cell" />
+                <ui:Label text="---" class="rank-driver ranking-cell" />
+                <ui:Label text="--%" class="rank-time ranking-cell" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="minimap-panel" class="minimap panel">
+            <ui:Label text="ROUTE MAP" class="caption" />
+            <ui:VisualElement name="map-viewport" class="map-viewport">
+                <ui:VisualElement class="map-grid">
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:10%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:20%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:30%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:40%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:50%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:60%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:70%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:80%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-v" style="left:90%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:10%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:20%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:30%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:40%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:50%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:60%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:70%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:80%;" />
+                    <ui:VisualElement class="map-grid-line map-grid-h" style="top:90%;" />
+                </ui:VisualElement>
+                <ui:VisualElement class="map-road" />
+                <ui:VisualElement class="finish-flag">
+                    <ui:VisualElement class="flag-light" />
+                    <ui:VisualElement class="flag-dark" />
+                    <ui:VisualElement class="flag-light" />
+                    <ui:VisualElement class="flag-dark" />
+                    <ui:VisualElement class="flag-light" />
+                    <ui:VisualElement class="flag-dark" />
+                    <ui:VisualElement class="flag-light" />
+                    <ui:VisualElement class="flag-dark" />
+                    <ui:VisualElement class="flag-light" />
+                    <ui:VisualElement class="flag-dark" />
+                    <ui:VisualElement class="flag-light" />
+                    <ui:VisualElement class="flag-dark" />
+                    <ui:VisualElement class="flag-light" />
+                    <ui:VisualElement class="flag-dark" />
+                    <ui:VisualElement class="flag-light" />
+                </ui:VisualElement>
+                <ui:Label name="player-marker" text="▲" class="player-marker" />
+            </ui:VisualElement>
+            <ui:Label name="route-distance" text="STRAIGHT" class="route-distance" />
+        </ui:VisualElement>
+        <ui:VisualElement name="instrument-panel" class="instrument panel">
+            <ui:VisualElement class="group-art instrument-art" />
+            <ui:VisualElement name="gear-pod" class="gear-pod">
+                <ui:Label text="GEAR" class="gear-caption" />
+                <racing:DigitalReadout name="gear-value" text="1" class="gear-number digital" />
+            </ui:VisualElement>
+            <racing:DigitalReadout name="speed-value" text="000" segment-thickness="0.16" digit-spacing="0.12" class="speed digital" />
+            <ui:Label text="km/h" class="unit" />
+            <ui:VisualElement name="fuel-pod" class="fuel-pod">
+                <ui:Label text="FUEL" class="fuel-caption" />
+                <racing:DigitalReadout name="fuel-percent" text="100" class="fuel-percent digital" />
+                <ui:Label text="%" class="fuel-percent-unit" />
+            </ui:VisualElement>
+            <ui:Label text="RPM x1000" class="rpm-title" />
+            <ui:VisualElement name="rpm-bars" class="rpm-bars">
+                <ui:VisualElement name="rpm-bar-0" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-1" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-2" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-3" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-4" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-5" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-6" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-7" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-8" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-9" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-10" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-11" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-12" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-13" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-14" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-15" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-16" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-17" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-18" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-19" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-20" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-21" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-22" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-23" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-24" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-25" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-26" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-27" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-28" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-29" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-30" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-31" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-32" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-33" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-34" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-35" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-36" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-37" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-38" class="rpm-segment" />
+                <ui:VisualElement name="rpm-bar-39" class="rpm-segment" />
+            </ui:VisualElement>
+            <ui:VisualElement name="rpm-ticks" class="rpm-ticks">
+                <ui:Label text="0" class="rpm-tick" />
+                <ui:Label text="1" class="rpm-tick" />
+                <ui:Label text="2" class="rpm-tick" />
+                <ui:Label text="3" class="rpm-tick" />
+                <ui:Label text="4" class="rpm-tick" />
+                <ui:Label text="5" class="rpm-tick" />
+                <ui:Label text="6" class="rpm-tick" />
+                <ui:Label text="7" class="rpm-tick" />
+                <ui:Label text="8" class="rpm-tick" />
+            </ui:VisualElement>
+            <ui:Label name="drive-status" text="READY" class="drive-status" />
+            <ui:Label name="gear-limit" text="LIMIT 050" class="gear-limit" />
+        </ui:VisualElement>
+        <ui:VisualElement name="enemy-warning-left" class="warning-symbol warning-left">
+            <ui:VisualElement class="warning-stem" />
+            <ui:VisualElement class="warning-dot" />
+        </ui:VisualElement>
+        <ui:VisualElement name="enemy-warning-right" class="warning-symbol warning-right">
+            <ui:VisualElement class="warning-stem" />
+            <ui:VisualElement class="warning-dot" />
+        </ui:VisualElement>
+        <ui:VisualElement class="warning-overlay">
+            <ui:VisualElement name="missile-warning" class="missile-warning">
+                <ui:Label text="MISSILE INCOMING" class="missile-title" />
+                <ui:Label name="missile-distance" text="TAKE EVASIVE ACTION" class="missile-subtitle" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="startup-shield" class="startup-shield" picking-mode="Ignore" />
+</ui:UXML>
