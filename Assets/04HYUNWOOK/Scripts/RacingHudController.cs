@@ -218,8 +218,8 @@ public class RacingHudController : MonoBehaviour
             bool first = viewCamera.ViewBlend >= 0.5f;
             hud.EnableInClassList("first-person", first);
 
-            // Hide the layout swap in a brief dip while the camera travels between views.
-            hud.style.opacity = StartupOpacity * (1f - 0.45f * Mathf.Sin(viewCamera.ViewBlend * Mathf.PI));
+            // The camera and document switch together beneath a fully opaque cover.
+            hud.style.opacity = StartupOpacity * viewCamera.ViewOpacity;
         }
         var status = boundRoot.Q<Label>("drive-status");
         if (status != null) status.text = car != null && car.IsShifting ? "SHIFTING" : car != null && car.IsBraking ? "BRAKING" : DisplayedSpeed > 1f ? "DRIVE" : "READY";
@@ -308,6 +308,7 @@ public class RacingHudController : MonoBehaviour
         if (next == null || document.visualTreeAsset == next) return;
         document.visualTreeAsset = next;
         Bind();
+        GetComponent<RacingHudCurvature>()?.ClearSurface();
     }
 
     void UpdateSpeedShake()

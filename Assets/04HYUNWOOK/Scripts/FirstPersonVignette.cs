@@ -100,10 +100,10 @@ public sealed class FirstPersonVignette : MonoBehaviour
             }
         }
         // Keep distortion off until the shield is fully closed, during the black hold.
-        // Once dressed, T switches distortion immediately with the selected view.
+        // Once dressed, distortion switches with the displayed view under the blackout.
         float amount = viewCamera != null && viewCamera.isActiveAndEnabled ? viewCamera.ViewBlend : 0f;
         amount *= helmetHud != null && helmetHud.isActiveAndEnabled ? helmetHud.StartupOpacity : 0f;
-        bool firstPerson = viewCamera != null && viewCamera.isActiveAndEnabled && viewCamera.IsFirstPerson;
+        bool firstPerson = viewCamera != null && viewCamera.isActiveAndEnabled && viewCamera.ViewBlend >= 0.5f;
         float lensCoverage = helmetHud != null && helmetHud.isActiveAndEnabled && !helmetHud.StartupComplete
             ? (helmetHud.StartupShieldClosed ? 1f : 0f) : 1f;
         ApplyVignette(amount, firstPerson, lensCoverage);

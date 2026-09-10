@@ -20,7 +20,9 @@ public sealed class RacingHudCurvature : MonoBehaviour
     void OnEnable() { document = GetComponent<UIDocument>(); hudController = GetComponent<RacingHudController>(); }
     void LateUpdate()
     {
-        if (document == null || !document.enabled || document.panelSettings == null) return;
+        bool visible = document != null && document.enabled && document.panelSettings != null;
+        if (image != null) image.enabled = visible;
+        if (!visible) return;
         if (runtimeSettings == null) Initialize();
         if (runtimeSettings == null) return;
         int w = Mathf.Max(64, Screen.width), h = Mathf.Max(64, Screen.height);
@@ -74,9 +76,23 @@ public sealed class RacingHudCurvature : MonoBehaviour
             filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp
         };
         surface.Create();
+        ClearSurface();
         runtimeSettings.targetTexture = surface;
         image.texture = surface;
         if (old != null) { old.Release(); Release(old); }
+    }
+
+    public void ClearSurface()
+    {
+        if (surface == null || !surface.IsCreated()) return;
+        var previous = RenderTexture.active;
+        try
+        {
+            RenderTexture.active = surface;
+            GL.Clear(true, true, Color.clear);
+        }
+        finally { RenderTexture.active = previous; }
+        document.rootVisualElement?.MarkDirtyRepaint();
     }
 
     void OnDisable()

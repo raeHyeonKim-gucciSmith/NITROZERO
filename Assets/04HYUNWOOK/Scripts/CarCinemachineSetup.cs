@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Unity.Cinemachine;
 using Unity.Cinemachine.TargetTracking;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using UnityEngine.InputSystem;
 #endif
 
 [DisallowMultipleComponent]
+[DefaultExecutionOrder(-100)]
 [RequireComponent(typeof(CinemachineCamera))]
 [RequireComponent(typeof(CinemachineFollow))]
 [RequireComponent(typeof(CinemachineRotationComposer))]
@@ -21,15 +23,20 @@ public class CarCinemachineSetup : MonoBehaviour
     [Min(1f)] public float firstPersonLookDistance = 30f;
     [Tooltip("실내 모델이 없는 차량의 차체가 1인칭 화면을 가리지 않게 숨깁니다.")]
     public bool hideVehicleInFirstPerson = false;
-    [Min(0.01f)] public float transitionDuration = 0.3f;
-    [Range(0f, 10f)] public float transitionFovKick = 4f;
+    [Tooltip("시점 전환 암전의 전체 시간(초)입니다. 기본값은 짧은 전환을 위한 0.12초입니다.")]
+    [Min(0.01f)] public float transitionDuration = 0.12f;
+    [Tooltip("전환 중 추가 확대 효과입니다. 0이면 시야각 출렁임 없이 전환합니다.")]
+    [Range(0f, 10f)] public float transitionFovKick = 0f;
     public bool startInFirstPerson = true;
     public bool ViewInputLocked { get; set; }
     public bool IsFirstPerson { get; private set; }
     public float ViewBlend { get; private set; }
-    float transitionStart, transitionElapsed = 1f, baseFov;
-    CinemachineFollow viewFollow;
-    CinemachineRotationComposer viewAim;
+    // ViewBlend represents the displayed view, not a path through the vehicle.
+    public float ViewOpacity { get; private set; } = 1f;
+    float transitionElapsed = 1f, baseFov;
+    bool transitioning, viewSwitched;
+    GameObject transitionOverlay;
+    Image transitionImage;
     readonly Dictionary<Renderer, bool> hiddenRenderers = new Dictionary<Renderer, bool>();
 
     [Header("Camera Position")]
@@ -60,7 +67,7 @@ public class CarCinemachineSetup : MonoBehaviour
     private void Start()
     {
         IsFirstPerson = startInFirstPerson;
-        ViewBlend = transitionStart = IsFirstPerson ? 1f : 0f;
+        ViewBlend = IsFirstPerson ? 1f : 0f;
         transitionElapsed = Mathf.Max(0.01f, transitionDuration);
         ApplyCameraSettings();
     }
@@ -88,11 +95,8 @@ public class CarCinemachineSetup : MonoBehaviour
         baseFov = Mathf.Clamp(Mathf.SmoothDamp(
             baseFov, target, ref fovVelocity,
             Mathf.Max(0.01f, fovSmoothTime), Mathf.Infinity, Time.deltaTime), minimum, maximum);
-        transitionElapsed += Time.deltaTime;
-        float t = Mathf.Clamp01(transitionElapsed / Mathf.Max(0.01f, transitionDuration));
-        ViewBlend = Mathf.Lerp(transitionStart, IsFirstPerson ? 1f : 0f, t * t * (3f - 2f * t));
-        if (viewFollow != null) viewFollow.FollowOffset = Vector3.Lerp(followOffset, firstPersonOffset, ViewBlend);
-        if (viewAim != null) viewAim.TargetOffset = Vector3.Lerp(lookAtOffset, firstPersonOffset + Vector3.forward * firstPersonLookDistance, ViewBlend);
+        UpdateViewTransition();
+        float t = transitioning ? Mathf.Clamp01(transitionElapsed / Mathf.Max(0.01f, transitionDuration)) : 1f;
         speedCamera.Lens.FieldOfView = Mathf.Clamp(baseFov + Mathf.Sin(t * Mathf.PI) * transitionFovKick, minimum, maximum);
         bool shouldHide = hideVehicleInFirstPerson && ViewBlend > 0.55f;
         if (shouldHide && hiddenRenderers.Count == 0)
@@ -128,8 +132,6 @@ public class CarCinemachineSetup : MonoBehaviour
         cam.LookAt = carTarget;
         cam.Lens.FieldOfView = fieldOfView;
         baseFov = fieldOfView;
-        viewFollow = follow;
-        viewAim = aim;
 
         follow.FollowOffset = IsFirstPerson ? firstPersonOffset : followOffset;
 
@@ -150,10 +152,62 @@ public class CarCinemachineSetup : MonoBehaviour
 
     public void ToggleView()
     {
-        if (carTarget == null || ViewInputLocked) return;
-        transitionStart = ViewBlend;
+        if (carTarget == null || ViewInputLocked || transitioning) return;
+        EnsureTransitionOverlay();
         transitionElapsed = 0f;
+        transitioning = true;
+        viewSwitched = false;
         IsFirstPerson = !IsFirstPerson;
+    }
+
+    void UpdateViewTransition()
+    {
+        if (!transitioning) return;
+        float duration = Mathf.Max(0.01f, transitionDuration);
+        transitionElapsed += Time.deltaTime;
+        float t = Mathf.Clamp01(transitionElapsed / duration);
+        if (!viewSwitched && t >= 0.5f)
+        {
+            // Always render a fully covered frame, even if a slow frame skips the midpoint.
+            transitionElapsed = duration * 0.5f;
+            t = 0.5f;
+            viewSwitched = true;
+            ViewBlend = IsFirstPerson ? 1f : 0f;
+            float currentFov = baseFov;
+            float currentFovVelocity = fovVelocity;
+            ApplyCameraSettings();
+            baseFov = currentFov;
+            fovVelocity = currentFovVelocity;
+            speedCamera.PreviousStateIsValid = false;
+        }
+        float opacity = t < 0.5f
+            ? Mathf.SmoothStep(0f, 1f, t * 2f)
+            : Mathf.SmoothStep(1f, 0f, (t - 0.5f) * 2f);
+        ViewOpacity = 1f - opacity;
+        transitionImage.color = new Color(0f, 0f, 0f, opacity);
+        transitionImage.enabled = opacity > 0f;
+        if (t >= 1f) transitioning = false;
+    }
+
+    void EnsureTransitionOverlay()
+    {
+        if (transitionOverlay != null) return;
+        transitionOverlay = new GameObject("Driving View Transition", typeof(RectTransform), typeof(Canvas));
+        transitionOverlay.hideFlags = HideFlags.HideAndDontSave;
+        transitionOverlay.transform.SetParent(transform, false);
+        var canvas = transitionOverlay.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = short.MaxValue;
+        var cover = new GameObject("Blackout", typeof(RectTransform), typeof(Image));
+        cover.transform.SetParent(transitionOverlay.transform, false);
+        transitionImage = cover.GetComponent<Image>();
+        transitionImage.raycastTarget = false;
+        transitionImage.color = Color.clear;
+        transitionImage.enabled = false;
+        var rect = transitionImage.rectTransform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
     }
 
     void RestoreVehicleVisibility()
@@ -167,7 +221,16 @@ public class CarCinemachineSetup : MonoBehaviour
     {
         RestoreVehicleVisibility();
         IsFirstPerson = false;
-        ViewBlend = transitionStart = 0f;
+        ViewBlend = 0f;
+        ViewOpacity = 1f;
+        transitioning = viewSwitched = false;
+        if (transitionOverlay != null)
+        {
+            transitionOverlay.SetActive(false);
+            Destroy(transitionOverlay);
+        }
+        transitionOverlay = null;
+        transitionImage = null;
         transitionElapsed = Mathf.Max(0.01f, transitionDuration);
         if (carTarget != null) ApplyCameraSettings();
     }

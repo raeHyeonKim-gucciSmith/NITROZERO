@@ -319,8 +319,8 @@ MonoBehaviour:
   firstPersonOffset: {x: 0, y: 1.1, z: 0.65}
   firstPersonLookDistance: 30
   hideVehicleInFirstPerson: 0
-  transitionDuration: 0.3
-  transitionFovKick: 4
+  transitionDuration: 0.12
+  transitionFovKick: 0
   startInFirstPerson: 1
   followOffset: {x: 0, y: 2.4, z: -7}
   lookAtOffset: {x: 0, y: 1.2, z: 6}
