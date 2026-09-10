@@ -1,0 +1,124 @@
+<ui:UXML xmlns:racing="RacingUI" xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/RacingHUD.uss?fileID=7433441132597879392&amp;guid=f0c18a5d2ce8e4246b959e3a571d02ad&amp;type=3#RacingHUD"/>
+    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/Red.uss?fileID=7433441132597879392&amp;guid=e4a49e798626a64489bfa8d0679442e6&amp;type=3#Red"/>
+    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/ReferenceHUD.uss?fileID=7433441132597879392&amp;guid=bee82a9ed742484ea75df4acee2d6179&amp;type=3#ReferenceHUD"/>
+    <ui:VisualElement name="racing-hud" picking-mode="Position" class="hud photo-hud tps-document">
+        <racing:HudArtworkPart name="art-title-frame" artwork="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/Textures/Reference/Chase_Overlay.png?fileID=2800000&amp;guid=792fec7ddb99e44408f66a9c2949700c&amp;type=3" source-x="0" source-y="0" source-width="435" source-height="132" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
+        <racing:HudArtworkPart name="art-timer-frame" artwork="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/Textures/Reference/Chase_Overlay.png?fileID=2800000&amp;guid=792fec7ddb99e44408f66a9c2949700c&amp;type=3" source-x="568" source-y="0" source-width="535" source-height="132" picking-mode="Position" class="artwork-part" style="position: absolute; left: 33.97129%; top: 0%; width: 31.99761%; height: 14.02763%;"/>
+        <racing:HudArtworkPart name="art-upper-right-frame" artwork="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/Textures/Reference/Chase_Overlay.png?fileID=2800000&amp;guid=792fec7ddb99e44408f66a9c2949700c&amp;type=3" source-x="1237" source-y="0" source-width="435" source-height="132" picking-mode="Position" class="artwork-part" style="position: absolute; left: 73.98325%; top: 0%; width: 26.01675%; height: 14.02763%;"/>
+        <racing:HudArtworkPart name="art-map-frame" artwork="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/Textures/Reference/Chase_Overlay.png?fileID=2800000&amp;guid=792fec7ddb99e44408f66a9c2949700c&amp;type=3" source-x="0" source-y="518" source-width="385" source-height="423" picking-mode="Position" class="map-artwork" style="position: absolute; left: 0%; top: 55.04782%; width: 23.02632%; height: 44.95218%;"/>
+        <ui:Label text="RED / RACING" name="theme-title" picking-mode="Position" class="theme-title"/>
+        <ui:VisualElement name="timer-panel" picking-mode="Position" class="timer panel">
+            <ui:Label text="TIMER" name="caption" picking-mode="Position" class="caption"/>
+            <racing:DigitalReadout name="time-value" text="00:00.000" picking-mode="Position" fit-to-bounds="true" class="time digital"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ranking-panel" picking-mode="Position" class="ranking panel">
+            <ui:VisualElement name="group-art" picking-mode="Position" class="group-art ranking-art"/>
+            <ui:VisualElement name="ranking-content" picking-mode="Ignore" class="ranking-content">
+                <ui:Label text="POSITION" name="caption-2" picking-mode="Position" class="caption"/>
+                <ui:Label text="PROGRESS" name="ranking-progress-caption" picking-mode="Position" class="ranking-progress-caption"/>
+                <ui:VisualElement name="ranking-row-1" picking-mode="Position" class="ranking-row ranking-player">
+                    <ui:Label text="01" name="rank-pos" picking-mode="Position" class="rank-pos ranking-cell"/>
+                    <ui:Label text="PLAYER" name="rank-driver" picking-mode="Position" class="rank-driver ranking-cell"/>
+                    <ui:Label text="0%" name="rank-time" picking-mode="Position" class="rank-time ranking-cell"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ranking-row-2" picking-mode="Position" class="ranking-row">
+                    <ui:Label text="02" name="rank-pos-2" picking-mode="Position" class="rank-pos ranking-cell"/>
+                    <ui:Label text="---" name="rank-driver-2" picking-mode="Position" class="rank-driver ranking-cell"/>
+                    <ui:Label text="--%" name="rank-time-2" picking-mode="Position" class="rank-time ranking-cell"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ranking-row-3" picking-mode="Position" class="ranking-row">
+                    <ui:Label text="03" name="rank-pos-3" picking-mode="Position" class="rank-pos ranking-cell"/>
+                    <ui:Label text="---" name="rank-driver-3" picking-mode="Position" class="rank-driver ranking-cell"/>
+                    <ui:Label text="--%" name="rank-time-3" picking-mode="Position" class="rank-time ranking-cell"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="minimap-panel" picking-mode="Position" class="minimap panel">
+            <ui:Label text="ROUTE MAP" name="caption-3" picking-mode="Position" class="caption"/>
+            <ui:VisualElement name="map-viewport" picking-mode="Position" class="map-viewport">
+                <racing:NavigationMap name="navigation-road" road-width="0.78" horizon="0.22" haze="0.9" picking-mode="Position" class="navigation-road"/>
+            </ui:VisualElement>
+            <ui:Label name="route-distance" text="STRAIGHT" picking-mode="Position" class="route-distance"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="instrument-panel" picking-mode="Position" class="instrument panel">
+            <ui:VisualElement name="group-art-2" picking-mode="Position" class="group-art instrument-art"/>
+            <ui:VisualElement name="gear-pod" picking-mode="Position" class="gear-pod">
+                <ui:Label text="GEAR" name="gear-caption" picking-mode="Position" class="gear-caption"/>
+                <racing:DigitalReadout name="gear-value" text="1" picking-mode="Position" fit-to-bounds="true" class="gear-number digital"/>
+            </ui:VisualElement>
+            <racing:DigitalReadout name="speed-value" text="000" segment-thickness="0.16" digit-spacing="0.12" picking-mode="Position" fit-to-bounds="true" class="speed digital"/>
+            <ui:Label text="km/h" name="unit" picking-mode="Position" class="unit"/>
+            <ui:VisualElement name="fuel-pod" picking-mode="Position" class="fuel-pod" style="top: 200px; left: 334px;">
+                <ui:Label text="FUEL" name="fuel-caption" picking-mode="Position" class="fuel-caption" style="width: 43px; height: 15px;"/>
+                <racing:DigitalReadout name="fuel-percent" text="100" picking-mode="Position" fit-to-bounds="true" class="fuel-percent digital"/>
+                <ui:Label text="%" name="fuel-percent-unit" picking-mode="Position" class="fuel-percent-unit"/>
+            </ui:VisualElement>
+            <ui:Label text="RPM x1000" name="rpm-title" picking-mode="Position" class="rpm-title" style="width: 54px; top: 141px; left: 30px;"/>
+            <ui:VisualElement name="rpm-bars" picking-mode="Position" class="rpm-bars">
+                <ui:VisualElement name="rpm-bar-0" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-1" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-2" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-3" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-4" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-5" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-6" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-7" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-8" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-9" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-10" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-11" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-12" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-13" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-14" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-15" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-16" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-17" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-18" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-19" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-20" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-21" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-22" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-23" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-24" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-25" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-26" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-27" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-28" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-29" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-30" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-31" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-32" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-33" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-34" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-35" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-36" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-37" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-38" picking-mode="Position" class="rpm-segment"/>
+                <ui:VisualElement name="rpm-bar-39" picking-mode="Position" class="rpm-segment"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="rpm-ticks" picking-mode="Position" class="rpm-ticks">
+                <ui:Label text="0" name="rpm-tick" picking-mode="Position" class="rpm-tick"/>
+                <ui:Label text="1" name="rpm-tick-2" picking-mode="Position" class="rpm-tick"/>
+                <ui:Label text="2" name="rpm-tick-3" picking-mode="Position" class="rpm-tick"/>
+                <ui:Label text="3" name="rpm-tick-4" picking-mode="Position" class="rpm-tick"/>
+                <ui:Label text="4" name="rpm-tick-5" picking-mode="Position" class="rpm-tick"/>
+                <ui:Label text="5" name="rpm-tick-6" picking-mode="Position" class="rpm-tick"/>
+                <ui:Label text="6" name="rpm-tick-7" picking-mode="Position" class="rpm-tick"/>
+                <ui:Label text="7" name="rpm-tick-8" picking-mode="Position" class="rpm-tick"/>
+                <ui:Label text="8" name="rpm-tick-9" picking-mode="Position" class="rpm-tick"/>
+            </ui:VisualElement>
+            <ui:Label name="drive-status" text="READY" picking-mode="Position" class="drive-status" style="top: 203px; left: 67px;"/>
+            <ui:Label name="gear-limit" text="LIMIT 050" picking-mode="Position" class="gear-limit"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="enemy-warning-left" picking-mode="Position" class="warning-symbol warning-left">
+            <ui:VisualElement name="warning-stem" picking-mode="Position" class="warning-stem"/>
+            <ui:VisualElement name="warning-dot" picking-mode="Position" class="warning-dot"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="enemy-warning-right" picking-mode="Position" class="warning-symbol warning-right">
+            <ui:VisualElement name="warning-stem-2" picking-mode="Position" class="warning-stem"/>
+            <ui:VisualElement name="warning-dot-2" picking-mode="Position" class="warning-dot"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="startup-shield" picking-mode="Ignore" class="startup-shield"/>
+</ui:UXML>

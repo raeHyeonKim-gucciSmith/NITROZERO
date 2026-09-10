@@ -1,0 +1,102 @@
+
+.hud { position:absolute; left:0; right:0; top:0; bottom:0; color:rgb(240,243,248); }
+.panel { position:absolute; padding:16px; }
+.caption { font-size:16px; letter-spacing:2px; margin:0; height:25px; }
+.theme-title { position:absolute; left:32px; top:25px; font-size:18px; letter-spacing:2px; }
+.view-hint { position:absolute; right:30px; top:28px; font-size:17px; }
+.timer { width:350px; height:98px; left:50%; translate:-50% 0; top:22px; align-items:center; }
+.time { width:285px; height:42px; font-size:35px; -unity-text-align:middle-center; }
+.ranking { left:25px; top:27%; width:370px; height:268px; }
+.ranking-row { flex-direction:row; height:33px; border-bottom-width:1px; border-bottom-color:rgba(170,190,210,0.16); align-items:center; }
+.ranking-cell { margin:0; font-size:17px; }
+.rank-pos { width:42px; font-size:21px; }
+.rank-driver { flex-grow:1; }
+.rank-time { width:125px; -unity-text-align:middle-right; font-size:16px; }
+.ranking-player { background-color:rgba(210,225,240,0.09); }
+.minimap { left:25px; bottom:28px; width:225px; height:310px; }
+.map-viewport { height:225px; margin-top:4px; overflow:hidden; background-color:rgba(0,8,15,0.2); }
+.map-road { position:absolute; left:43%; width:14%; top:10px; bottom:10px; border-left-width:1px; border-right-width:1px; border-color:rgba(220,230,240,0.6); background-color:rgba(200,220,240,0.07); }
+.finish { position:absolute; top:0; left:30%; width:40%; font-size:11px; -unity-text-align:middle-center; }
+.player-marker { position:absolute; width:16px; height:22px; font-size:22px; margin:0; -unity-text-align:middle-center; }
+.route-distance { font-size:13px; margin-top:8px; -unity-text-align:middle-center; }
+.instrument { right:30px; bottom:28px; width:470px; height:202px; }
+.speed-row { height:72px; flex-shrink:0; flex-direction:row; align-items:center; }
+.speed-row .caption { width:48px; flex-shrink:0; font-size:10px; letter-spacing:1px; height:auto; }
+.speed { flex-grow:1; flex-shrink:1; min-width:0; width:auto; height:64px; font-size:56px; margin:0 8px; padding:0; -unity-text-align:middle-center; white-space:nowrap; overflow:hidden; }
+.unit { flex-shrink:0; width:42px; font-size:14px; margin:0; padding:0; }
+.rpm-title { font-size:10px; height:14px; flex-shrink:0; margin:4px 0 3px 0; padding:0; }
+.rpm-bars { flex-direction:row; height:23px; flex-shrink:0; align-items:flex-end; }
+.rpm-segment { flex-grow:1; flex-basis:0; min-width:0; height:100%; margin-right:2px; background-color:rgb(240,210,110); }
+.rpm-ticks { height:16px; flex-shrink:0; flex-direction:row; justify-content:space-between; margin:3px 0 0 0; }
+.rpm-tick { font-size:10px; margin:0; padding:0; width:14px; -unity-text-align:middle-center; }
+.drive-status { height:16px; flex-shrink:0; font-size:10px; letter-spacing:1px; margin:4px 0 0 0; padding:0; -unity-text-align:middle-right; white-space:nowrap; }
+.visor { display:none; position:absolute; left:0; right:0; top:0; bottom:0; }
+.first-person .visor { display:flex; }
+.first-person .instrument { right:auto; left:50%; translate:-50% 0; width:610px; bottom:28px; height:202px; }
+.first-person .speed-row { justify-content:center; }
+.first-person .ranking { top:65px; left:65px; width:330px; }
+.first-person .minimap { left:auto; right:70px; top:65px; bottom:auto; width:225px; height:280px; }
+.first-person .map-viewport { height:200px; }
+.first-person .timer { top:32px; }
+.first-person .theme-title { top:auto; bottom:24px; }
+.first-person .view-hint { top:auto; bottom:24px; }
+
+/* BACKPLATES BEGIN */
+/* First child: fills the parent without affecting the foreground layout. */
+.hud-backplate {
+    position:absolute; left:6px; right:6px; top:6px; bottom:6px;
+    background-color:rgba(5,12,20,0.70);
+    border-width:1px; border-color:rgba(220,230,240,0.45);
+    border-top-left-radius:16px; border-top-right-radius:5px;
+    border-bottom-left-radius:5px; border-bottom-right-radius:16px;
+}
+.backplate-inner {
+    position:absolute; left:6px; right:6px; top:6px; bottom:6px;
+    border-width:1px; border-color:rgba(200,220,240,0.10);
+    border-top-left-radius:10px; border-bottom-right-radius:10px;
+}
+.backplate-accent { position:absolute; height:2px; width:25%; }
+.accent-top { left:20px; top:0; }
+.accent-bottom { right:20px; bottom:0; }
+.backplate-corner { position:absolute; width:6px; height:6px; border-width:1px; rotate:45deg; }
+.corner-left { left:5px; bottom:5px; }
+.corner-right { right:5px; top:5px; }
+
+/* BACKPLATES END */
+
+/* INSTRUMENT DETAIL BEGIN */
+.gear-pod { width:46px; height:64px; flex-shrink:0; align-items:center; border-right-width:1px; border-color:rgba(220,230,240,0.22); padding-right:7px; }
+.gear-caption { font-size:9px; letter-spacing:1px; margin:0; padding:0; height:14px; }
+.gear-number { width:30px; height:40px; font-size:32px; }
+.instrument-footer { flex-direction:row; height:25px; flex-shrink:0; align-items:center; margin-top:3px; padding-top:2px; border-top-width:1px; border-color:rgba(220,230,240,0.18); }
+.instrument-footer .drive-status { flex-grow:1; -unity-text-align:middle-left; margin:0; }
+.gear-limit { font-size:10px; width:78px; margin:0 10px; padding:0; }
+.fuel-pod { width:126px; flex-shrink:0; }
+.fuel-value { font-size:11px; margin:0; padding:0; -unity-text-align:middle-right; }
+.fuel-rail { height:3px; margin-top:2px; background-color:rgba(180,200,220,0.1); }
+.fuel-fill { height:3px; width:100%; background-color:rgb(240,210,110); }
+.panel-tech-rail { position:absolute; left:1px; top:30%; bottom:25%; width:3px; justify-content:space-between; }
+.tech-chip { height:5px; background-color:rgba(230,240,250,0.4); }
+.panel-header-line { position:absolute; left:20px; right:25px; top:3px; height:5px; border-bottom-width:1px; border-color:rgba(230,240,250,0.22); }
+.panel-fastener { position:absolute; width:3px; height:3px; border-radius:2px; background-color:rgba(235,245,255,0.55); }
+.fastener-tl { left:15px; top:9px; } .fastener-tr { right:13px; top:9px; }
+.fastener-bl { left:13px; bottom:9px; } .fastener-br { right:15px; bottom:9px; }
+.startup-shield { display:none; position:absolute; left:0; right:0; top:0; bottom:0; background-color:black; translate:0 -100%; }
+/* INSTRUMENT DETAIL END */
+
+/* Prominent fuel readout beside speed, shared by first/third person. */
+.speed-row > .fuel-pod { width:105px; height:66px; flex-shrink:0; margin-left:8px; padding-left:10px; border-left-width:1px; border-color:rgba(220,235,250,0.3); }
+.fuel-caption { font-size:11px; letter-spacing:2px; height:14px; margin:0; padding:0; }
+.fuel-percent { font-size:25px; -unity-font-style:bold; height:28px; margin:0; padding:0; color:rgb(245,250,255); }
+.speed-row .fuel-value { font-size:12px; height:16px; margin:0; padding:0; -unity-text-align:middle-left; white-space:nowrap; }
+.speed-row .fuel-rail { height:4px; margin-top:3px; }
+.speed-row .fuel-fill { height:4px; }
+
+/* DIGITAL FUEL */
+.fuel-percent-row { height:28px; flex-shrink:0; flex-direction:row; align-items:center; }
+.fuel-percent-row .fuel-percent { flex-grow:1; min-width:0; height:28px; font-size:25px; }
+.fuel-percent-unit { width:17px; flex-shrink:0; margin:0; padding:0; font-size:14px; }
+.fuel-litres-row { height:16px; flex-shrink:0; flex-direction:row; align-items:center; }
+.fuel-litres-row .fuel-value { flex-grow:1; flex-basis:0; min-width:0; height:16px; font-size:12px; }
+.fuel-capacity { flex-grow:1; flex-basis:0; min-width:0; height:16px; font-size:12px; }
+.fuel-litre-unit { width:9px; flex-shrink:0; margin:0; padding:0; font-size:10px; -unity-text-align:middle-center; }
