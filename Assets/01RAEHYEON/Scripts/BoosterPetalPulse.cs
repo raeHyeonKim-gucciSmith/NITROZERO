@@ -5,10 +5,11 @@ public sealed class BoosterPetalPulse : MonoBehaviour
     [SerializeField] private BoosterDeploymentController deployment;
     [SerializeField] private VariableNozzleController nozzleController;
     [SerializeField, Range(-1f, 0f)] private float maximumOpenClosure = -0.5f;
-    [SerializeField, Range(0f, 1f)] private float openingStart = 0.77f;
-    [SerializeField, Range(0f, 1f)] private float fullyOpenAt = 0.84f;
-    [SerializeField, Range(0f, 1f)] private float neutralAgainAt = 0.92f;
-    [SerializeField, Range(0f, 1f)] private float closedAgainAt = 1f;
+    [SerializeField, Range(0f, 1f)] private float maximumContractedClosure = 0.65f;
+    [SerializeField, Range(0f, 1f)] private float openingStart = 0.6875f;
+    [SerializeField, Range(0f, 1f)] private float fullyOpenAt = 0.78125f;
+    [SerializeField, Range(0f, 1f)] private float fullyContractedAt = 0.88125f;
+    [SerializeField, Range(0f, 1f)] private float horizontalAgainAt = 1f;
     [SerializeField, HideInInspector] private Quaternion[] storedNeutralRotations = new Quaternion[0];
 
     private bool initialized;
@@ -76,22 +77,25 @@ public sealed class BoosterPetalPulse : MonoBehaviour
         float closure;
         if (amount < openingStart)
         {
-            closure = 1f;
+            closure = 0f;
         }
         else if (amount < fullyOpenAt)
         {
             float opening = SmoothRange(openingStart, fullyOpenAt, amount);
             closure = Mathf.LerpUnclamped(1f, maximumOpenClosure, opening);
         }
-        else if (amount < neutralAgainAt)
+        else if (amount < fullyContractedAt)
         {
-            float returning = SmoothRange(fullyOpenAt, neutralAgainAt, amount);
-            closure = Mathf.LerpUnclamped(maximumOpenClosure, 0f, returning);
+            float contracting = SmoothRange(fullyOpenAt, fullyContractedAt, amount);
+            closure = Mathf.LerpUnclamped(
+                maximumOpenClosure,
+                maximumContractedClosure,
+                contracting);
         }
         else
         {
-            float tightening = SmoothRange(neutralAgainAt, closedAgainAt, amount);
-            closure = Mathf.LerpUnclamped(0f, 1f, tightening);
+            float leveling = SmoothRange(fullyContractedAt, horizontalAgainAt, amount);
+            closure = Mathf.LerpUnclamped(maximumContractedClosure, 0f, leveling);
         }
 
         nozzleController.ApplyClosureImmediate(closure);
