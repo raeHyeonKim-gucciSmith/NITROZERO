@@ -1,4 +1,6 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Damin.VFX.HoodMissile.csproj" />
+  <Project Path="Damin.VFX.HoodMissile.CubePreview.csproj" />
 </Solution>
