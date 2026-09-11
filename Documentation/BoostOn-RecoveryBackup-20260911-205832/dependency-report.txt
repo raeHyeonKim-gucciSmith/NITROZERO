@@ -1,0 +1,10 @@
+Restored dependencies:
+Assets\Race Car Package\Prefab\Car_2.prefab
+Assets\Race Car Package\Material\Mat.5.mat
+Assets\Race Car Package\Material\Mat.5_2.mat
+Assets\Race Car Package\Material\Mat.1.mat
+Assets\Race Car Package\Material\Mat.4.mat
+Assets\Race Car Package\Race Car Package.fbx
+Assets\Race Car Package\Textures\red car.png
+Assets\Race Car Package\Textures\black car.png
+Unresolved GUIDs:

@@ -18,6 +18,9 @@ namespace RacingUI {
  if(!float.TryParse(xy[0],System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out float x)||!float.TryParse(xy[1],System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out float y))return;
  v[i]=new Vector2(x*r.width/100,y*r.height/100);}
  var p=ctx.painter2D;
+ // Rounded joins prevent acute panel corners from producing long miter spikes.
+ p.lineJoin=LineJoin.Round;
+ p.lineCap=LineCap.Round;
  void Path(float inset){
  p.BeginPath();
  for(int i=0;i<v.Length;i++){
@@ -27,7 +30,13 @@ namespace RacingUI {
  float radius=Mathf.Min(cornerRadius,Mathf.Min(Vector2.Distance(prev,a),Vector2.Distance(next,a))*.35f);
  var enter=a+(prev-a).normalized*radius;var leave=a+(next-a).normalized*radius;
  if(i==0)p.MoveTo(enter);else p.LineTo(enter);
- if(radius>0)p.QuadraticCurveTo(a,leave);else p.LineTo(a);
+ if(radius>0){
+ // Explicit samples avoid Painter2D curve-join artifacts on narrow corners.
+ for(int step=1;step<=8;step++){
+ float t=step/8f,u=1-t;
+ p.LineTo(u*u*enter+2*u*t*a+t*t*leave);
+ }
+ }else p.LineTo(a);
  }p.ClosePath();}
  if(!helmetValue){Path(0);p.fillColor=new Color(.09f,.12f,.15f,opacityValue);p.Fill();}
  // Thin layered illumination preserves a sharp core instead of a thick polygon border.
