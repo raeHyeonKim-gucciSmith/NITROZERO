@@ -53,6 +53,10 @@ namespace YUJEONG
         [Range(0.02f, 0.3f)]
         public float stage5DelayAfterStage4 = 0.08f;
 
+        [Header("[ UI 표시 설정 ]")]
+        [Tooltip("화면에 변형 제어 UI 패널을 표시할지 여부 (체크 해제 시 화면에서 숨김, 단축키는 정상 작동)")]
+        public bool showOnGUI = false;
+
         [Header("[ 대상 차량 루트 (기본: SportCar_4change_2) ]")]
         public Transform targetCarRoot;
 
@@ -655,6 +659,8 @@ namespace YUJEONG
 
         private void OnGUI()
         {
+            if (!showOnGUI) return;
+
             // 화면 좌상단에 테스트용 UI 패널 표시
             GUI.Box(new Rect(10, 10, 260, 280), "🚗 변형 제어 패널");
 

@@ -100,7 +100,7 @@ namespace YUJEONG
 
         [Header("[ 온스크린 GUI 표시 ]")]
         [Tooltip("화면에 클릭 가능한 드리프트 조작 버튼 표시 여부")]
-        public bool showOnGUI = true;
+        public bool showOnGUI = false;
 
         // --- 내부 제어 변수 ---
         private float currentSteerAngle = 0f;
@@ -136,12 +136,27 @@ namespace YUJEONG
 
             SaveInitialRotations();
 
-            if (autoManageOtherWheelSpin && targetCarRoot != null)
+            if (autoManageOtherWheelSpin)
             {
-                cachedWheelSpinController = targetCarRoot.GetComponent<VehicleWheelSpinController>();
+                if (targetCarRoot != null)
+                {
+                    cachedWheelSpinController = targetCarRoot.GetComponent<VehicleWheelSpinController>();
+                    if (cachedWheelSpinController == null)
+                    {
+                        cachedWheelSpinController = targetCarRoot.GetComponentInChildren<VehicleWheelSpinController>();
+                    }
+                }
                 if (cachedWheelSpinController == null)
                 {
                     cachedWheelSpinController = GetComponent<VehicleWheelSpinController>();
+                }
+                if (cachedWheelSpinController == null)
+                {
+                    cachedWheelSpinController = GetComponentInParent<VehicleWheelSpinController>();
+                }
+                if (cachedWheelSpinController == null)
+                {
+                    cachedWheelSpinController = UnityEngine.Object.FindFirstObjectByType<VehicleWheelSpinController>();
                 }
             }
         }
@@ -239,8 +254,8 @@ namespace YUJEONG
                 ToggleRightDrift();
             }
 
-            // 3. [T] 직진 주행 토글 (선택적)
-            if (allowStraightDrive && IsKeyPressed(straightDriveKey, "t"))
+            // 3. [T] 직진 주행 토글 (단독 사용 시에만 작동, VehicleWheelSpinController가 있으면 해당 스크립트에 일임)
+            if (allowStraightDrive && cachedWheelSpinController == null && IsKeyPressed(straightDriveKey, "t"))
             {
                 ToggleStraightDrive();
             }
@@ -335,6 +350,34 @@ namespace YUJEONG
         {
             if (targetCarRoot == null) targetCarRoot = transform;
             if (!hasInitializedRotations) SaveInitialRotations();
+
+            // ★ 전담 바퀴 회전 스크립트(VehicleWheelSpinController)가 함께 장착되어 있는 경우
+            if (cachedWheelSpinController != null)
+            {
+                // 드리프트 모드가 아닐 때 (평상시 / T 일반 주행 / B 초고속 주행)
+                if (currentDriftMode == DriftMode.None)
+                {
+                    // 조향 각도가 남아있다면 중앙(0도)으로 부드럽게 복귀만 처리
+                    if (Mathf.Abs(currentSteerAngle) > 0.01f)
+                    {
+                        float resetDuration = Mathf.Max(0.01f, steerTransitionDuration);
+                        float resetRate = (counterSteerAngle / resetDuration) * dt;
+                        currentSteerAngle = Mathf.MoveTowards(currentSteerAngle, 0f, resetRate);
+
+                        Quaternion rootRot = targetCarRoot.rotation;
+                        Quaternion centerSteerRot = Quaternion.AngleAxis(currentSteerAngle, Vector3.up);
+                        if (wheelFL != null) wheelFL.rotation = rootRot * (centerSteerRot * initialRelRotFL);
+                        if (wheelFR != null) wheelFR.rotation = rootRot * (centerSteerRot * initialRelRotFR);
+                    }
+                    else
+                    {
+                        currentSteerAngle = 0f;
+                    }
+
+                    // ★ 평상시 바퀴 회전(Roll)은 VehicleWheelSpinController가 T(1080도)/B(2520도)로 제어하도록 일체 덮어쓰지 않고 즉시 반환!
+                    return;
+                }
+            }
 
             // 1. 목표 조향 각도 및 목표 회전 속도 결정
             float targetSteerAngle = 0f;
@@ -468,17 +511,16 @@ namespace YUJEONG
         {
             if (!showOnGUI) return;
 
-            // 드리프트 조작 안내 및 토글 버튼 패널
-            GUILayout.BeginArea(new Rect(10, 360, 270, 150), GUI.skin.box);
-            GUILayout.Label("<b>🏎️ [드리프트 쇼케이스 컨트롤]</b>");
+            // 드리프트 조작 안내 및 토글 버튼 패널 (pure GUI 호출로 LayoutGroup 스택 충돌 완벽 방지)
+            GUI.Box(new Rect(10, 360, 260, 120), "🏎️ 드리프트 쇼케이스");
 
             // 1. 왼쪽 드리프트 버튼 [Q]
             bool isLeft = (currentDriftMode == DriftMode.DriftLeft);
             GUI.color = isLeft ? new Color(0.3f, 1f, 0.4f) : Color.white;
             string leftLabel = isLeft 
-                ? $"◀ [Q] 왼쪽 드리프트 중! (+{(int)counterSteerAngle}°)" 
-                : "◀ [Q] 왼쪽 드리프트 (우측 조향 꺾임)";
-            if (GUILayout.Button(leftLabel, GUILayout.Height(26)))
+                ? $"◀ [Q] 왼쪽 드리프트 (+{(int)counterSteerAngle}°)" 
+                : "◀ [Q] 왼쪽 드리프트 (우측 조향)";
+            if (GUI.Button(new Rect(20, 385, 240, 24), leftLabel))
             {
                 ToggleLeftDrift();
             }
@@ -487,22 +529,21 @@ namespace YUJEONG
             bool isRight = (currentDriftMode == DriftMode.DriftRight);
             GUI.color = isRight ? new Color(0.3f, 1f, 0.4f) : Color.white;
             string rightLabel = isRight 
-                ? $"▶ [E] 오른쪽 드리프트 중! (-{(int)counterSteerAngle}°)" 
-                : "▶ [E] 오른쪽 드리프트 (좌측 조향 꺾임)";
-            if (GUILayout.Button(rightLabel, GUILayout.Height(26)))
+                ? $"▶ [E] 오른쪽 드리프트 (-{(int)counterSteerAngle}°)" 
+                : "▶ [E] 오른쪽 드리프트 (좌측 조향)";
+            if (GUI.Button(new Rect(20, 413, 240, 24), rightLabel))
             {
                 ToggleRightDrift();
             }
 
             // 3. 해제 / 정지 버튼 [ESC]
             GUI.color = (currentDriftMode == DriftMode.None && !isStraightDriving) ? Color.gray : new Color(1f, 0.6f, 0.6f);
-            if (GUILayout.Button("⏹ [ESC] 드리프트 해제 (중립 정렬)", GUILayout.Height(24)))
+            if (GUI.Button(new Rect(20, 441, 240, 24), "⏹ [ESC] 드리프트 해제 (중립)"))
             {
                 ResetDrift();
             }
 
             GUI.color = Color.white;
-            GUILayout.EndArea();
         }
     }
 }

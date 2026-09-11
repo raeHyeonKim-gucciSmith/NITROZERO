@@ -104,6 +104,10 @@ namespace YUJEONG
         [Tooltip("초고속 바퀴 회전 토글 키 (기본: B 키)")]
         public KeyCode boostToggleKey = KeyCode.B;
 
+        [Header("[ UI 표시 설정 ]")]
+        [Tooltip("화면에 바퀴 제어 UI 버튼을 표시할지 여부 (체크 해제 시 화면에서 숨김, 단축키 T, B는 정상 작동)")]
+        public bool showOnGUI = false;
+
         // 현재 회전 속도 (도/초)
         private float currentSpeed = 0f;
 
@@ -256,7 +260,7 @@ namespace YUJEONG
             {
                 currentState = WheelState.Normal;
                 previousState = WheelState.Normal;
-                Debug.Log($"[VehicleWheelSpinController] ▶ [T] 일반 주행 속도로 달리기 시작! ({normalWheelSpeed} deg/s)");
+                Debug.Log($"[VehicleWheelSpinController] ▶ [T] 일반 주행 속도 회전 시작! ({normalWheelSpeed} deg/s - 초당 {normalWheelSpeed / 360f:F1}바퀴)");
             }
         }
 
@@ -271,13 +275,13 @@ namespace YUJEONG
             if (currentState == WheelState.SuperFast)
             {
                 currentState = (previousState == WheelState.Normal) ? WheelState.Normal : WheelState.Stopped;
-                Debug.Log($"[VehicleWheelSpinController] ⚡ [B] 초고속 모드 종료 -> {(currentState == WheelState.Normal ? "일반 주행 복귀" : "정지")}");
+                Debug.Log($"[VehicleWheelSpinController] ⚡ [B] 초고속 모드 종료 -> {(currentState == WheelState.Normal ? $"일반 주행 복귀 ({normalWheelSpeed} deg/s)" : "정지")}");
             }
             else
             {
                 previousState = currentState;
                 currentState = WheelState.SuperFast;
-                Debug.Log($"[VehicleWheelSpinController] ⚡ [B] 초고속 바퀴 회전 시작! ({boostWheelSpeed} deg/s)");
+                Debug.Log($"[VehicleWheelSpinController] ⚡ [B] 초고속 부스터 바퀴 회전 시작! ({boostWheelSpeed} deg/s - 초당 {boostWheelSpeed / 360f:F1}바퀴)");
             }
         }
 
@@ -366,6 +370,8 @@ namespace YUJEONG
 
         private void OnGUI()
         {
+            if (!showOnGUI) return;
+
             // 1. [T] 일반 주행 버튼
             bool isNormal = (currentState == WheelState.Normal);
             GUI.color = isNormal ? new Color(0.7f, 1f, 0.7f) : new Color(0.92f, 0.92f, 0.92f);
