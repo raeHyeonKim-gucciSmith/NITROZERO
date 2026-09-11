@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3367377553633027903
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6043412747726220140}
+  - component: {fileID: 2244728867268165510}
+  m_Layer: 0
+  m_Name: PF_BulletAirDistortion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6043412747726220140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3367377553633027903}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2244728867268165510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3367377553633027903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a0596f18b32df842a77a514f160a0e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.VFX.AirDistortion.BulletAirDistortionVFX
+  Target: {fileID: 0}
+  ViewCamera: {fileID: 0}
+  DistortionMaterial: {fileID: 2100000, guid: 7ad0528ab9143ce42b04a7248ac6976b, type: 2}
+  DistortionStrength: 0.8
+  DistortionLength: 0.9
+  DistortionWidth: 0.14
+  NoiseScale: 3.5
+  NoiseSpeed: 2.5
+  TrailFade: 0.18
+  BulletSpeed: 60
+  RefractionOffset: 8
+  OpacityMask: 0.8
+  MeasureTargetSpeed: 1
+  MinimumSpeed: 3
+  FullStrengthSpeed: 60
+  CoreLength: 0.23
+  TeleportDistance: 30
+  EnablePressureLayer: 0
+  PressureStrength: 0.25
+  SimulationTimeScale: 1
