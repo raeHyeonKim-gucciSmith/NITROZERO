@@ -15,7 +15,6 @@ public class ArcadeCarController : MonoBehaviour
     [Header("Coolant Temperature")]
     [Tooltip("현재 냉각수 온도(°C). 예열된 차량의 기본값은 80이며, 플레이 중 변경하면 HUD에 즉시 반영됩니다.")]
     [Range(-40f, 160f)] public float coolantTemperatureCelsius = 80f;
-    [Range(-40f,160f)] public float engineTemperatureCelsius = 98f;
     [Tooltip("게임용 냉각수 온도 변화. 끄면 위 온도 값을 직접 지정할 수 있습니다.")]
     public bool simulateCoolantTemperature = true;
     [Min(1f)] public float idleSecondsPerDegree = 30f;

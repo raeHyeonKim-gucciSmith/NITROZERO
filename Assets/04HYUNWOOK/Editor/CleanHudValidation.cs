@@ -298,6 +298,11 @@ public static class CleanHudValidation
 
     static void Cleanup()
     {
+        if (document != null)
+        {
+            document.enabled = false;
+            document.panelSettings = null;
+        }
         if (holder != null) UnityEngine.Object.DestroyImmediate(holder);
         if (scene.IsValid()) EditorSceneManager.ClosePreviewScene(scene);
         if (settings != null) UnityEngine.Object.DestroyImmediate(settings);

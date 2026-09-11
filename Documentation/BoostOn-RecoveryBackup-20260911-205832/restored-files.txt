@@ -1,0 +1,33 @@
+Assets/Scenes/boostOn.unity
+Assets/04HYUNWOOK/Prefab/UI.prefab
+Assets/04HYUNWOOK/Scripts/AmberHudPanel.cs
+Assets/04HYUNWOOK/Scripts/AmberHudPanel.cs.meta
+Assets/04HYUNWOOK/Scripts/AmberMapFrame.cs
+Assets/04HYUNWOOK/Scripts/AmberMapFrame.cs.meta
+Assets/04HYUNWOOK/Scripts/AmberTimerFrame.cs
+Assets/04HYUNWOOK/Scripts/AmberTimerFrame.cs.meta
+Assets/04HYUNWOOK/Scripts/FpsAmberFrame.cs
+Assets/04HYUNWOOK/Scripts/FpsAmberFrame.cs.meta
+Assets/04HYUNWOOK/Scripts/HudDesignCanvas.cs
+Assets/04HYUNWOOK/Scripts/HudDesignCanvas.cs.meta
+Assets/04HYUNWOOK/Scripts/HudRectifiedPanel.cs
+Assets/04HYUNWOOK/Scripts/HudRectifiedPanel.cs.meta
+Assets/04HYUNWOOK/Scripts/HudReferenceFrame.cs
+Assets/04HYUNWOOK/Scripts/HudReferenceFrame.cs.meta
+Assets/04HYUNWOOK/Scripts/TpsSkinPart.cs
+Assets/04HYUNWOOK/Scripts/TpsSkinPart.cs.meta
+Assets/04HYUNWOOK/Scripts/CarBoost.cs
+Assets/04HYUNWOOK/Scripts/CarBoost.cs.meta
+Assets/04HYUNWOOK/Scripts/DrivingViewTransition.cs
+Assets/04HYUNWOOK/Scripts/DrivingViewTransition.cs.meta
+Assets/04HYUNWOOK/Scripts/CarCinemachineSetup.cs
+Assets/04HYUNWOOK/Scripts/ArcadeCarController.cs
+Assets/04HYUNWOOK/Scripts/RacingHudController.cs
+Assets/04HYUNWOOK/Scripts/RacingHudCurvature.cs
+Assets/04HYUNWOOK/Scripts/NavigationMap.cs
+Assets/04HYUNWOOK/UI Toolkit/RacingHUD/FPS 2.uxml
+Assets/04HYUNWOOK/UI Toolkit/RacingHUD/FPS 2.uxml.meta
+Assets/04HYUNWOOK/UI Toolkit/RacingHUD/TPS 2.uxml
+Assets/04HYUNWOOK/UI Toolkit/RacingHUD/TPS 2.uxml.meta
+Assets/04HYUNWOOK/UI Toolkit/RacingHUD/AmberHUD.uss
+Assets/04HYUNWOOK/UI Toolkit/RacingHUD/AmberHUD.uss.meta

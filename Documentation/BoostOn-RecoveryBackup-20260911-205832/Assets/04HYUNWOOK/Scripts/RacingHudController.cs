@@ -58,9 +58,7 @@ public class RacingHudController : MonoBehaviour
     Label gearLimitText;
     RacingUI.DigitalReadout fuelText, fuelPercentText, fuelCapacityText;
     VisualElement fuelFill;
-    RacingUI.DigitalReadout coolantText, engineText, boostText;
-    VisualElement engineFill, boostFill;
-    CarBoost boost;
+    RacingUI.DigitalReadout coolantText;
     VisualElement coolantNeedle, coolantFill;
     [Header("Speed UI Shake")]
     public bool enableSpeedShake = true;
@@ -168,9 +166,6 @@ public class RacingHudController : MonoBehaviour
         fuelFill = boundRoot.Q("fuel-fill");
         fuelCapacityText = boundRoot.Q<RacingUI.DigitalReadout>("fuel-capacity");
         coolantText = boundRoot.Q<RacingUI.DigitalReadout>("coolant-value");
-        engineText = boundRoot.Q<RacingUI.DigitalReadout>("engine-value");
-        boostText = boundRoot.Q<RacingUI.DigitalReadout>("boost-value");
-        engineFill = boundRoot.Q("engine-fill"); boostFill = boundRoot.Q("boost-fill");
         coolantNeedle = boundRoot.Q("coolant-needle");
         coolantFill = boundRoot.Q("coolant-fill");
         for (int i = 0; i < rpmBars.Length; i++) rpmBars[i] = boundRoot.Q("rpm-bar-" + i);
@@ -193,13 +188,6 @@ public class RacingHudController : MonoBehaviour
         if (car == null) car = FindFirstObjectByType<ArcadeCarController>();
         UpdateMapToggle();
         UpdateCoolantDisplay();
-        if (hud != null && hud.ClassListContains("amber-hud") && car != null) {
-            if (boost == null) boost = car.GetComponent<CarBoost>() ?? car.gameObject.AddComponent<CarBoost>();
-            if (boostText != null) boostText.text = Mathf.FloorToInt(boost.charge).ToString();
-            if (boostFill != null) boostFill.style.width = Length.Percent(boost.charge);
-            if (engineText != null) engineText.text = Mathf.RoundToInt(car.engineTemperatureCelsius).ToString();
-            if (engineFill != null) engineFill.style.width = Length.Percent(Mathf.InverseLerp(0,130,car.engineTemperatureCelsius)*100);
-        }
         DisplayedSpeed = finishSequence ? finishSpeed * 3.6f : car != null ? car.SpeedKmh : 0f;
         UpdateStartup();
         if (StartupComplete) { UpdateSpeedShake(); if (!finishSequence) ElapsedSeconds += Time.deltaTime; UpdateMinimap(); }
@@ -221,8 +209,8 @@ public class RacingHudController : MonoBehaviour
         int milliseconds = Mathf.FloorToInt(ElapsedSeconds * 1000f);
         if (timeText != null) timeText.text = $"{milliseconds / 60000:00}:{milliseconds / 1000 % 60:00}.{milliseconds % 1000:000}";
         speedText?.MarkDirtyRepaint(); timeText?.MarkDirtyRepaint();
-        float rpmFill = Mathf.Clamp01(IndicatedRpm / Mathf.Max(1f, hud != null && hud.ClassListContains("amber-hud") ? 9000f : engineMaximum));
-        if (targetRpm >= engineMaximum * 0.98f && (hud == null || !hud.ClassListContains("amber-hud"))) rpmFill = 1f;
+        float rpmFill = Mathf.Clamp01(IndicatedRpm / Mathf.Max(1f, engineMaximum));
+        if (targetRpm >= engineMaximum * 0.98f) rpmFill = 1f;
         for (int i = 0; i < rpmBars.Length; i++) if (rpmBars[i] != null)
             rpmBars[i].style.opacity = rpmFill * rpmBars.Length > i ? 1f : 0.12f;
         if (hud != null && viewCamera != null)
@@ -246,7 +234,7 @@ public class RacingHudController : MonoBehaviour
         if (coolantText == null && coolantNeedle == null && coolantFill == null) return;
         // No smoothing or cached startup value: Inspector/telemetry changes are visible immediately.
         float temperature = car != null ? car.CoolantTemperatureCelsius : 80f;
-        float ratio = Mathf.InverseLerp(0f, hud != null && hud.ClassListContains("amber-hud") ? 120f : 100f, temperature);
+        float ratio = Mathf.InverseLerp(0f, 100f, temperature);
         if (coolantText != null) coolantText.text = Mathf.RoundToInt(temperature).ToString();
         if (coolantNeedle != null)
         {

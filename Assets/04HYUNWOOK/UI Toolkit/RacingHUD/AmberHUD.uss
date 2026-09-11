@@ -1,0 +1,7 @@
+ .amber-hud { color:#ff9b35;overflow:hidden; }
+.amber-hud VisualElement, .amber-hud Label { margin:0;padding:0;border-width:0;flex-shrink:0; }
+.amber-hud Label { -unity-font-definition:url("project://database/Assets/04HYUNWOOK/Resources/RacingHud/DepartureMono-Regular.otf?fileID=12800000&guid=75b4d49a793f4a848792f3b6f2b644e0&type=3#DepartureMono-Regular");-unity-font:url("project://database/Assets/04HYUNWOOK/Resources/RacingHud/DepartureMono-Regular.otf?fileID=12800000&guid=75b4d49a793f4a848792f3b6f2b644e0&type=3#DepartureMono-Regular");-unity-font-style:normal;white-space:nowrap;-unity-text-align:middle-left; }
+.amber-hud .rank-pos,.amber-hud .rank-time,.amber-hud .rpm-tick { -unity-font-definition:url("project://database/Assets/04HYUNWOOK/Resources/RacingHud/DS-DIGI.TTF?fileID=12800000&guid=fbf16cb84ebbc944baf39a0dfcce53f3&type=3#DS-DIGI");-unity-font:url("project://database/Assets/04HYUNWOOK/Resources/RacingHud/DS-DIGI.TTF?fileID=12800000&guid=fbf16cb84ebbc944baf39a0dfcce53f3&type=3#DS-DIGI"); }
+.amber-hud .ranking-row { border-bottom-width:1px;border-bottom-color:rgba(255,155,53,.28); }
+.amber-hud .gauge-track { background-color:rgba(255,155,53,.12);overflow:hidden; }
+.amber-hud .gauge-fill { background-color:#ff9b35; }
