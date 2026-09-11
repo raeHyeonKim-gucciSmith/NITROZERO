@@ -561,18 +561,44 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
     private float HeavyMechanicalRange(float start, float end, float sequence)
     {
-        float amount = SmoothRange(start, end, sequence);
-        float clunkWindow = Mathf.Max(0.001f, (end - start) * 0.22f);
+        float amount = HeavyDrivenRange(start, end, sequence, 0.10f, 0.20f);
+        float clunkWindow = Mathf.Max(0.001f, (end - start) * 0.28f);
         float clunk = Pulse(end - clunkWindow, end, sequence);
         return amount + clunk * panelClunkOvershoot;
     }
 
     private float HeavyEngineRange(float start, float end, float sequence)
     {
-        float amount = SmoothRange(start, end, sequence);
-        float clunkWindow = Mathf.Max(0.001f, (end - start) * 0.18f);
+        float amount = HeavyDrivenRange(start, end, sequence, 0.06f, 0.22f);
+        float clunkWindow = Mathf.Max(0.001f, (end - start) * 0.24f);
         float clunk = Pulse(end - clunkWindow, end, sequence);
         return amount + clunk * engineClunkOvershoot;
+    }
+
+    private static float HeavyDrivenRange(
+        float start,
+        float end,
+        float sequence,
+        float takeUpDistance,
+        float takeUpTime)
+    {
+        float t = Mathf.Clamp01(Mathf.InverseLerp(start, end, sequence));
+        float driveStartsAt = Mathf.Clamp01(takeUpTime + 0.08f);
+
+        if (t < takeUpTime)
+            return Mathf.Lerp(0f, takeUpDistance,
+                Mathf.SmoothStep(0f, 1f, t / takeUpTime));
+
+        if (t < driveStartsAt)
+            return takeUpDistance;
+
+        if (t < 0.84f)
+            return Mathf.Lerp(takeUpDistance, 0.94f,
+                Mathf.SmoothStep(0f, 1f,
+                    Mathf.InverseLerp(driveStartsAt, 0.84f, t)));
+
+        return Mathf.Lerp(0.94f, 1f,
+            Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.84f, 1f, t)));
     }
 
     private bool TryGetNozzlePartPositions(

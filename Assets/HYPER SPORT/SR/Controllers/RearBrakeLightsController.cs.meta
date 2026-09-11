@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d2519950ae4062e4cbed7c722cbcfa47
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 347302
+  packageName: Street Racer.
+  packageVersion: 1.0.1
+  assetPath: Assets/HYPER SPORT/SR/Controllers/RearBrakeLightsController.cs
+  uploadId: 852310

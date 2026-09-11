@@ -12,6 +12,8 @@ public static class MoonSceneAsphaltRoadGenerator
     private const string RoughnessPath = AsphaltFolder + "Asphalt025C_4K-JPG_Roughness.jpg";
     private const string OcclusionPath = AsphaltFolder + "Asphalt025C_4K-JPG_AmbientOcclusion.jpg";
     private const string HeightPath = AsphaltFolder + "Asphalt025C_4K-JPG_Displacement.jpg";
+    private const string Asphalt004Folder = "Assets/01RAEHYEON/Material/Asphalt004_4K-JPG/";
+    private const string Asphalt006Folder = "Assets/01RAEHYEON/Material/Asphalt006_4K-JPG/";
     private const float TileWorldSize = 4f;
     private const float PlacedDomeX = -1123f;
     private const float PlacedDomeZ = 32f;
@@ -48,6 +50,14 @@ public static class MoonSceneAsphaltRoadGenerator
         ConfigureTexture(RoughnessPath, false, false);
         ConfigureTexture(OcclusionPath, false, false);
         ConfigureTexture(HeightPath, false, false);
+        ConfigureTexture(Asphalt004Folder + "Asphalt004_4K-JPG_Color.jpg", false, true);
+        ConfigureTexture(Asphalt004Folder + "Asphalt004_4K-JPG_NormalGL.jpg", true, false);
+        ConfigureTexture(Asphalt004Folder + "Asphalt004_4K-JPG_Roughness.jpg", false, false);
+        ConfigureTexture(Asphalt004Folder + "Asphalt004_4K-JPG_AmbientOcclusion.jpg", false, false);
+        ConfigureTexture(Asphalt006Folder + "Asphalt006_4K-JPG_Color.jpg", false, true);
+        ConfigureTexture(Asphalt006Folder + "Asphalt006_4K-JPG_NormalGL.jpg", true, false);
+        ConfigureTexture(Asphalt006Folder + "Asphalt006_4K-JPG_Roughness.jpg", false, false);
+        ConfigureTexture(Asphalt006Folder + "Asphalt006_4K-JPG_AmbientOcclusion.jpg", false, false);
 
         Material material = AssetDatabase.LoadAssetAtPath<Material>(AsphaltPath);
         Shader shader = Shader.Find("NITRO ZERO/High Quality Asphalt");
@@ -67,6 +77,16 @@ public static class MoonSceneAsphaltRoadGenerator
         material.SetTexture("_BumpMap", normal);
         material.SetTexture("_RoughnessMap", roughness);
         material.SetTexture("_OcclusionMap", occlusion);
+        material.SetTexture("_BaseMapB", AssetDatabase.LoadAssetAtPath<Texture2D>(Asphalt004Folder + "Asphalt004_4K-JPG_Color.jpg"));
+        material.SetTexture("_BumpMapB", AssetDatabase.LoadAssetAtPath<Texture2D>(Asphalt004Folder + "Asphalt004_4K-JPG_NormalGL.jpg"));
+        material.SetTexture("_RoughnessMapB", AssetDatabase.LoadAssetAtPath<Texture2D>(Asphalt004Folder + "Asphalt004_4K-JPG_Roughness.jpg"));
+        material.SetTexture("_OcclusionMapB", AssetDatabase.LoadAssetAtPath<Texture2D>(Asphalt004Folder + "Asphalt004_4K-JPG_AmbientOcclusion.jpg"));
+        material.SetTexture("_BaseMapC", AssetDatabase.LoadAssetAtPath<Texture2D>(Asphalt006Folder + "Asphalt006_4K-JPG_Color.jpg"));
+        material.SetTexture("_BumpMapC", AssetDatabase.LoadAssetAtPath<Texture2D>(Asphalt006Folder + "Asphalt006_4K-JPG_NormalGL.jpg"));
+        material.SetTexture("_RoughnessMapC", AssetDatabase.LoadAssetAtPath<Texture2D>(Asphalt006Folder + "Asphalt006_4K-JPG_Roughness.jpg"));
+        material.SetTexture("_OcclusionMapC", AssetDatabase.LoadAssetAtPath<Texture2D>(Asphalt006Folder + "Asphalt006_4K-JPG_AmbientOcclusion.jpg"));
+        material.SetColor("_BlendBTint", new Color(0.43f, 0.44f, 0.45f, 1f));
+        material.SetColor("_BlendCTint", new Color(0.48f, 0.49f, 0.50f, 1f));
         material.SetColor("_BaseColor", new Color(0.78f, 0.78f, 0.78f, 1f));
         material.SetFloat("_BaseWorldSize", 5.5f);
         material.SetFloat("_SecondaryWorldSize", 17f);
@@ -147,9 +167,10 @@ public static class MoonSceneAsphaltRoadGenerator
     private static void CreateOrUpdateRoad(Scene scene, string objectName, string meshPath,
         Vector3 start, Vector3 end, float width, Material asphalt)
     {
+        float length = Vector3.Distance(start, end);
         Vector3 direction = (end - start).normalized;
         Vector3 lateral = Vector3.Cross(Vector3.up, direction) * (width * 0.5f);
-        float length = Vector3.Distance(start, end);
+        int segments = Mathf.Max(1, Mathf.CeilToInt(length / 100f));
 
         Mesh mesh = AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
         if (mesh == null)
@@ -158,13 +179,25 @@ public static class MoonSceneAsphaltRoadGenerator
             AssetDatabase.CreateAsset(mesh, meshPath);
         }
         mesh.Clear();
-        mesh.vertices = new[] { start - lateral, start + lateral, end - lateral, end + lateral };
-        mesh.uv = new[]
+        Vector3[] vertices = new Vector3[(segments + 1) * 2];
+        Vector2[] uvs = new Vector2[vertices.Length];
+        int[] triangles = new int[segments * 6];
+        for (int i = 0; i <= segments; i++)
         {
-            new Vector2(0f, 0f), new Vector2(width / TileWorldSize, 0f),
-            new Vector2(0f, length / TileWorldSize), new Vector2(width / TileWorldSize, length / TileWorldSize)
-        };
-        mesh.triangles = new[] { 0, 2, 1, 1, 2, 3 };
+            float t = i / (float)segments;
+            Vector3 center = Vector3.Lerp(start, end, t);
+            vertices[i * 2] = center - lateral;
+            vertices[i * 2 + 1] = center + lateral;
+            uvs[i * 2] = new Vector2(0f, length * t / TileWorldSize);
+            uvs[i * 2 + 1] = new Vector2(width / TileWorldSize, length * t / TileWorldSize);
+            if (i == segments) continue;
+            int v = i * 2, q = i * 6;
+            triangles[q] = v; triangles[q + 1] = v + 2; triangles[q + 2] = v + 1;
+            triangles[q + 3] = v + 1; triangles[q + 4] = v + 2; triangles[q + 5] = v + 3;
+        }
+        mesh.vertices = vertices;
+        mesh.uv = uvs;
+        mesh.triangles = triangles;
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
         EditorUtility.SetDirty(mesh);

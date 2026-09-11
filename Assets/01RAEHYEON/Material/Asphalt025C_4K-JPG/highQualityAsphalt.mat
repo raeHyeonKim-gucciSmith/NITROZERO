@@ -44,8 +44,24 @@ Material:
         m_Texture: {fileID: 2800000, guid: eff746a7f38526c429296ef4de905c0a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BaseMapB:
+        m_Texture: {fileID: 2800000, guid: 2f6658ab4bea5194bb521c43187f8350, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseMapC:
+        m_Texture: {fileID: 2800000, guid: 6257c1684724ac0418fa2ee079b38e95, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 8fe1d207046cd194c8947d765c0af470, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMapB:
+        m_Texture: {fileID: 2800000, guid: 6c1b075e053ba714095219d5f15c6e40, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMapC:
+        m_Texture: {fileID: 2800000, guid: 8f21b0e3f12c51047a7d21452ff35db1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -76,12 +92,28 @@ Material:
         m_Texture: {fileID: 2800000, guid: 56b0d369b1f4dae4cb785c706a2e38c4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _OcclusionMapB:
+        m_Texture: {fileID: 2800000, guid: adc437ef8081e8c4182bb8f28e15fac9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMapC:
+        m_Texture: {fileID: 2800000, guid: 4cef7847ee63c2d4dabcab50490057e9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 2800000, guid: 5fcd1dfdd955b374f879246b04d7d905, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RoughnessMap:
         m_Texture: {fileID: 2800000, guid: 6be8ac45dbf3ca64ebf2819f74d78be0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RoughnessMapB:
+        m_Texture: {fileID: 2800000, guid: 5ca7561ffbfdc9e4fa47f88b472fe5fc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RoughnessMapC:
+        m_Texture: {fileID: 2800000, guid: 71c9dc795d7ecf94ca3fec18cdd676fb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -145,6 +177,8 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+    - _BlendBTint: {r: 0.43, g: 0.44, b: 0.45, a: 1}
+    - _BlendCTint: {r: 0.48, g: 0.49, b: 0.5, a: 1}
     - _Color: {r: 0.78, g: 0.78, b: 0.78, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

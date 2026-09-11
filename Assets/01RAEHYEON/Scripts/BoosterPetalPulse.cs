@@ -6,9 +6,10 @@ public sealed class BoosterPetalPulse : MonoBehaviour
     [SerializeField] private VariableNozzleController nozzleController;
     [SerializeField, Range(-1f, 0f)] private float maximumOpenClosure = -0.5f;
     [SerializeField, Range(0f, 1f)] private float maximumContractedClosure = 0.65f;
+    [Tooltip("노즐 점검을 시작하며 블레이드가 축소되기 시작하는 시점")]
     [SerializeField, Range(0f, 1f)] private float openingStart = 0.6875f;
-    [SerializeField, Range(0f, 1f)] private float fullyOpenAt = 0.78125f;
-    [SerializeField, Range(0f, 1f)] private float fullyContractedAt = 0.88125f;
+    [SerializeField, Range(0f, 1f)] private float fullyContractedAt = 0.765625f;
+    [SerializeField, Range(0f, 1f)] private float fullyOpenAt = 0.875f;
     [SerializeField, Range(0f, 1f)] private float horizontalAgainAt = 1f;
     [SerializeField, HideInInspector] private Quaternion[] storedNeutralRotations = new Quaternion[0];
 
@@ -79,23 +80,23 @@ public sealed class BoosterPetalPulse : MonoBehaviour
         {
             closure = 0f;
         }
-        else if (amount < fullyOpenAt)
-        {
-            float opening = SmoothRange(openingStart, fullyOpenAt, amount);
-            closure = Mathf.LerpUnclamped(1f, maximumOpenClosure, opening);
-        }
         else if (amount < fullyContractedAt)
         {
-            float contracting = SmoothRange(fullyOpenAt, fullyContractedAt, amount);
+            float contracting = HeavyPhase(openingStart, fullyContractedAt, amount, 0.055f);
+            closure = Mathf.LerpUnclamped(0f, maximumContractedClosure, contracting);
+        }
+        else if (amount < fullyOpenAt)
+        {
+            float opening = HeavyPhase(fullyContractedAt, fullyOpenAt, amount, 0.045f);
             closure = Mathf.LerpUnclamped(
-                maximumOpenClosure,
                 maximumContractedClosure,
-                contracting);
+                maximumOpenClosure,
+                opening);
         }
         else
         {
-            float leveling = SmoothRange(fullyContractedAt, horizontalAgainAt, amount);
-            closure = Mathf.LerpUnclamped(maximumContractedClosure, 0f, leveling);
+            float leveling = HeavyPhase(fullyOpenAt, horizontalAgainAt, amount, 0.04f);
+            closure = Mathf.LerpUnclamped(maximumOpenClosure, 0f, leveling);
         }
 
         nozzleController.ApplyClosureImmediate(closure);
@@ -105,5 +106,21 @@ public sealed class BoosterPetalPulse : MonoBehaviour
     {
         float t = Mathf.InverseLerp(start, end, value);
         return Mathf.SmoothStep(0f, 1f, t);
+    }
+
+    private static float HeavyPhase(float start, float end, float value, float overshoot)
+    {
+        float t = Mathf.Clamp01(Mathf.InverseLerp(start, end, value));
+        float driven;
+
+        if (t < 0.18f)
+            driven = Mathf.Lerp(0f, 0.07f, Mathf.SmoothStep(0f, 1f, t / 0.18f));
+        else if (t < 0.82f)
+            driven = Mathf.Lerp(0.07f, 0.94f, Mathf.SmoothStep(0f, 1f, (t - 0.18f) / 0.64f));
+        else
+            driven = Mathf.Lerp(0.94f, 1f, Mathf.SmoothStep(0f, 1f, (t - 0.82f) / 0.18f));
+
+        float impact = Mathf.Sin(Mathf.InverseLerp(0.72f, 1f, t) * Mathf.PI);
+        return driven + impact * overshoot;
     }
 }

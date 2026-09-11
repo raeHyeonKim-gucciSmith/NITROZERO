@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2c8b2550faa7eed489982e6528776c0d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 347302
+  packageName: Street Racer.
+  packageVersion: 1.0.1
+  assetPath: Assets/HYPER SPORT/SR/Controllers/CarTestController.cs
+  uploadId: 852310
