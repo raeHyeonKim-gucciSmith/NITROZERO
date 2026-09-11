@@ -14,6 +14,9 @@ public static class MoonSceneAsphaltRoadGenerator
     private const string HeightPath = AsphaltFolder + "Asphalt025C_4K-JPG_Displacement.jpg";
     private const string Asphalt004Folder = "Assets/01RAEHYEON/Material/Asphalt004_4K-JPG/";
     private const string Asphalt006Folder = "Assets/01RAEHYEON/Material/Asphalt006_4K-JPG/";
+    private const string RoadLineFolder = "Assets/01RAEHYEON/Material/RoadLines002_4K-JPG/";
+    private const string RoadLineMaterialPath = RoadLineFolder + "OldMoonRoadLine.mat";
+    private const string RoadDustMaterialPath = AsphaltFolder + "MoonRoadEdgeDust.mat";
     private const float TileWorldSize = 4f;
     private const float PlacedDomeX = -1123f;
     private const float PlacedDomeZ = 32f;
@@ -22,12 +25,14 @@ public static class MoonSceneAsphaltRoadGenerator
     public static void ApplyAll()
     {
         Material asphalt = CreateHighQualityAsphalt();
+        Material roadLine = CreateOverlayMaterial(false);
+        Material roadDust = CreateOverlayMaterial(true);
         BuildStraightRoad("Assets/Scenes/avoidMissile.unity", "Avoid Missile Asphalt Road",
-            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 100f, asphalt);
+            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 100f, asphalt, roadLine, roadDust);
         BuildStraightRoad("Assets/Scenes/boostOn.unity", "Boost On Asphalt Road",
-            "Assets/Terrain/BoostOn_AsphaltRoad.asset", -3000f, 3000f, 0f, -23.65f, 140f, asphalt);
-        BuildDomeRoad(asphalt);
-        ApplyRacingRoad(asphalt);
+            "Assets/Terrain/BoostOn_AsphaltRoad.asset", -3000f, 3000f, 0f, -23.65f, 140f, asphalt, roadLine, roadDust);
+        BuildDomeRoad(asphalt, roadLine, roadDust);
+        ApplyRacingRoad(asphalt, roadLine, roadDust);
 
         AssetDatabase.SaveAssets();
         Debug.Log("[NITRO ZERO] highQualityAsphalt applied to all four moon-road scenes.");
@@ -38,7 +43,8 @@ public static class MoonSceneAsphaltRoadGenerator
     {
         Material asphalt = CreateHighQualityAsphalt();
         BuildStraightRoad("Assets/Scenes/avoidMissile.unity", "Avoid Missile Asphalt Road",
-            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 100f, asphalt);
+            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 100f, asphalt,
+            CreateOverlayMaterial(false), CreateOverlayMaterial(true));
         AssetDatabase.SaveAssets();
         Debug.Log("[NITRO ZERO] avoidMissile asphalt road restored without changing other scenes.");
     }
@@ -102,6 +108,32 @@ public static class MoonSceneAsphaltRoadGenerator
         return material;
     }
 
+    private static Material CreateOverlayMaterial(bool dust)
+    {
+        string colorPath = dust ? "Assets/02YUJEONG/Moon/moon_dusted_01_2k.blend/textures/moon_dusted_01_diff_2k.jpg"
+            : RoadLineFolder + "RoadLines002_4K-JPG_Color.jpg";
+        string opacityPath = dust ? colorPath : RoadLineFolder + "RoadLines002_4K-JPG_Opacity.jpg";
+        ConfigureTexture(colorPath, false, true);
+        ConfigureTexture(opacityPath, false, false);
+        if (!dust) ConfigureTexture(RoadLineFolder + "RoadLines002_4K-JPG_NormalGL.jpg", true, false);
+        string path = dust ? RoadDustMaterialPath : RoadLineMaterialPath;
+        Shader shader = Shader.Find("NITRO ZERO/Moon Road Overlay");
+        if (shader == null) throw new MissingReferenceException("Moon Road Overlay shader was not found.");
+        Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+        if (material == null) { material = new Material(shader); AssetDatabase.CreateAsset(material, path); }
+        material.shader = shader;
+        material.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>(colorPath));
+        material.SetTexture("_OpacityMap", AssetDatabase.LoadAssetAtPath<Texture2D>(opacityPath));
+        material.SetColor("_Tint", dust ? new Color(0.46f,0.47f,0.48f,1f) : new Color(0.76f,0.75f,0.70f,1f));
+        material.SetFloat("_RepeatLength", dust ? 19f : 3.95f);
+        material.SetFloat("_Opacity", dust ? 0.54f : 0.92f);
+        material.SetFloat("_NoiseScale", dust ? 23f : 9f);
+        material.SetFloat("_Cutoff", dust ? 0.035f : 0.1f);
+        material.SetFloat("_IsDust", dust ? 1f : 0f);
+        EditorUtility.SetDirty(material);
+        return material;
+    }
+
     private static void ConfigureTexture(string path, bool normalMap, bool srgb)
     {
         AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
@@ -117,7 +149,7 @@ public static class MoonSceneAsphaltRoadGenerator
         importer.SaveAndReimport();
     }
 
-    private static void ApplyRacingRoad(Material asphalt)
+    private static void ApplyRacingRoad(Material asphalt, Material roadLine, Material roadDust)
     {
         Scene scene = EditorSceneManager.OpenScene("Assets/Scenes/racing.unity", OpenSceneMode.Single);
         GameObject road = GameObject.Find("Racing Asphalt Road Preview");
@@ -130,12 +162,13 @@ public static class MoonSceneAsphaltRoadGenerator
             MeshCollider collider = road.GetComponent<MeshCollider>();
             if (collider == null) collider = road.AddComponent<MeshCollider>();
             collider.sharedMesh = filter.sharedMesh;
+            CreateRoadOverlays(scene, road, filter.sharedMesh, "Assets/Terrain/Racing", roadLine, roadDust);
         }
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
     }
 
-    private static void BuildDomeRoad(Material asphalt)
+    private static void BuildDomeRoad(Material asphalt, Material roadLine, Material roadDust)
     {
         const string scenePath = "Assets/Scenes/domeInTheMoon.unity";
         Scene scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
@@ -149,23 +182,23 @@ public static class MoonSceneAsphaltRoadGenerator
         startX = Mathf.Max(startX, domeX + 190f);
 
         CreateOrUpdateRoad(scene, "Dome Exit Asphalt Road", "Assets/Terrain/DomeExit_AsphaltRoad.asset",
-            new Vector3(startX, -19.65f, roadZ), new Vector3(3000f, -19.65f, roadZ), 150f, asphalt);
+            new Vector3(startX, -19.65f, roadZ), new Vector3(3000f, -19.65f, roadZ), 150f, asphalt, roadLine, roadDust);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
     }
 
     private static void BuildStraightRoad(string scenePath, string objectName, string meshPath,
-        float startX, float endX, float z, float y, float width, Material asphalt)
+        float startX, float endX, float z, float y, float width, Material asphalt, Material roadLine, Material roadDust)
     {
         Scene scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
         CreateOrUpdateRoad(scene, objectName, meshPath,
-            new Vector3(startX, y, z), new Vector3(endX, y, z), width, asphalt);
+            new Vector3(startX, y, z), new Vector3(endX, y, z), width, asphalt, roadLine, roadDust);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
     }
 
     private static void CreateOrUpdateRoad(Scene scene, string objectName, string meshPath,
-        Vector3 start, Vector3 end, float width, Material asphalt)
+        Vector3 start, Vector3 end, float width, Material asphalt, Material roadLine, Material roadDust)
     {
         float length = Vector3.Distance(start, end);
         Vector3 direction = (end - start).normalized;
@@ -219,6 +252,56 @@ public static class MoonSceneAsphaltRoadGenerator
         collider.sharedMesh = null;
         collider.sharedMesh = mesh;
         road.isStatic = true;
+        CreateRoadOverlays(scene, road, mesh, meshPath.Substring(0, meshPath.Length - 6), roadLine, roadDust);
+    }
+
+    private static void CreateRoadOverlays(Scene scene, GameObject road, Mesh source, string assetPrefix,
+        Material roadLine, Material roadDust)
+    {
+        Vector3[] sourceVertices = source.vertices;
+        if (sourceVertices.Length < 4 || sourceVertices.Length % 2 != 0) return;
+        int sections = sourceVertices.Length / 2;
+        BuildEdgeOverlay(scene, road, sourceVertices, sections, assetPrefix + "_EdgeLines.asset",
+            road.name + " Edge Lines", 4.0f, 2.5f, 0.018f, roadLine);
+        BuildEdgeOverlay(scene, road, sourceVertices, sections, assetPrefix + "_EdgeDust.asset",
+            road.name + " Edge Dust", 0f, 7.5f, 0.009f, roadDust);
+    }
+
+    private static void BuildEdgeOverlay(Scene scene, GameObject road, Vector3[] edges, int sections,
+        string meshPath, string objectName, float inset, float stripWidth, float height, Material material)
+    {
+        Vector3[] vertices = new Vector3[sections * 4];
+        Vector2[] uvs = new Vector2[vertices.Length];
+        int[] triangles = new int[(sections - 1) * 12];
+        float distance = 0f;
+        for (int i = 0; i < sections; i++)
+        {
+            Vector3 left = edges[i * 2], right = edges[i * 2 + 1];
+            Vector3 inward = (right - left).normalized;
+            if (i > 0) distance += Vector3.Distance((edges[(i-1)*2]+edges[(i-1)*2+1])*0.5f, (left+right)*0.5f);
+            vertices[i*4] = left + inward*inset + Vector3.up*height;
+            vertices[i*4+1] = left + inward*(inset+stripWidth) + Vector3.up*height;
+            vertices[i*4+2] = right - inward*(inset+stripWidth) + Vector3.up*height;
+            vertices[i*4+3] = right - inward*inset + Vector3.up*height;
+            uvs[i*4]=new Vector2(0,distance); uvs[i*4+1]=new Vector2(1,distance);
+            uvs[i*4+2]=new Vector2(1,distance); uvs[i*4+3]=new Vector2(0,distance);
+            if(i==sections-1) continue;
+            int v=i*4,q=i*12;
+            triangles[q]=v; triangles[q+1]=v+4; triangles[q+2]=v+1;
+            triangles[q+3]=v+1; triangles[q+4]=v+4; triangles[q+5]=v+5;
+            triangles[q+6]=v+2; triangles[q+7]=v+6; triangles[q+8]=v+3;
+            triangles[q+9]=v+3; triangles[q+10]=v+6; triangles[q+11]=v+7;
+        }
+        Mesh mesh=AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
+        if(mesh==null){ mesh=new Mesh{name=objectName+" Mesh"}; AssetDatabase.CreateAsset(mesh,meshPath); }
+        mesh.Clear(); mesh.vertices=vertices; mesh.uv=uvs; mesh.triangles=triangles; mesh.RecalculateNormals(); mesh.RecalculateBounds(); EditorUtility.SetDirty(mesh);
+        GameObject overlay=GameObject.Find(objectName);
+        if(overlay==null){ overlay=new GameObject(objectName); SceneManager.MoveGameObjectToScene(overlay,scene); }
+        overlay.transform.SetPositionAndRotation(road.transform.position,road.transform.rotation);
+        overlay.transform.localScale=road.transform.localScale;
+        MeshFilter filter=overlay.GetComponent<MeshFilter>(); if(filter==null) filter=overlay.AddComponent<MeshFilter>();
+        MeshRenderer renderer=overlay.GetComponent<MeshRenderer>(); if(renderer==null) renderer=overlay.AddComponent<MeshRenderer>();
+        filter.sharedMesh=mesh; renderer.sharedMaterial=material; overlay.isStatic=true;
     }
 
 }

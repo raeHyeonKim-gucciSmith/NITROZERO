@@ -30,15 +30,15 @@ public static class MoonSurfaceTerrainLayerGenerator
         ConfigureTexture(GroundColor, false, 4096);
         ConfigureTexture(GroundNormal, true, 4096);
 
-        TerrainLayer baseLayer = CreateLayer("HighQualityMoon_Base", BaseColor, BaseNormal, 57f, 0.82f, 0.008f,
+        TerrainLayer baseLayer = CreateLayer("HighQualityMoon_Base", BaseColor, BaseNormal, 57f, 0.62f, 0f,
             new Color(0.88f, 0.89f, 0.91f, 1f));
-        TerrainLayer dustLayer = CreateLayer("HighQualityMoon_Dust", DustColor, DustNormal, 93f, 0.52f, 0.004f,
+        TerrainLayer dustLayer = CreateLayer("HighQualityMoon_Dust", DustColor, DustNormal, 93f, 0.34f, 0f,
             new Color(0.82f, 0.84f, 0.88f, 1f));
-        TerrainLayer rockLayer = CreateLayer("HighQualityMoon_Rock", RockColor, RockNormal, 37f, 1.05f, 0.012f,
+        TerrainLayer rockLayer = CreateLayer("HighQualityMoon_Rock", RockColor, RockNormal, 37f, 0.78f, 0f,
             new Color(0.58f, 0.61f, 0.66f, 1f));
-        TerrainLayer gravelLayer = CreateLayer("HighQualityMoon_Gravel", GravelColor, GravelNormal, 46f, 0.88f, 0.006f,
+        TerrainLayer gravelLayer = CreateLayer("HighQualityMoon_Gravel", GravelColor, GravelNormal, 46f, 0.66f, 0f,
             new Color(0.55f, 0.57f, 0.61f, 1f));
-        TerrainLayer groundLayer = CreateLayer("HighQualityMoon_Ground", GroundColor, GroundNormal, 127f, 0.42f, 0.003f,
+        TerrainLayer groundLayer = CreateLayer("HighQualityMoon_Ground", GroundColor, GroundNormal, 127f, 0.3f, 0f,
             new Color(0.49f, 0.51f, 0.55f, 1f));
         TerrainLayer[] layers = { baseLayer, dustLayer, rockLayer, gravelLayer, groundLayer };
 
@@ -121,11 +121,11 @@ public static class MoonSurfaceTerrainLayerGenerator
     private static float DistanceToRacingRoad(float x, float z)
     {
         Vector2 p = new Vector2(x, z);
-        float straight = DistanceToSegment(p, new Vector2(-2050f, 600f), new Vector2(300f, 600f));
-        Vector2 center = new Vector2(300f, 0f), local = p - center;
+        float straight = DistanceToSegment(p, new Vector2(-2050f, 600f), new Vector2(-200f, 600f));
+        Vector2 center = new Vector2(-200f, 0f), local = p - center;
         float angle = Mathf.Atan2(local.y, local.x) * Mathf.Rad2Deg;
         float endAngle = -20f * Mathf.Deg2Rad;
-        Vector2 arcStart = new Vector2(300f, 600f);
+        Vector2 arcStart = new Vector2(-200f, 600f);
         Vector2 arcEnd = center + new Vector2(Mathf.Cos(endAngle), Mathf.Sin(endAngle)) * 600f;
         float arc = angle >= -20f && angle <= 90f ? Mathf.Abs(local.magnitude - 600f)
             : Mathf.Min(Vector2.Distance(p, arcStart), Vector2.Distance(p, arcEnd));
@@ -171,7 +171,7 @@ public static class MoonSurfaceTerrainLayerGenerator
         layer.normalScale = normalScale;
         layer.metallic = 0f;
         layer.smoothness = smoothness;
-        layer.specular = new Color(0.015f, 0.015f, 0.015f, 1f);
+        layer.specular = Color.clear;
         layer.diffuseRemapMin = Color.black;
         layer.diffuseRemapMax = tint;
         EditorUtility.SetDirty(layer);
