@@ -10,6 +10,10 @@ public static class MoonSurfaceTerrainLayerGenerator
     private const string DustNormal = "Assets/02YUJEONG/Moon/moon_dusted_01_2k.blend/textures/moon_dusted_01_nor_gl_2k.exr";
     private const string RockColor = "Assets/01RAEHYEON/Material/Rock030_4K-JPG/Rock030_4K-JPG_Color.jpg";
     private const string RockNormal = "Assets/01RAEHYEON/Material/Rock030_4K-JPG/Rock030_4K-JPG_NormalGL.jpg";
+    private const string GravelColor = "Assets/01RAEHYEON/Material/Gravel035_4K-JPG/Gravel035_4K-JPG_Color.jpg";
+    private const string GravelNormal = "Assets/01RAEHYEON/Material/Gravel035_4K-JPG/Gravel035_4K-JPG_NormalGL.jpg";
+    private const string GroundColor = "Assets/01RAEHYEON/Material/Ground054_4K-JPG/Ground054_4K-JPG_Color.jpg";
+    private const string GroundNormal = "Assets/01RAEHYEON/Material/Ground054_4K-JPG/Ground054_4K-JPG_NormalGL.jpg";
 
     [MenuItem("NITRO ZERO/Moon Terrain/Apply Three-Layer Moon Surface")]
     public static void ApplyAll()
@@ -21,6 +25,10 @@ public static class MoonSurfaceTerrainLayerGenerator
         ConfigureTexture(DustNormal, true, 2048);
         ConfigureTexture(RockColor, false, 4096);
         ConfigureTexture(RockNormal, true, 4096);
+        ConfigureTexture(GravelColor, false, 4096);
+        ConfigureTexture(GravelNormal, true, 4096);
+        ConfigureTexture(GroundColor, false, 4096);
+        ConfigureTexture(GroundNormal, true, 4096);
 
         TerrainLayer baseLayer = CreateLayer("HighQualityMoon_Base", BaseColor, BaseNormal, 57f, 0.82f, 0.008f,
             new Color(0.88f, 0.89f, 0.91f, 1f));
@@ -28,14 +36,18 @@ public static class MoonSurfaceTerrainLayerGenerator
             new Color(0.82f, 0.84f, 0.88f, 1f));
         TerrainLayer rockLayer = CreateLayer("HighQualityMoon_Rock", RockColor, RockNormal, 37f, 1.05f, 0.012f,
             new Color(0.58f, 0.61f, 0.66f, 1f));
-        TerrainLayer[] layers = { baseLayer, dustLayer, rockLayer };
+        TerrainLayer gravelLayer = CreateLayer("HighQualityMoon_Gravel", GravelColor, GravelNormal, 46f, 0.88f, 0.006f,
+            new Color(0.55f, 0.57f, 0.61f, 1f));
+        TerrainLayer groundLayer = CreateLayer("HighQualityMoon_Ground", GroundColor, GroundNormal, 127f, 0.42f, 0.003f,
+            new Color(0.49f, 0.51f, 0.55f, 1f));
+        TerrainLayer[] layers = { baseLayer, dustLayer, rockLayer, gravelLayer, groundLayer };
 
         ApplyToTerrain("Assets/Terrain/AvoidMissile_MoonTerrain.asset", layers, 17f, SceneKind.AvoidMissile);
         ApplyToTerrain("Assets/Terrain/BoostOn_MoonOpenPlain_v5.asset", layers, 43f, SceneKind.BoostOn);
         ApplyToTerrain("Assets/Terrain/DomeInTheMoon_Basin.asset", layers, 79f, SceneKind.Dome);
         ApplyToTerrain("Assets/Terrain/Racing_JCurveMoonTerrain.asset", layers, 113f, SceneKind.Racing);
         AssetDatabase.SaveAssets();
-        Debug.Log("[NITRO ZERO] Three-layer moon surface applied without changing terrain heights.");
+        Debug.Log("[NITRO ZERO] Five-layer moon surface applied without changing terrain heights.");
     }
 
     private enum SceneKind { AvoidMissile, BoostOn, Dome, Racing }
@@ -46,7 +58,7 @@ public static class MoonSurfaceTerrainLayerGenerator
         if (data == null) throw new MissingReferenceException("TerrainData not found: " + path);
         data.terrainLayers = layers;
         int resolution = data.alphamapResolution;
-        float[,,] alpha = new float[resolution, resolution, 3];
+        float[,,] alpha = new float[resolution, resolution, 5];
         for (int z = 0; z < resolution; z++)
         {
             float nz = z / (float)(resolution - 1);
@@ -77,14 +89,21 @@ public static class MoonSurfaceTerrainLayerGenerator
                     float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(-1500f, 0f));
                     dust += (1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(430f, 900f, domeDistance))) * 0.24f;
                 }
-                if (IsRoad(kind, worldX, worldZ)) dust = Mathf.Max(dust, 0.62f);
+                bool road = IsRoad(kind, worldX, worldZ);
+                if (road) dust = Mathf.Max(dust, 0.62f);
 
                 dust = Mathf.Clamp01(dust);
-                float baseWeight = Mathf.Max(0.12f, 1f - rock - dust);
-                float sum = baseWeight + dust + rock;
+                float gravelMask = Mathf.SmoothStep(0.43f, 0.78f, warped * 0.58f + crossNoise * 0.42f);
+                float gravel = road ? 0f : gravelMask * Mathf.Lerp(0.04f, 0.28f, rockBySlope) * (1f - dust * 0.52f);
+                float groundMask = Mathf.SmoothStep(0.34f, 0.72f, regional * 0.64f + (1f - crossNoise) * 0.36f);
+                float ground = road ? 0f : flatness * groundMask * 0.22f * (1f - rock * 0.76f);
+                float baseWeight = Mathf.Max(0.12f, 1f - rock - dust - gravel - ground);
+                float sum = baseWeight + dust + rock + gravel + ground;
                 alpha[z, x, 0] = baseWeight / sum;
                 alpha[z, x, 1] = dust / sum;
                 alpha[z, x, 2] = rock / sum;
+                alpha[z, x, 3] = gravel / sum;
+                alpha[z, x, 4] = ground / sum;
             }
         }
         data.SetAlphamaps(0, 0, alpha);
