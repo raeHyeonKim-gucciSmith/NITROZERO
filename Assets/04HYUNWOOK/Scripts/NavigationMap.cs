@@ -9,6 +9,8 @@ namespace RacingUI
     {
         float roadWidthValue = .55f, horizonValue = .22f, hazeValue = 1f;
         float lateral, heading;
+        [UxmlAttribute] public bool amberRoute { get; set; }
+        [UxmlAttribute] public bool referenceMarker { get; set; }
         Color mapTintValue = Color.clear;
         [UxmlAttribute]
         public Color mapTint { get => mapTintValue; set { mapTintValue = value; MarkDirtyRepaint(); } }
@@ -84,6 +86,24 @@ namespace RacingUI
             Rect r = contentRect;
             if (r.width <= 0 || r.height <= 0) return;
             var p = context.painter2D;
+            if (amberRoute) {
+                float cx=r.width*(.5f-lateral*.4f);
+                for(int j=0;j<3;j++){
+                    p.lineWidth=j==0?8:j==1?4:2;
+                    p.strokeColor=new Color(1,.66f,.18f,j==0?.06f:j==1?.22f:1);
+                    p.BeginPath();p.MoveTo(new Vector2(cx,r.height*.82f));
+                    p.LineTo(new Vector2(cx,r.height*.08f));p.Stroke();
+                }
+                var markerAt=new Vector2(r.width*.5f,r.height*.8f);float sz=referenceMarker?15:11;
+                var rot=Quaternion.Euler(0,0,-heading);
+                Vector2 Offset(float x,float y)=>markerAt+(Vector2)(rot*new Vector3(x,y,0));
+                Quad(p,new Color(1,.5f,.1f,1),Offset(-sz,sz*.7f),Offset(0,-sz),Offset(sz,sz*.7f),Offset(0,sz*.25f));
+                if(referenceMarker){
+                    Quad(p,new Color(1,.70f,.30f,1),Offset(-sz*.64f,sz*.42f),Offset(0,-sz*.70f),Offset(sz*.64f,sz*.42f),Offset(0,0));
+                    Quad(p,new Color(.55f,.21f,.04f,1),Offset(-sz*.22f,sz*.12f),Offset(0,-sz*.29f),Offset(sz*.22f,sz*.12f),Offset(0,0));
+                }
+                return;
+            }
             // Layered dark haze has no world imagery: only the road remains distinct.
             for (int i = 0; i < 40; i++)
             {

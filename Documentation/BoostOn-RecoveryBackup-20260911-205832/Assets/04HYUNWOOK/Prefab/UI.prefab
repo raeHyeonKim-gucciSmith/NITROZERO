@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6005321131793931914
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6461654280933138413}
+  - component: {fileID: 2748832458481113038}
+  - component: {fileID: 2342058729020817483}
+  - component: {fileID: 5290447982830600919}
+  m_Layer: 5
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6461654280933138413
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6005321131793931914}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2748832458481113038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6005321131793931914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: e2734df668734164697b413263837820, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 7b03694884b1fa64f8110effdbb20bdd, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &2342058729020817483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6005321131793931914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cb97509d25145f42a5723e45aa39ce4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RacingHudController
+  car: {fileID: 0}
+  tpsDocument: {fileID: 9197481963319205126, guid: 7b03694884b1fa64f8110effdbb20bdd, type: 3}
+  fpsDocument: {fileID: 9197481963319205126, guid: 487504f1e1ba4755becc848165de6e27, type: 3}
+  speedometerMaximum: 300
+  tachometerMaximum: 8000
+  needleStartAngle: 150
+  needleSweep: 240
+  needleResponse: 12
+  fuelCapacityLitres: 60
+  displayedFuelLitres: 60
+  secondsPerFuelPercentAtMaxSpeed: 5
+  playHelmetStartup: 1
+  startupClearTime: 0.3
+  shieldCloseTime: 0.65
+  startupBlackHold: 0.15
+  hudPowerFadeTime: 0.8
+  powerOnSound: {fileID: 8300000, guid: 467d4d0edb81413a9831d805d5f6486b, type: 3}
+  shieldCloseSound: {fileID: 8300000, guid: 0af4a86a6cd74971890d5fc6d8269625, type: 3}
+  startupVolume: 0.4
+  enableSpeedShake: 1
+  shakeStartSpeed: 30
+  shakeFullSpeed: 300
+  shakeMaxPixels: 2.5
+  shakeFrequency: 14
+  shakeSmoothTime: 0.2
+  minimapRoad: {fileID: 0}
+  mapStart: {x: 126, y: 198}
+  mapEnd: {x: 126, y: 52}
+  mapRoadWidth: 20
+  lapStartPoint: {fileID: 0}
+  playerName: PLAYER
+  finishAtRoadEnd: 1
+--- !u!114 &5290447982830600919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6005321131793931914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c2324a085612d4ab0362341f6693d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RacingHudCurvature
+  curvature: 0.095
+  curvedShader: {fileID: 4800000, guid: 36faa7bd742bb204582ce79c7493cbf5, type: 3}

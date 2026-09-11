@@ -98,3 +98,11 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# MVC setup wizard requires these bundled import packages.
+!/[Pp]ackages/dev.bxbstudio.mvc.community/Setup~/
+!/[Pp]ackages/dev.bxbstudio.mvc.community/Setup~/*.unitypackage
+!/[Pp]ackages/dev.bxbstudio.mvc.community/Setup~/*.unitypackage.meta
+!/[Pp]ackages/dev.bxbstudio.mvc.community/Samples~/
+!/[Pp]ackages/dev.bxbstudio.mvc.community/Samples~/*.unitypackage
+!/[Pp]ackages/dev.bxbstudio.mvc.community/Samples~/*.unitypackage.meta

@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
   m_PanelSettings: {fileID: 11400000, guid: e2734df668734164697b413263837820, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 7b03694884b1fa64f8110effdbb20bdd, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 9dc2c7c0fe7a49d8bbb77d9a479f788d, type: 3}
   m_SortingOrder: 0
   m_Position: 0
   m_WorldSpaceSizeMode: 1
@@ -70,8 +70,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RacingHudController
   car: {fileID: 0}
-  tpsDocument: {fileID: 9197481963319205126, guid: 7b03694884b1fa64f8110effdbb20bdd, type: 3}
-  fpsDocument: {fileID: 9197481963319205126, guid: 487504f1e1ba4755becc848165de6e27, type: 3}
+  tpsDocument: {fileID: 9197481963319205126, guid: 9dc2c7c0fe7a49d8bbb77d9a479f788d, type: 3}
+  fpsDocument: {fileID: 9197481963319205126, guid: 826e18e428304dd281799dce2a199048, type: 3}
   speedometerMaximum: 300
   tachometerMaximum: 8000
   needleStartAngle: 150
@@ -101,6 +101,8 @@ MonoBehaviour:
   lapStartPoint: {fileID: 0}
   playerName: PLAYER
   finishAtRoadEnd: 1
+  finishApproachSpeedKmh: 300
+  finishEdgeMargin: 8
 --- !u!114 &5290447982830600919
 MonoBehaviour:
   m_ObjectHideFlags: 0

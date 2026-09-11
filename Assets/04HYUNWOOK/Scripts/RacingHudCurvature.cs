@@ -27,9 +27,13 @@ public sealed class RacingHudCurvature : MonoBehaviour
         if (runtimeSettings == null) return;
         int w = Mathf.Max(64, Screen.width), h = Mathf.Max(64, Screen.height);
         if (surface == null || w != width || h != height) Resize(w, h);
-        material.SetFloat("_Curvature", hudController != null && hudController.IsFirstPersonHud ? curvature : 0f);
+        // Apply visor curvature only to the active first-person document, including FPS 2.
+        // The authored perimeter still owns its outside mask independently of this projection.
+        bool authoredLayout = document.rootVisualElement.Q("racing-hud")?.ClassListContains("production-hud") == true;
+        bool firstPerson = document.rootVisualElement.Q("racing-hud")?.ClassListContains("fps-document") == true;
+        material.SetFloat("_Curvature", firstPerson ? curvature : 0f);
         bool activeHud = hudController != null && hudController.isActiveAndEnabled;
-        material.SetFloat("_OutsideOpacity", activeHud && hudController.IsFirstPersonHud ? hudController.StartupOpacity : 0f);
+        material.SetFloat("_OutsideOpacity", !authoredLayout && activeHud && hudController.IsFirstPersonHud ? hudController.StartupOpacity : 0f);
         material.SetFloat("_ShieldCoverage", activeHud ? hudController.StartupShieldCoverage : 0f);
         material.SetFloat("_ShieldOpacity", activeHud ? hudController.StartupShieldOpacity : 0f);
         // The shader composites this in screen space, after curvature, covering every pixel.
@@ -63,7 +67,7 @@ public sealed class RacingHudCurvature : MonoBehaviour
         rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
         rect.offsetMin = rect.offsetMax = Vector2.zero;
         Resize(Mathf.Max(64, Screen.width), Mathf.Max(64, Screen.height));
-        document.panelSettings = runtimeSettings;
+        SwitchPanelSettings(runtimeSettings);
     }
 
     void Resize(int w, int h)
@@ -92,12 +96,25 @@ public sealed class RacingHudCurvature : MonoBehaviour
             GL.Clear(true, true, Color.clear);
         }
         finally { RenderTexture.active = previous; }
-        document.rootVisualElement?.MarkDirtyRepaint();
+        if (document != null) document.rootVisualElement?.MarkDirtyRepaint();
+    }
+
+    // UIDocument unregisters its asset tracker in OnDisable using the CURRENT panel.
+    // Disable before changing panels so the previous panel cannot retain a dead document.
+    void SwitchPanelSettings(PanelSettings next)
+    {
+        if (document == null || document.panelSettings == next) return;
+        bool wasEnabled = document.enabled;
+        bool hadRoot = document.rootVisualElement != null;
+        document.enabled = false;
+        document.panelSettings = next;
+        if (wasEnabled && (hadRoot || !document.gameObject.activeInHierarchy)) document.enabled = true;
     }
 
     void OnDisable()
     {
-        if (document != null && document.panelSettings == runtimeSettings) document.panelSettings = originalSettings;
+        if (document != null && runtimeSettings != null && document.panelSettings == runtimeSettings)
+            SwitchPanelSettings(originalSettings);
         if (surface != null) { surface.Release(); Release(surface); }
         Release(overlay); Release(material); Release(runtimeSettings);
         surface = null; overlay = null; material = null; runtimeSettings = null; image = null;
