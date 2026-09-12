@@ -180,6 +180,7 @@ namespace Damin.Trailer.FinalVFX
             if(bodyBlocker){VFXValues.Vector(effect,"BodyCenter",frame.InverseTransformPoint(bodyBlocker.position));VFXValues.Vector(effect,"BodySize",Abs(frame.InverseTransformVector(bodyBlocker.TransformVector(Vector3.one))));}
             VFXValues.Float(effect,"CollisionMargin",collisionMargin);
             if(effect==sideLeft||effect==sideRight){
+                VFXValues.Vector(effect,"UpDirection",frame.InverseTransformDirection(Vector3.up));
                 VFXValues.Float(effect,"Lifetime",sideLifetime);VFXValues.Float(effect,"Expansion",sideExpansion);
                 VFXValues.Float(effect,"Drag",sideDrag);VFXValues.Float(effect,"Buoyancy",sideBuoyancy);
                 VFXValues.Color(effect,"SmokeColor",sideColor);
@@ -194,14 +195,15 @@ namespace Damin.Trailer.FinalVFX
             InteriorBuildProgress=Rise(sequenceClock,s.InteriorSmokeStartTime,s.InteriorBuildUpDuration);
             float startFade=Mathf.SmoothStep(0,1,Mathf.Clamp01(elapsed/.15f));
             float endFade=Fade(afterLaunch,interiorFadeDelay,interiorFadeDuration);
-            float densityRise=InteriorBuildProgress;
+            float densityRise=1-(1-InteriorBuildProgress)*(1-InteriorBuildProgress);
             InteriorActualSpawnRate=ActiveSequence&&interiorAccumulationEnabled ? Mathf.Lerp(s.InteriorSpawnRateMin,s.InteriorSpawnRateMax,densityRise)*startFade*endFade:0;
             // Continuous rate only. Birth properties are read in Initialize, never used to flash existing particles on.
             VFXValues.Float(interior,"Emission",1);VFXValues.Float(interior,"SpawnRate",InteriorActualSpawnRate);
             VFXValues.Float(interior,"LifetimeMin",s.InteriorLifetimeMin);VFXValues.Float(interior,"LifetimeMax",Mathf.Lerp(s.InteriorLifetimeMin,s.InteriorLifetimeMax,InteriorBuildProgress));
             VFXValues.Float(interior,"StartSize",s.InteriorStartSize);VFXValues.Float(interior,"EndSize",s.InteriorEndSize);
-            VFXValues.Float(interior,"BirthOpacity",s.InteriorOpacity*Mathf.Lerp(.22f,1,densityRise));
+            VFXValues.Float(interior,"BirthOpacity",s.InteriorOpacity*Mathf.Lerp(.6f,1,densityRise));
             VFXValues.Float(interior,"BirthFill",InteriorBuildProgress);
+            VFXValues.Float(interior,"FlowTime",sequenceClock);
             VFXValues.Float(interior,"UpwardForce",s.InteriorUpwardForce);
             VFXValues.Float(interior,"Turbulence",s.InteriorTurbulence);VFXValues.Vector(interior,"VolumeSize",s.InteriorVolumeSize);
             VFXValues.Color(interior,"SmokeColor",s.InteriorColor);
