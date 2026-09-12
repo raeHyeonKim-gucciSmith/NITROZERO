@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,28 +11,25 @@ internal static class HellaFlushWheelInstaller
     private const string Type3PrefabPath = "Assets/Simple Drift Tyres/Prefabs/Tyre_Type_3.prefab";
     private const string Type9VisualName = "SimpleDriftTyre_Type9_Visual";
     private const string Type3VisualName = "SimpleDriftTyre_Type3_Visual";
+    private const float Type9ScaleMultiplier = 1.404f;
+    private const float Type3ScaleMultiplier = 1.4742f;
     private static readonly string[] WheelNames = { "FL", "FR", "RL", "RR" };
     private static readonly string[] Racer5WheelNames =
         { "FL wheel ", "FR wheel ", "RL wheel ", "RR wheel " };
 
-    [DidReloadScripts]
-    private static void QueueSimpleDriftTyreInstall()
-    {
-        EditorApplication.delayCall += InstallSimpleDriftTyres;
-    }
-
     [MenuItem("Tools/Raehyeon Car/Install Simple Drift Tyres")]
     public static void InstallSimpleDriftTyres()
     {
-        InstallIntoVehicle("RedCar", WheelNames, Type9PrefabPath, Type9VisualName);
-        InstallIntoVehicle("RACER 5", Racer5WheelNames, Type3PrefabPath, Type3VisualName);
+        InstallIntoVehicle("RedCar", WheelNames, Type9PrefabPath, Type9VisualName, Type9ScaleMultiplier);
+        InstallIntoVehicle("RACER 5", Racer5WheelNames, Type3PrefabPath, Type3VisualName, Type3ScaleMultiplier);
     }
 
     private static void InstallIntoVehicle(
         string vehicleName,
         string[] wheelNames,
         string prefabPath,
-        string visualName)
+        string visualName,
+        float scaleMultiplier)
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
             return;
@@ -120,7 +116,7 @@ internal static class HellaFlushWheelInstaller
             float oldDiameter = Mathf.Max(oldBounds.size.y, oldBounds.size.z);
             float newDiameter = Mathf.Max(newBounds.size.y, newBounds.size.z);
             if (newDiameter > 0.0001f)
-                visual.transform.localScale = Vector3.one * (oldDiameter / newDiameter);
+                visual.transform.localScale = Vector3.one * (oldDiameter / newDiameter) * scaleMultiplier;
 
             if (TryGetBounds(newRenderers, out newBounds))
                 visual.transform.position += oldBounds.center - newBounds.center;
