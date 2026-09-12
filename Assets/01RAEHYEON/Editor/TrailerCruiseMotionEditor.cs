@@ -11,6 +11,12 @@ public sealed class TrailerCruiseMotionEditor : Editor
         DrawDefaultInspector();
         var car = (TrailerCruiseMotion)target;
         EditorGUILayout.Space();
+        EditorGUILayout.HelpBox("자동 조향: Steering Spline에 이동 경로를 연결하세요.\n" +
+            "Manual Steering Weight: 0 = 자동 / 1 = 수동. 조향 실행 버튼은 수동으로 전환합니다.\n" +
+            "Look Ahead는 커브 예측 거리, Smoothing Distance는 공간 평균 거리입니다.\n" +
+            "교차 경로는 Use Spline Progress를 켜고 이동 컨트롤러의 진행도(0~1)를 연결하세요.", MessageType.Info);
+        if (car.automaticSteering && car.steeringSpline == null)
+            EditorGUILayout.HelpBox("스플라인이 연결되지 않아 기존 수동 조향을 사용합니다.", MessageType.Warning);
         EditorGUILayout.HelpBox("Wheel Speed Kph: 바퀴 회전만 조절 (0.1 = 슬로우, 최대 600).\n" +
             "핸들 360° → 앞바퀴 " + car.wheelAngleAt360.ToString("0.##") + "°. 양수: 우회전 / 음수: 좌회전.\n" +
             "일반 0.8초 / 드리프트·카운터 0.35초 / 정렬 1초. Override Duration으로 시간 변경.", MessageType.Info);
@@ -40,6 +46,7 @@ public sealed class TrailerCruiseMotionEditor : Editor
         clip.duration = 5;
         var asset = (TrailerCruiseClip)clip.asset;
         asset.wheelSpeedKph = car.wheelSpeedKph;
+        asset.manualSteeringWeight = 0f;
         asset.steering.startHandleAngle = car.steeringWheelAngle;
         asset.steering.targetHandleAngle = car.steeringWheelAngle;
         var shot = new GameObject(car.name + "_CruiseShot");
@@ -70,5 +77,9 @@ public sealed class TrailerCruiseClipEditor : Editor
             "Recovery도 목표각을 직접 지정합니다 (직진 복귀는 0°).\n" +
             "다음 클립의 시작각을 이전 목표각에 맞추세요. 클립을 겹치지 않게 배치하세요.\n" +
             "클립이 조향 시간보다 짧으면 해당 지점까지만 진행합니다.", MessageType.Info);
+        EditorGUILayout.HelpBox("Manual Steering Weight: 일반 주행 0 / 드리프트 수동 조향 1.\n" +
+            "Automatic Blend In/Out은 스플라인 자동 조향과 전환하는 시간입니다.\n" +
+            "끝에서는 0도 대신 현재 커브의 자동 조향으로 복귀합니다.\n" +
+            "클립 사이에서는 차량의 Manual Steering Weight 값을 사용합니다 (기본 0).", MessageType.Info);
     }
 }
