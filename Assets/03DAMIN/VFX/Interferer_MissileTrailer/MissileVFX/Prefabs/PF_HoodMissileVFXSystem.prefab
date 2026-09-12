@@ -167,25 +167,25 @@ MonoBehaviour:
   - {fileID: 7471736579966121031}
   - {fileID: 5832435463421092131}
   interiorAccumulation:
-    InteriorSmokeStartTime: 0.55
-    InteriorBuildUpDuration: 3.6
-    InteriorSpawnRateMin: 80
-    InteriorSpawnRateMax: 1100
-    InteriorLifetimeMin: 4.2
-    InteriorLifetimeMax: 6.2
-    InteriorStartSize: 0.035
-    InteriorEndSize: 0.21
-    InteriorOpacity: 0.35
-    InteriorColor: {r: 0.76, g: 0.78, b: 0.8, a: 1}
-    InteriorTurbulence: 0.012
-    InteriorUpwardForce: 0.015
+    InteriorSmokeStartTime: 0.2
+    InteriorBuildUpDuration: 2.3
+    InteriorSpawnRateMin: 20
+    InteriorSpawnRateMax: 600
+    InteriorLifetimeMin: 2.8
+    InteriorLifetimeMax: 3.8
+    InteriorStartSize: 0.065
+    InteriorEndSize: 0.19
+    InteriorOpacity: 0.26
+    InteriorColor: {r: 0.64, g: 0.65, b: 0.66, a: 1}
+    InteriorTurbulence: 0.014
+    InteriorUpwardForce: 0.008
     InteriorVolumeSize: {x: 0.76, y: 0.28, z: 0.58}
   interiorStart: 0.15
   interiorFillDuration: 3.8
-  sideStart: 4.35
-  sideRiseDuration: 2.6
+  sideStart: 2.65
+  sideRiseDuration: 2.2
   overflowThreshold: 0.78
-  maxLateralDistance: 0.14
+  maxLateralDistance: 0.18
   interiorGrowth: 0.055
   sideFadeDelay: 3
   sideFadeDuration: 5
@@ -197,22 +197,22 @@ MonoBehaviour:
   interiorDensity: 2.6
   interiorTurbulence: 0.018
   interiorParticleSize: 0.17
-  sideSpawnRate: 85
-  sideDensity: 0.23
-  sideParticleSize: 0.025
-  sideSpeed: 0.4
-  sideSpread: 0.055
-  sideTurbulence: 0.065
+  sideSpawnRate: 120
+  sideDensity: 0.58
+  sideParticleSize: 0.075
+  sideSpeed: 0.6
+  sideSpread: 0.28
+  sideTurbulence: 0.13
   riseAfterDistance: 0.025
-  outsideRiseSpeed: 0.12
+  outsideRiseSpeed: 0.22
   backflowSpeed: 0
   sideAsymmetry: 0.1
   sideLifetime: 3.6
-  sideExpansion: 0.28
-  sideDrag: 3
-  sideBuoyancy: 0.06
-  sideColor: {r: 0.76, g: 0.78, b: 0.8, a: 1}
-  sideSwirlSpeed: 2.4
+  sideExpansion: 0.4
+  sideDrag: 4
+  sideBuoyancy: 0.08
+  sideColor: {r: 0.8, g: 0.82, b: 0.85, a: 1}
+  sideSwirlSpeed: 2
   launchBurstIntensity: 1
   residualSpawnRate: 100
   residualDensity: 1.3
