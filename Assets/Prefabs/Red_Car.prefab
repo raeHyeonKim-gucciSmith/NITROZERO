@@ -350,7 +350,7 @@ Transform:
   - {fileID: 4336056087798035686}
   - {fileID: 1875055463746756684}
   - {fileID: 8339852679987692172}
-  m_Father: {fileID: 9194037893826644413}
+  m_Father: {fileID: 880000000000000002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &415700884014374845
 GameObject:
@@ -3651,7 +3651,7 @@ Transform:
   - {fileID: 389921122196989188}
   - {fileID: 1160688746040075042}
   - {fileID: 398928964064214156}
-  m_Father: {fileID: 9194037893826644413}
+  m_Father: {fileID: 880000000000000002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7640880992322836528
 MeshFilter:
@@ -3971,7 +3971,7 @@ Transform:
   m_Children:
   - {fileID: 5680134571451293343}
   - {fileID: 1059059179660665268}
-  m_Father: {fileID: 9194037893826644413}
+  m_Father: {fileID: 880000000000000002}
   m_LocalEulerAnglesHint: {x: 0.576, y: 0, z: 0}
 --- !u!114 &9051401591511354605
 MonoBehaviour:
@@ -5568,7 +5568,7 @@ Transform:
   - {fileID: 7940309912208271781}
   - {fileID: 3823001579909378806}
   - {fileID: 4808115901771786895}
-  m_Father: {fileID: 9194037893826644413}
+  m_Father: {fileID: 880000000000000002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8883783614517402442
 GameObject:
@@ -5795,6 +5795,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9194037893826644413}
   - component: {fileID: 7171897119437427411}
+  - component: {fileID: 880000000000000003}
   m_Layer: 0
   m_Name: Red_Car
   m_TagString: Untagged
@@ -5815,10 +5816,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3105780752282373401}
-  - {fileID: 913696535608729160}
-  - {fileID: 1366348254534330397}
-  - {fileID: 4795917867674144377}
+  - {fileID: 880000000000000002}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7171897119437427411
@@ -5828,7 +5826,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9002908007820672555}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43ed863d2fa34b148bfcc16ff980ac25, type: 3}
   m_Name: 
@@ -10330,3 +10328,73 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 669af14135b17e94f97b15f4c0d109f3, type: 3}
   m_PrefabInstance: {fileID: 9222466263089225143}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &880000000000000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 880000000000000002}
+  m_Layer: 0
+  m_Name: CruiseBodyMotion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &880000000000000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880000000000000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3105780752282373401}
+  - {fileID: 913696535608729160}
+  - {fileID: 1366348254534330397}
+  - {fileID: 4795917867674144377}
+  m_Father: {fileID: 9194037893826644413}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &880000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9002908007820672555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af59a717e72948a6a2f620d3a59a71c6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TrailerCruiseMotion
+  bodyMotionRoot: {fileID: 880000000000000002}
+  wheels:
+  - {fileID: 389921122196989188}
+  - {fileID: 8674072027557697546}
+  - {fileID: 2133226503562365851}
+  - {fileID: 5875551272912769682}
+  speedKph: 240
+  wheelRadius: 0.19
+  reverseWheelSpin: 0
+  suspensionIntensity: 1
+  heaveAmplitude: 0.006
+  pitchDegrees: 0.24
+  rollDegrees: 0.18
+  suspensionFrequency: 1.65
+  vibrationIntensity: 1
+  vibrationAmplitude: 0.0008
+  vibrationDegrees: 0.035
+  vibrationFrequency: 11
+  shotDirector: {fileID: 0}
+  useManualTime: 0
+  manualTime: 0
+  timeOffset: 0
+  motionSeed: 17
