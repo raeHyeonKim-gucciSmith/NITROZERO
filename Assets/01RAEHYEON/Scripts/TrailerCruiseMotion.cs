@@ -11,23 +11,35 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
     [SerializeField] private Transform bodyMotionRoot;
     [SerializeField] private Transform[] wheels = new Transform[4];
 
-    [Header("Constant high-speed cruise")]
-    [Tooltip("Visual speed only. Does not translate the vehicle; the spline owns movement.")]
+    [Header("Body motion speed")]
+    [Tooltip("Controls suspension/vibration only. The spline owns vehicle movement.")]
     [Min(1f)] public float speedKph = 240f;
+
+    [Header("Wheel rotation")]
+    [Tooltip("Independent visual wheel speed. Try 0.1 for slow motion, up to 600 km/h.")]
+    [Range(0f, 600f)] public float wheelSpeedKph = 240f;
     [Min(0.01f)] public float wheelRadius = 0.19f;
     public bool reverseWheelSpin;
 
+    [Header("Front steering: handle degrees")]
+    public float minHandleAngle = -360f;
+    public float maxHandleAngle = 360f;
+    [Tooltip("Actual front wheel angle for a 360-degree handle turn.")]
+    [Range(0f, 60f)] public float wheelAngleAt360 = 30f;
+    public float steeringWheelAngle;
+    public TrailerSteeringSettings steering = new TrailerSteeringSettings();
+
     [Header("Body suspension (metres / degrees)")]
-    [Range(0f, 2f)] public float suspensionIntensity = 1f;
-    [Min(0f)] public float heaveAmplitude = 0.006f;
-    [Min(0f)] public float pitchDegrees = 0.24f;
-    [Min(0f)] public float rollDegrees = 0.18f;
-    [Min(0.01f)] public float suspensionFrequency = 1.65f;
+    [Range(0f, 2f)] public float suspensionIntensity = 0.3f;
+    [Min(0f)] public float heaveAmplitude = 0.001f;
+    [Min(0f)] public float pitchDegrees = 0.035f;
+    [Min(0f)] public float rollDegrees = 0.025f;
+    [Min(0.01f)] public float suspensionFrequency = 0.9f;
 
     [Header("High-frequency road vibration")]
     [Range(0f, 2f)] public float vibrationIntensity = 1f;
-    [Min(0f)] public float vibrationAmplitude = 0.0008f;
-    [Min(0f)] public float vibrationDegrees = 0.035f;
+    [Min(0f)] public float vibrationAmplitude = 0.00025f;
+    [Min(0f)] public float vibrationDegrees = 0.008f;
     [Min(0.01f)] public float vibrationFrequency = 11f;
 
     [Header("Repeatable shot timing")]
@@ -44,10 +56,23 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
     private Quaternion[] wheelRootRotations;
     private double startTime;
     private bool initialized;
+    private double lastCruiseTime;
+    private double cruiseDistance;
+    private bool steeringActive;
+    private double steeringStartTime;
+    private object timelineOwner;
+
+    public Transform BodyMotionRoot => bodyMotionRoot;
+    public Transform[] Wheels => wheels;
+    public float CurrentHandleAngle { get; private set; }
+    public float CurrentFrontWheelAngle => CurrentHandleAngle / 360f * wheelAngleAt360;
+    public bool IsTimelineControlled => timelineOwner != null;
 
     private void OnEnable()
     {
         startTime = Time.timeAsDouble;
+        lastCruiseTime = 0;
+        cruiseDistance = 0;
         if (InitializeRig()) EvaluateAtTime(0);
     }
 
@@ -81,13 +106,59 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (timelineOwner != null) return;
+        if (steeringActive)
+        {
+            double elapsed = Time.timeAsDouble - steeringStartTime;
+            steeringWheelAngle = steering.Sample(elapsed, minHandleAngle, maxHandleAngle);
+            if (elapsed >= steering.Duration) steeringActive = false;
+        }
         double time = useManualTime ? manualTime :
             shotDirector != null ? shotDirector.time : Time.timeAsDouble - startTime;
-        EvaluateAtTime(time);
+        if (useManualTime || shotDirector != null)
+            EvaluateAtTime(time);
+        else
+        {
+            // Integrate live Inspector changes without jumping the existing wheel phase.
+            cruiseDistance += Math.Max(0, time - lastCruiseTime) * Mathf.Clamp(wheelSpeedKph, 0, 600) / 3.6;
+            lastCruiseTime = time;
+            ApplyPose(time, cruiseDistance, steeringWheelAngle);
+        }
     }
+
+    public void StartSteering()
+    {
+        if (!Application.isPlaying || IsTimelineControlled) return;
+        steeringStartTime = Time.timeAsDouble;
+        steeringActive = true;
+        steeringWheelAngle = steering.Sample(0, minHandleAngle, maxHandleAngle);
+    }
+
+    public void StopSteering() => steeringActive = false;
 
     // Absolute sampling has no integration, startup settling or frame-rate-dependent randomness.
     public void EvaluateAtTime(double seconds)
+    {
+        ApplyPose(seconds, seconds * Mathf.Clamp(wheelSpeedKph, 0, 600) / 3.6, steeringWheelAngle);
+    }
+
+    public void ApplyTimelinePose(object owner, double seconds, double distance, float handleAngle)
+    {
+        timelineOwner = owner;
+        ApplyPose(seconds, distance, handleAngle);
+    }
+
+    public void ReleaseTimeline(object owner)
+    {
+        if (!ReferenceEquals(timelineOwner, owner)) return;
+        timelineOwner = null;
+        RestorePose();
+        startTime = Time.timeAsDouble;
+        lastCruiseTime = 0;
+        cruiseDistance = 0;
+    }
+
+    private void ApplyPose(double seconds, double distance, float handleAngle)
     {
         if (!InitializeRig()) return;
         double t = seconds + timeOffset;
@@ -107,17 +178,20 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
             0f, roll + Wave(fast * 0.77, 6.4) * vibrationDegrees * vibration);
         bodyMotionRoot.SetLocalPositionAndRotation(position, rotation);
 
-        double degrees = t * (Math.Max(1f, speedKph) / 3.6) /
+        double degrees = distance /
             (2.0 * Math.PI * Math.Max(0.01f, wheelRadius)) * 360.0;
         Quaternion spin = Quaternion.AngleAxis((float)(degrees % 360.0) *
             (reverseWheelSpin ? -1f : 1f), Vector3.right);
+        CurrentHandleAngle = Mathf.Clamp(handleAngle, Mathf.Min(minHandleAngle, maxHandleAngle),
+            Mathf.Max(minHandleAngle, maxHandleAngle));
+        Quaternion steer = Quaternion.AngleAxis(CurrentFrontWheelAngle, Vector3.up);
         for (int i = 0; i < 4; i++)
         {
             if (wheels[i] == null) continue;
             // Flat-road contact: body moves over planted wheels, creating relative suspension travel.
             // Root-relative poses also work when a spline translates or rotates the vehicle.
             wheels[i].SetPositionAndRotation(transform.TransformPoint(wheelRootPositions[i]),
-                transform.rotation * spin * wheelRootRotations[i]);
+                transform.rotation * (i < 2 ? steer : Quaternion.identity) * spin * wheelRootRotations[i]);
         }
     }
 
@@ -130,6 +204,13 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
     }
 
     private void OnDisable()
+    {
+        timelineOwner = null;
+        steeringActive = false;
+        RestorePose();
+    }
+
+    public void RestorePose()
     {
         if (!initialized) return;
         if (bodyMotionRoot != null)

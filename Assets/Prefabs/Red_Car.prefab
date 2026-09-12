@@ -10382,16 +10382,21 @@ MonoBehaviour:
   - {fileID: 2133226503562365851}
   - {fileID: 5875551272912769682}
   speedKph: 240
+  wheelSpeedKph: 240
   wheelRadius: 0.19
   reverseWheelSpin: 0
-  suspensionIntensity: 1
-  heaveAmplitude: 0.006
-  pitchDegrees: 0.24
-  rollDegrees: 0.18
-  suspensionFrequency: 1.65
+  minHandleAngle: -360
+  maxHandleAngle: 360
+  wheelAngleAt360: 30
+  steeringWheelAngle: 0
+  suspensionIntensity: 0.3
+  heaveAmplitude: 0.001
+  pitchDegrees: 0.035
+  rollDegrees: 0.025
+  suspensionFrequency: 0.9
   vibrationIntensity: 1
-  vibrationAmplitude: 0.0008
-  vibrationDegrees: 0.035
+  vibrationAmplitude: 0.00025
+  vibrationDegrees: 0.008
   vibrationFrequency: 11
   shotDirector: {fileID: 0}
   useManualTime: 0
