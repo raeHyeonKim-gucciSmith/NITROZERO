@@ -37,32 +37,3 @@ public sealed class BoosterDeploymentControllerEditor : Editor
         }
     }
 }
-
-[InitializeOnLoad]
-internal static class RearWingPivotSetupInitializer
-{
-    static RearWingPivotSetupInitializer()
-    {
-        EditorApplication.delayCall += PrepareCurrentRaehyeonCar;
-    }
-
-    private static void PrepareCurrentRaehyeonCar()
-    {
-        if (EditorApplication.isPlayingOrWillChangePlaymode)
-            return;
-
-        foreach (BoosterDeploymentController controller in
-                 Resources.FindObjectsOfTypeAll<BoosterDeploymentController>())
-        {
-            if (!controller.gameObject.scene.IsValid()
-                || !controller.gameObject.activeInHierarchy)
-                continue;
-
-            if (controller.gameObject.scene.name != "RaehyeonCar")
-                continue;
-
-            if (controller.PrepareRearWingPivotSetupInEditor())
-                break;
-        }
-    }
-}

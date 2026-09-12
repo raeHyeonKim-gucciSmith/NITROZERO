@@ -49,15 +49,19 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     [SerializeField] private bool enableLegacyRearWingAnimation;
     [Header("Rear Wing New Pose Animation")]
     [Tooltip("힌지를 사용하지 않는 새로운 후방 날개 전개 전 기본 Transform")]
-    [SerializeField] private Vector3 rearLeftWingBasePosition = new Vector3(-0.0394f, -0.0651f, -0.003f);
-    [SerializeField] private Vector3 rearLeftWingBaseEuler = new Vector3(-114.358f, -6.3099976f, -91.231995f);
-    [SerializeField] private Vector3 rearRightWingBasePosition = new Vector3(1.111f, -0.0679f, -0.002507329f);
-    [SerializeField] private Vector3 rearRightWingBaseEuler = new Vector3(-115.333f, 7.949997f, 89.313f);
+    [SerializeField] private Vector3 rearLeftWingBasePosition = new Vector3(0.0059f, 0.019f, -0.003f);
+    [SerializeField] private Vector3 rearLeftWingBaseEuler = new Vector3(-141.245f, -58.40799f, -30.95001f);
+    [SerializeField] private Vector3 rearRightWingBasePosition = new Vector3(1.082f, 0.009f, -0.002507329f);
+    [SerializeField] private Vector3 rearRightWingBaseEuler = new Vector3(-139.46f, 56.357f, 34.036f);
+    [SerializeField] private Quaternion rearLeftWingBaseRotation = new Quaternion(-0.7503949f, -0.3757276f, -0.52086943f, 0.15630549f);
+    [SerializeField] private Quaternion rearRightWingBaseRotation = new Quaternion(-0.74280334f, 0.39844245f, 0.5129564f, 0.16236572f);
     [Tooltip("사용자가 직접 저장한 새로운 후방 날개 전개 완료 Transform")]
     [SerializeField] private Vector3 rearLeftWingFinalPosition = new Vector3(-0.065f, -0.032f, -0.1f);
     [SerializeField] private Vector3 rearLeftWingFinalEuler = new Vector3(-169.786f, -174.59f, 11.001007f);
     [SerializeField] private Vector3 rearRightWingFinalPosition = new Vector3(1.1369f, -0.0273f, -0.1f);
     [SerializeField] private Vector3 rearRightWingFinalEuler = new Vector3(-169.015f, 173.821f, -8.587006f);
+    [SerializeField] private Quaternion rearLeftWingFinalRotation = new Quaternion(-0.055313118f, -0.08399738f, -0.9899365f, 0.099552415f);
+    [SerializeField] private Quaternion rearRightWingFinalRotation = new Quaternion(-0.0606485f, 0.09128884f, 0.9907871f, 0.07955561f);
     [SerializeField] private Vector2 rearWingUnlockTiming = new Vector2(0.20f, 0.27f);
     [SerializeField] private Vector2 rearWingRotateTiming = new Vector2(0.27f, 0.48f);
     [SerializeField] private Vector2 rearWingSpreadTiming = new Vector2(0.48f, 0.62f);
@@ -104,7 +108,7 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     [Header("Back Track")]
     [SerializeField] private Vector3 backTrackOpenOffset = new Vector3(0f, 0.05f, 0f);
     [SerializeField] private Vector3 backTrackOpenEulerAngles = new Vector3(9.46f, 0f, 0f);
-    [SerializeField] private Vector2 backTrackTiming = new Vector2(0.20f, 0.30f);
+    [SerializeField] private Vector2 backTrackTiming = new Vector2(0.171875f, 0.515625f);
     [SerializeField, Range(0f, 0.2f)] private float backTrackClunkOvershoot = 0.10f;
 
     [Header("Nozzle Extension")]
@@ -615,12 +619,12 @@ public sealed class BoosterDeploymentController : MonoBehaviour
             Vector3 finalPosition = i == 0
                 ? rearLeftWingFinalPosition
                 : rearRightWingFinalPosition;
-            Quaternion baseRotation = Quaternion.Euler(i == 0
-                ? rearLeftWingBaseEuler
-                : rearRightWingBaseEuler);
-            Quaternion finalRotation = Quaternion.Euler(i == 0
-                ? rearLeftWingFinalEuler
-                : rearRightWingFinalEuler);
+            Quaternion baseRotation = i == 0
+                ? rearLeftWingBaseRotation
+                : rearRightWingBaseRotation;
+            Quaternion finalRotation = i == 0
+                ? rearLeftWingFinalRotation
+                : rearRightWingFinalRotation;
 
             Vector3 unlockPosition = basePosition + Vector3.up * rearWingUnlockLift;
             Vector3 rotatePosition = Vector3.Lerp(unlockPosition, finalPosition, 0.68f)
