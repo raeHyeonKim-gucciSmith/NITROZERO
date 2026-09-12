@@ -25,6 +25,12 @@
 /LocalBackups/
 /LocalOptimization/
 
+# Local weapon-edit backups; keep previews and scripts available for review.
+/Documentation/GunBodyTrim-20260912/*.fbx
+/Documentation/GunBodyTrim-20260912/*.blend*
+/Documentation/GunTriggerFit-20260912/*.fbx
+/Documentation/GunTriggerFit-20260912/*.blend*
+
 # Local source FBX and one-off vehicle import helpers; the optimized FBX is committed instead.
 /Assets/ImportedBlenderAsset/Models/Interferer_Car_Wasteland_v24.fbx
 /Assets/ImportedBlenderAsset/Models/Interferer_Car_Wasteland_v24.fbx.meta
