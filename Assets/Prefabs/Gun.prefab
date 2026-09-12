@@ -98,7 +98,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 7fce0aab8bd9ea54b864113f961f44aa, type: 2}
     - target: {fileID: 919132149155446097, guid: 9b6a0fadccf4f064185b17b832610d34, type: 3}
       propertyPath: m_Name
-      value: Gun_Editable
+      value: Gun
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
