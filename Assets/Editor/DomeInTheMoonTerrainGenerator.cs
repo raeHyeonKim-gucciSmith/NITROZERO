@@ -11,7 +11,7 @@ public static class DomeInTheMoonTerrainGenerator
     private const string LayerPath = "Assets/02YUJEONG/Moon/moon_04_2k.blend/textures/NewLayer.terrainlayer";
     private const int Resolution = 2049;
     private const float Length = 6000f;
-    private const float Width = 4000f;
+    private const float Width = 6500f;
     private const float Height = 560f;
     private const float OriginY = -100f;
     private const float RoadY = -20f;
@@ -21,8 +21,8 @@ public static class DomeInTheMoonTerrainGenerator
     private const float DomeBlendRadius = 1080f;
     private const float RoadStartX = -930f;
     private const float RoadFlatHalfWidth = 75f;
-    private const float RoadBlendHalfWidth = 850f;
-    private const int Version = 4;
+    private const float RoadBlendHalfWidth = 1550f;
+    private const int Version = 5;
 
     private readonly struct Crater
     {
@@ -99,7 +99,7 @@ public static class DomeInTheMoonTerrainGenerator
             terrain = terrainObject.GetComponent<Terrain>();
         }
         terrain.terrainData = data;
-        terrain.gameObject.name = "Dome Moon Basin 6000x4000";
+        terrain.gameObject.name = "Dome Moon Basin 6000x6500";
         terrain.transform.position = new Vector3(-Length * 0.5f, OriginY, -Width * 0.5f);
         terrain.heightmapPixelError = 4f;
         terrain.basemapDistance = 5500f;
@@ -113,14 +113,14 @@ public static class DomeInTheMoonTerrainGenerator
         CreateGuides(scene);
         foreach (GameObject root in scene.GetRootGameObjects())
             foreach (Camera camera in root.GetComponentsInChildren<Camera>(true))
-                camera.farClipPlane = Mathf.Max(camera.farClipPlane, 6000f);
+                camera.farClipPlane = Mathf.Max(camera.farClipPlane, 8000f);
 
         EditorUtility.SetDirty(data);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.SaveAssets();
         if (close) EditorSceneManager.CloseScene(scene, true);
-        Debug.Log("[NITRO ZERO] domeInTheMoon 6000x4000 basin terrain generated.");
+        Debug.Log("[NITRO ZERO] domeInTheMoon 6000x6500 basin terrain generated.");
     }
 
     private static float[,] BuildHeights()
@@ -137,13 +137,20 @@ public static class DomeInTheMoonTerrainGenerator
                 float basinDistance = Mathf.Sqrt(
                     Mathf.Pow((worldX - DomeX * 0.25f) / (Length * 0.54f), 2f) +
                     Mathf.Pow(worldZ / (Width * 0.54f), 2f));
-                float edgeRise = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.34f, 0.84f, basinDistance));
+                float edgeRise = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.27f, 0.98f, basinDistance));
                 float edgeVariation = Mathf.Lerp(0.68f, 1.28f, Fbm(warp.x, warp.y, 0.00055f, 3, 313f));
                 float h = roadLocal + edgeRise * Mathf.Lerp(178f, 292f, edgeVariation);
                 h += (Fbm(warp.x, warp.y, 0.0011f, 4, 41f) - 0.5f) * (9f + edgeRise * 44f);
                 h += BroadRidge(worldX, worldZ, -2350f, 1250f, 820f, 430f, 58f);
                 h += BroadRidge(worldX, worldZ, 900f, -1550f, 1050f, 390f, 64f);
                 h += BroadRidge(worldX, worldZ, 2380f, 1280f, 720f, 360f, 52f);
+                // Wide, overlapping horizon shoulders conceal the rectangular side boundaries.
+                h += BroadRidge(worldX, worldZ, -2050f, 2780f, 1150f, 610f, 54f);
+                h += BroadRidge(worldX, worldZ,   150f, 2870f, 1420f, 560f, 67f);
+                h += BroadRidge(worldX, worldZ,  2240f, 2740f, 1080f, 640f, 49f);
+                h += BroadRidge(worldX, worldZ, -2200f,-2810f, 1080f, 620f, 61f);
+                h += BroadRidge(worldX, worldZ,   -50f,-2890f, 1460f, 570f, 52f);
+                h += BroadRidge(worldX, worldZ,  2160f,-2760f, 1120f, 650f, 64f);
                 for (int i = 0; i < OuterCraters.Length; i++) h += CraterHeight(worldX, worldZ, OuterCraters[i], i);
 
                 float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(DomeX, DomeZ));
@@ -162,8 +169,8 @@ public static class DomeInTheMoonTerrainGenerator
                     float sideSeed = upperSide ? 227f : 563f;
                     float broad = Mathf.PerlinNoise(worldX * 0.00046f + sideSeed, sideSeed * 0.019f);
                     float detail = Mathf.PerlinNoise(worldX * 0.00105f + sideSeed * 0.21f, sideSeed * 0.031f);
-                    float riseStart = Mathf.Lerp(145f, 335f, broad);
-                    float fullHeightAt = Mathf.Lerp(890f, 1420f, broad * 0.65f + detail * 0.35f);
+                    float riseStart = Mathf.Lerp(260f, 520f, broad);
+                    float fullHeightAt = Mathf.Lerp(1850f, 2750f, broad * 0.65f + detail * 0.35f);
                     float roadBlend = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(riseStart, fullHeightAt, Mathf.Abs(worldZ)));
                     h = Mathf.Lerp(roadLocal, h, roadBlend);
                     if (Mathf.Abs(worldZ) <= RoadFlatHalfWidth) h = roadLocal;

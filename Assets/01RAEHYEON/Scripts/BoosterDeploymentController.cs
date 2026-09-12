@@ -45,6 +45,25 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     [SerializeField] private Vector3 shortRightWingClosedEuler = new Vector3(0f, 47.317f, 0f);
 
     [Header("Rear Wing Deployment")]
+    [Tooltip("기존 수납-상승-슬라이드 방식의 후방 날개 연출")]
+    [SerializeField] private bool enableLegacyRearWingAnimation;
+    [Header("Rear Wing New Pose Animation")]
+    [Tooltip("힌지를 사용하지 않는 새로운 후방 날개 전개 전 기본 Transform")]
+    [SerializeField] private Vector3 rearLeftWingBasePosition = new Vector3(-0.0394f, -0.0651f, -0.003f);
+    [SerializeField] private Vector3 rearLeftWingBaseEuler = new Vector3(-114.358f, -6.3099976f, -91.231995f);
+    [SerializeField] private Vector3 rearRightWingBasePosition = new Vector3(1.111f, -0.0679f, -0.002507329f);
+    [SerializeField] private Vector3 rearRightWingBaseEuler = new Vector3(-115.333f, 7.949997f, 89.313f);
+    [Tooltip("사용자가 직접 저장한 새로운 후방 날개 전개 완료 Transform")]
+    [SerializeField] private Vector3 rearLeftWingFinalPosition = new Vector3(-0.065f, -0.032f, -0.1f);
+    [SerializeField] private Vector3 rearLeftWingFinalEuler = new Vector3(-169.786f, -174.59f, 11.001007f);
+    [SerializeField] private Vector3 rearRightWingFinalPosition = new Vector3(1.1369f, -0.0273f, -0.1f);
+    [SerializeField] private Vector3 rearRightWingFinalEuler = new Vector3(-169.015f, 173.821f, -8.587006f);
+    [SerializeField] private Vector2 rearWingUnlockTiming = new Vector2(0.20f, 0.27f);
+    [SerializeField] private Vector2 rearWingRotateTiming = new Vector2(0.27f, 0.48f);
+    [SerializeField] private Vector2 rearWingSpreadTiming = new Vector2(0.48f, 0.62f);
+    [SerializeField] private Vector2 rearWingFinalLockTiming = new Vector2(0.62f, 0.66f);
+    [SerializeField] private float rearWingUnlockLift = 0.018f;
+    [SerializeField, Range(0f, 0.15f)] private float rearWingLockOvershoot = 0.045f;
     [Tooltip("현재 활성 차량에서 저장한 뒤쪽 날개 전개 완료 Transform")]
     [SerializeField] private Vector3 rearLeftWingDeployedPosition = Vector3.zero;
     [SerializeField] private Vector3 rearLeftWingDeployedEuler = new Vector3(-141.245f, -58.40799f, -30.950012f);
@@ -518,6 +537,12 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
     private void ApplyRearWings(float sequence)
     {
+        if (!enableLegacyRearWingAnimation)
+        {
+            ApplyNewRearWingAnimation(sequence);
+            return;
+        }
+
         float riseAmount = SmoothRange(rearWingRiseTiming.x, rearWingRiseTiming.y, sequence);
         float slideAmount = SmoothRange(rearWingSlideTiming.x, rearWingSlideTiming.y, sequence);
         float lockAmount = SmoothRange(rearWingLockTiming.x, rearWingLockTiming.y, sequence);
@@ -565,6 +590,72 @@ public sealed class BoosterDeploymentController : MonoBehaviour
         float clunkWindow = Mathf.Max(0.001f, (end - start) * 0.28f);
         float clunk = Pulse(end - clunkWindow, end, sequence);
         return amount + clunk * panelClunkOvershoot;
+    }
+
+    private void ApplyNewRearWingAnimation(float sequence)
+    {
+        float unlock = HeavyDrivenRange(
+            rearWingUnlockTiming.x, rearWingUnlockTiming.y, sequence, 0.08f, 0.18f);
+        float rotate = HeavyDrivenRange(
+            rearWingRotateTiming.x, rearWingRotateTiming.y, sequence, 0.06f, 0.20f);
+        float spread = HeavyDrivenRange(
+            rearWingSpreadTiming.x, rearWingSpreadTiming.y, sequence, 0.05f, 0.20f);
+        float finalLock = SmoothRange(
+            rearWingFinalLockTiming.x, rearWingFinalLockTiming.y, sequence);
+
+        for (int i = 0; i < rearWings.Length; i++)
+        {
+            Transform wing = rearWings[i];
+            if (wing == null)
+                continue;
+
+            Vector3 basePosition = i == 0
+                ? rearLeftWingBasePosition
+                : rearRightWingBasePosition;
+            Vector3 finalPosition = i == 0
+                ? rearLeftWingFinalPosition
+                : rearRightWingFinalPosition;
+            Quaternion baseRotation = Quaternion.Euler(i == 0
+                ? rearLeftWingBaseEuler
+                : rearRightWingBaseEuler);
+            Quaternion finalRotation = Quaternion.Euler(i == 0
+                ? rearLeftWingFinalEuler
+                : rearRightWingFinalEuler);
+
+            Vector3 unlockPosition = basePosition + Vector3.up * rearWingUnlockLift;
+            Vector3 rotatePosition = Vector3.Lerp(unlockPosition, finalPosition, 0.68f)
+                + Vector3.up * (rearWingUnlockLift * 0.65f);
+            Vector3 lockDirection = finalPosition - rotatePosition;
+            Vector3 overshootPosition = finalPosition
+                + lockDirection * rearWingLockOvershoot
+                + Vector3.up * 0.004f;
+
+            Quaternion unlockRotation = Quaternion.Slerp(baseRotation, finalRotation, 0.08f);
+            Quaternion rotateRotation = Quaternion.Slerp(baseRotation, finalRotation, 0.72f);
+            Quaternion overshootRotation = Quaternion.SlerpUnclamped(
+                baseRotation, finalRotation, 1f + rearWingLockOvershoot);
+
+            if (sequence < rearWingRotateTiming.x)
+            {
+                wing.localPosition = Vector3.LerpUnclamped(basePosition, unlockPosition, unlock);
+                wing.localRotation = Quaternion.SlerpUnclamped(baseRotation, unlockRotation, unlock);
+            }
+            else if (sequence < rearWingSpreadTiming.x)
+            {
+                wing.localPosition = Vector3.LerpUnclamped(unlockPosition, rotatePosition, rotate);
+                wing.localRotation = Quaternion.SlerpUnclamped(unlockRotation, rotateRotation, rotate);
+            }
+            else if (sequence < rearWingFinalLockTiming.x)
+            {
+                wing.localPosition = Vector3.LerpUnclamped(rotatePosition, overshootPosition, spread);
+                wing.localRotation = Quaternion.SlerpUnclamped(rotateRotation, overshootRotation, spread);
+            }
+            else
+            {
+                wing.localPosition = Vector3.LerpUnclamped(overshootPosition, finalPosition, finalLock);
+                wing.localRotation = Quaternion.SlerpUnclamped(overshootRotation, finalRotation, finalLock);
+            }
+        }
     }
 
     private float HeavyEngineRange(float start, float end, float sequence)
@@ -668,6 +759,59 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    public bool PrepareRearWingPivotSetupInEditor()
+    {
+        if (Application.isPlaying)
+            return false;
+
+        Transform activeWingRoot = FindActiveDescendant(transform.root, "WingDeploymentRoot");
+        if (activeWingRoot == null)
+            return false;
+
+        Transform existingLeftHinge = FindDescendant(activeWingRoot, "RearWingL_Hinge");
+        Transform existingRightHinge = FindDescendant(activeWingRoot, "RearWingR_Hinge");
+        if (existingLeftHinge != null && existingRightHinge != null)
+            return false;
+
+        Transform leftWing = FindDescendant(activeWingRoot, "backwingL (1)");
+        Transform rightWing = FindDescendant(activeWingRoot, "backwingR (1)");
+        if (leftWing == null || rightWing == null)
+            return false;
+
+        UnityEditor.Undo.RegisterFullObjectHierarchyUndo(
+            transform.root.gameObject,
+            "Prepare Rear Wing Pivot Setup");
+
+        enableLegacyRearWingAnimation = false;
+        leftWing.localPosition = rearLeftWingDeployedPosition;
+        leftWing.localRotation = Quaternion.Euler(rearLeftWingDeployedEuler);
+        rightWing.localPosition = rearRightWingDeployedPosition;
+        rightWing.localRotation = Quaternion.Euler(rearRightWingDeployedEuler);
+
+        if (existingLeftHinge == null)
+            CreateRearWingHinge(activeWingRoot, leftWing, "RearWingL_Hinge");
+        if (existingRightHinge == null)
+            CreateRearWingHinge(activeWingRoot, rightWing, "RearWingR_Hinge");
+
+        MarkPreviewDirty();
+        return true;
+    }
+
+    private static Transform CreateRearWingHinge(
+        Transform wingRoot,
+        Transform referenceWing,
+        string hingeName)
+    {
+        GameObject hingeObject = new GameObject(hingeName);
+        UnityEditor.Undo.RegisterCreatedObjectUndo(hingeObject, "Create Rear Wing Hinge");
+        Transform hinge = hingeObject.transform;
+        hinge.SetParent(wingRoot, false);
+        hinge.localPosition = referenceWing.localPosition;
+        hinge.localRotation = Quaternion.identity;
+        hinge.localScale = Vector3.one;
+        return hinge;
+    }
+
     public void PreviewRetractedInEditor()
     {
         if (Application.isPlaying)

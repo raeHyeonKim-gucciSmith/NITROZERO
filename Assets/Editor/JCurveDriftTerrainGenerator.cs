@@ -121,11 +121,11 @@ public static class JCurveDriftTerrainGenerator
 
     private static float DistanceToJRoad(float x, float z)
     {
-        float straight = DistanceToSegment(new Vector2(x, z), new Vector2(-2050f, 600f), new Vector2(300f, 600f));
-        Vector2 center = new Vector2(300f, 0f);
+        float straight = DistanceToSegment(new Vector2(x, z), new Vector2(-2050f, 600f), new Vector2(-200f, 600f));
+        Vector2 center = new Vector2(-200f, 0f);
         Vector2 local = new Vector2(x, z) - center;
         float angle = Mathf.Atan2(local.y, local.x) * Mathf.Rad2Deg;
-        Vector2 arcStart = new Vector2(300f, 600f);
+        Vector2 arcStart = new Vector2(-200f, 600f);
         float endAngle = -20f * Mathf.Deg2Rad;
         Vector2 arcEnd = center + new Vector2(Mathf.Cos(endAngle), Mathf.Sin(endAngle)) * 600f;
         float arc = angle >= -20f && angle <= 90f
@@ -139,11 +139,11 @@ public static class JCurveDriftTerrainGenerator
     private static float RevealMountainRange(float x, float z)
     {
         float h = 0f;
-        h += Mound(x, z, 300f,  20f, 330f, 300f, 152f, 31f);
-        h += Mound(x, z,  90f, 110f, 250f, 220f, 116f, 47f);
-        h += Mound(x, z, 500f,  80f, 235f, 210f, 104f, 63f);
-        h += Mound(x, z, 230f,-210f, 210f, 170f,  79f, 79f);
-        h += Mound(x, z, 420f, 250f, 185f, 150f,  64f, 97f);
+        h += Mound(x, z, -200f,  20f, 330f, 300f, 152f, 31f);
+        h += Mound(x, z, -410f, 110f, 250f, 220f, 116f, 47f);
+        h += Mound(x, z,    0f,  80f, 235f, 210f, 104f, 63f);
+        h += Mound(x, z, -270f,-210f, 210f, 170f,  79f, 79f);
+        h += Mound(x, z,  -80f, 250f, 185f, 150f,  64f, 97f);
         return h;
     }
 
@@ -188,10 +188,10 @@ public static class JCurveDriftTerrainGenerator
 
         // Diagonal ridge continues toward the camera side of the curve. It stays on
         // the inside of the exit road, so the car is hidden and then revealed at apex.
-        h += Mound(x, z,   350f, -170f, 270f, 210f, 146f, 277f);
-        h += Mound(x, z,   270f, -390f, 285f, 225f, 164f, 293f);
-        h += Mound(x, z,   175f, -620f, 300f, 235f, 151f, 317f);
-        h += Mound(x, z,    65f, -850f, 315f, 245f, 128f, 337f);
+        h += Mound(x, z,  -150f, -170f, 270f, 210f, 146f, 277f);
+        h += Mound(x, z,  -230f, -390f, 285f, 225f, 164f, 293f);
+        h += Mound(x, z,  -325f, -620f, 300f, 235f, 151f, 317f);
+        h += Mound(x, z,  -435f, -850f, 315f, 245f, 128f, 337f);
         return h;
     }
 
@@ -331,7 +331,7 @@ public static class JCurveDriftTerrainGenerator
         int index = 0;
         foreach (Vector3 point in points) AddPoint(guide, ref index, point);
         AddMarker(guide, "Road Start", points[0]);
-        AddMarker(guide, "Drift Apex", new Vector3(900f, RoadY, 0f));
+        AddMarker(guide, "Drift Apex", new Vector3(400f, RoadY, 0f));
         AddMarker(guide, "Boost Exit", points[points.Count - 1]);
     }
 
@@ -339,14 +339,14 @@ public static class JCurveDriftTerrainGenerator
     {
         List<Vector3> points = new List<Vector3>();
         for (int i = 0; i <= 14; i++)
-            points.Add(Vector3.Lerp(new Vector3(-2050f, RoadY, 600f), new Vector3(300f, RoadY, 600f), i / 14f));
+            points.Add(Vector3.Lerp(new Vector3(-2050f, RoadY, 600f), new Vector3(-200f, RoadY, 600f), i / 14f));
         for (int i = 1; i <= 20; i++)
         {
             float angle = Mathf.Lerp(90f, -20f, i / 20f) * Mathf.Deg2Rad;
-            points.Add(new Vector3(300f + Mathf.Cos(angle) * 600f, RoadY, Mathf.Sin(angle) * 600f));
+            points.Add(new Vector3(-200f + Mathf.Cos(angle) * 600f, RoadY, Mathf.Sin(angle) * 600f));
         }
         float endAngle = -20f * Mathf.Deg2Rad;
-        Vector3 arcEnd = new Vector3(300f + Mathf.Cos(endAngle) * 600f, RoadY, Mathf.Sin(endAngle) * 600f);
+        Vector3 arcEnd = new Vector3(-200f + Mathf.Cos(endAngle) * 600f, RoadY, Mathf.Sin(endAngle) * 600f);
         Vector3 exitDirection = new Vector3(Mathf.Sin(endAngle), 0f, -Mathf.Cos(endAngle));
         for (int i = 1; i <= 10; i++) points.Add(arcEnd + exitDirection * (1450f * i / 10f));
         return points;
@@ -435,10 +435,10 @@ public static class JCurveDriftTerrainGenerator
             cameraObject.tag = "MainCamera";
         }
         camera.gameObject.name = "Drift Reveal Camera Guide";
-        Vector3 horizontalPosition = new Vector3(-260f, 0f, -1220f);
+        Vector3 horizontalPosition = new Vector3(-760f, 0f, -1220f);
         float groundY = terrain.SampleHeight(horizontalPosition) + terrain.transform.position.y;
         camera.transform.position = new Vector3(horizontalPosition.x, groundY + 10f, horizontalPosition.z);
-        camera.transform.LookAt(new Vector3(430f, RoadY + 5f, 10f));
+        camera.transform.LookAt(new Vector3(-70f, RoadY + 5f, 10f));
         camera.fieldOfView = 40f;
         camera.nearClipPlane = 0.1f;
         camera.farClipPlane = 5500f;
