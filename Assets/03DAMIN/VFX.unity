@@ -168,6 +168,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &297849244
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 17.120678
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00000028064642
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 9.040158
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572282221551529829, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3901157452251272959, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
+      propertyPath: m_Name
+      value: Green_Car_SmokeWork_CinematicFinal (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d41b0a28cb550e241ae3989bee7cc7bd, type: 3}
 --- !u!1001 &350139965
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1240,7 +1297,7 @@ Transform:
   m_GameObject: {fileID: 1806581787}
   serializedVersion: 2
   m_LocalRotation: {x: -0.009358759, y: 0.98601234, z: -0.15546344, w: -0.059357055}
-  m_LocalPosition: {x: 13.4, y: 2.23, z: 13.97}
+  m_LocalPosition: {x: 17.03, y: 1.8, z: 12.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1635,3 +1692,4 @@ SceneRoots:
   - {fileID: 1587970162}
   - {fileID: 1651655238}
   - {fileID: 557454654}
+  - {fileID: 297849244}
