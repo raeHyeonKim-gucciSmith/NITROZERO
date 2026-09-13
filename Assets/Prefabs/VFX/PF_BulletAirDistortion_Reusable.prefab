@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 145179691840383898}
   - component: {fileID: 1423782353718304140}
+  - component: {fileID: 1109393536478168131}
+  - component: {fileID: 4791452783121351767}
   m_Layer: 0
   m_Name: PF_BulletAirDistortion_Reusable
   m_TagString: Untagged
@@ -44,16 +46,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c17da27114f6be943b2d220617544953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damin.VFX.AirDistortion.Reusable.ReusableBulletAirDistortion
-  Target: {fileID: 0}
+  Target: {fileID: 4988786416857878073, guid: 09dbc1ad45be51842bd1dcce1479fcf8, type: 3}
   ViewCamera: {fileID: 0}
-  DistortionStrength: 1
-  SizeMultiplier: 1
+  DistortionStrength: 1.66
+  SizeMultiplier: 2.1
   WakeLengthMultiplier: 1
-  TrailFade: 0.2
+  TrailFade: 0.904
   AutoSize: 1
   ManualBulletLength: 0.2
   ManualBulletDiameter: 0.05
-  CenterOffset: {x: 0, y: 0, z: 0}
+  CenterOffset: {x: -0.69, y: 0, z: 0}
   AutoForwardAxis: 1
   ForwardAxis: {x: 0, y: 0, z: 1}
   WidthMultiplier: 1
@@ -66,3 +68,41 @@ MonoBehaviour:
   FullStrengthSpeed: 60
   TeleportDistance: 10
   DistortionMaterial: {fileID: 2100000, guid: 1c9ce167f64d08e4998339a1342b40e3, type: 2}
+--- !u!114 &1109393536478168131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824613812931078958}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ca73f320e49f4240a85377fd0ccaa45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.VFX.AirDistortion.Reusable.AirPreviewFlight
+  AirVFX: {fileID: 1423782353718304140}
+  MoveSpeed: 0.72
+  FlightDistance: 4
+  Direction: {x: 1, y: 0, z: 0}
+  SpawnOffset: {x: 0, y: 0, z: 0}
+  Loop: 1
+  ReplayDelay: 0.8
+  OrientAlongMotion: 1
+  ReverseModelForward: 0
+  RestoreOnDisable: 1
+--- !u!114 &4791452783121351767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824613812931078958}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7959dd9f085f3ec4e93450fc40d9a96a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.VFX.AirDistortion.Reusable.AirPreviewCameraFollow
+  AirVFX: {fileID: 1423782353718304140}
+  KeepCurrentOffset: 1
+  FollowOffset: {x: -0.22, y: 0, z: -0.8}
+  RestoreOnDisable: 1

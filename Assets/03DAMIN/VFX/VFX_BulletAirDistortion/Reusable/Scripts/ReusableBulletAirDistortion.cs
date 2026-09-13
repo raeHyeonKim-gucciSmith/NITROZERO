@@ -81,6 +81,7 @@ namespace Damin.VFX.AirDistortion.Reusable
         {
             if(!(GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset))return "이 프리팹은 URP 전용입니다.";
             if(!ViewCamera)return "촬영 카메라를 연결하세요.";
+            if(Target&&!Target.gameObject.scene.IsValid())return "총알 프리팹 파일이 연결돼 있습니다. 테스트 이동을 켜면 복사본을 생성합니다. 게임 모드에서는 씬/발사된 총알을 연결하세요.";
             if(!DistortionMaterial||!DistortionMaterial.shader||!DistortionMaterial.shader.isSupported)return "왜곡 재질/셰이더가 없거나 지원되지 않습니다.";
             if(ViewCamera.stereoEnabled)return "XR/스테레오 카메라는 지원하지 않습니다.";
             if(ViewCamera.rect!=new Rect(0,0,1,1))return "카메라 Viewport Rect는 전체 화면 (0,0,1,1)을 사용하세요.";
