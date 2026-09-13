@@ -5,7 +5,15 @@ namespace RacingUI {
 [UxmlElement] public partial class AmberHudPanel : VisualElement {
  string shapeValue="8,0 92,0 100,15 100,85 92,100 8,100 0,85 0,15";
  float opacityValue=.28f;
+ Color glassColorValue=new Color(.09f,.12f,.15f,1f);
+ bool outlineValue=true;
+ [UxmlAttribute] public Color glassColor {get=>glassColorValue;set{glassColorValue=value;MarkDirtyRepaint();}}
+ [UxmlAttribute] public bool drawOutline {get=>outlineValue;set{outlineValue=value;MarkDirtyRepaint();}}
  bool helmetValue;
+ bool accentsValue=true;
+ bool splitOutlineValue;
+ [UxmlAttribute] public bool splitInstrumentOutline {get=>splitOutlineValue;set{splitOutlineValue=value;MarkDirtyRepaint();}}
+ [UxmlAttribute] public bool edgeAccents {get=>accentsValue;set{accentsValue=value;MarkDirtyRepaint();}}
  [UxmlAttribute] public float cornerRadius {get;set;}
  [UxmlAttribute] public string points {get=>shapeValue;set{shapeValue=value;MarkDirtyRepaint();}}
  [UxmlAttribute] public float glassOpacity {get=>opacityValue;set{opacityValue=Mathf.Clamp01(value);MarkDirtyRepaint();}}
@@ -38,10 +46,29 @@ namespace RacingUI {
  }
  }else p.LineTo(a);
  }p.ClosePath();}
- if(!helmetValue){Path(0);p.fillColor=new Color(.09f,.12f,.15f,opacityValue);p.Fill();}
+ if(!helmetValue){Path(0);p.fillColor=new Color(glassColorValue.r,glassColorValue.g,glassColorValue.b,opacityValue);p.Fill();}
+ if(!outlineValue)return;
+ // FPS instrument: keep the glass closed, but leave the two tiled shoulders
+ // unstroked. Top and bottom are independent open rails, not a polygon border.
+ if(splitOutlineValue && v.Length==18){
+ p.BeginPath();p.MoveTo(v[1]);for(int i=2;i<=10;i++)p.LineTo(v[i]);
+ p.lineWidth=.85f;p.strokeColor=new Color(1,.55f,.13f,.75f);p.Stroke();
+ // Short marker rails meet the existing notch on each side. Coordinates use
+ // the same design space as the four shoulder ticks in FpsAmberFrame.
+ p.BeginPath();p.MoveTo(new Vector2(r.width*202f/997f,r.height*22f/210f));
+ p.LineTo(new Vector2(r.width*258f/997f,r.height*22f/210f));p.LineTo(v[3]);
+ p.lineWidth=.7f;p.strokeColor=new Color(1,.55f,.13f,.64f);p.Stroke();
+ p.BeginPath();p.MoveTo(new Vector2(r.width*794f/997f,r.height*22f/210f));
+ p.LineTo(new Vector2(r.width*739f/997f,r.height*22f/210f));p.LineTo(v[8]);
+ p.lineWidth=.7f;p.strokeColor=new Color(1,.55f,.13f,.64f);p.Stroke();
+ p.BeginPath();p.MoveTo(v[11]);for(int i=12;i<v.Length;i++)p.LineTo(v[i]);p.LineTo(v[0]);
+ p.lineWidth=.65f;p.strokeColor=new Color(1,.49f,.10f,.48f);p.Stroke();
+ return;
+ }
  // Thin layered illumination preserves a sharp core instead of a thick polygon border.
- foreach(float width in new[]{7f,4f,1.1f}){Path(.002f);p.lineWidth=width;p.strokeColor=new Color(1,.46f,.08f,width>4?.035f:width>2?.09f:.85f);p.Stroke();}
+ foreach(float width in new[]{7f,4f,1.1f}){Path(accentsValue?.002f:0f);p.lineWidth=width;p.strokeColor=new Color(1,.46f,.08f,width>4?.035f:width>2?.09f:.85f);p.Stroke();}
  Path(.025f);p.lineWidth=.65f;p.strokeColor=new Color(1,.65f,.2f,.37f);p.Stroke();
+ if(!accentsValue)return;
  for(int i=0;i<v.Length;i++){
  var a=v[i];var b=v[(i+1)%v.Length];float len=Vector2.Distance(a,b);if(len<12)continue;
  var d=(b-a).normalized;var n=new Vector2(-d.y,d.x);

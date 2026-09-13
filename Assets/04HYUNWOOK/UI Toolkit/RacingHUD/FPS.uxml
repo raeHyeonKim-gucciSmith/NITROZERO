@@ -1,172 +1,184 @@
 <ui:UXML xmlns:racing="RacingUI" xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/RacingHUD.uss?fileID=7433441132597879392&amp;guid=f0c18a5d2ce8e4246b959e3a571d02ad&amp;type=3"/>
-    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/Red.uss?fileID=7433441132597879392&amp;guid=e4a49e798626a64489bfa8d0679442e6&amp;type=3"/>
-    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/ReferenceHUD.uss?fileID=7433441132597879392&amp;guid=bee82a9ed742484ea75df4acee2d6179&amp;type=3"/>
-    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/FPS.uss?fileID=7433441132597879392&amp;guid=0bc12d598b06437991491391a2f00f78&amp;type=3"/>
-    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/CleanHUD.uss?fileID=7433441132597879392&amp;guid=97a185a2a06c49d482285e1d62273b8e&amp;type=3#CleanHUD"/>
-    <ui:VisualElement name="racing-hud" picking-mode="Position" class="hud photo-hud first-person fps-document clean-hud">
-        <racing:HudVectorPart name="helmet-outside-mask" path-data="M -128 -128 L 2048 -128 L 2048 1208 L -128 1208 Z M 40 100 L 105 38 L 490 55 L 510 35 L 820 51 L 1100 51 L 1400 35 L 1430 54 L 1810 38 L 1880 100  L 1890 230 L 1820 300 C 1884 465 1884 630 1820 795 L 1840 870 L 1790 955  L 1420 985 L 1290 1030 L 625 1030 L 495 985 L 130 955  L 80 870 L 100 795 C 36 630 36 465 100 300 L 30 230 L 40 100 Z" view-width="1920" view-height="1080" stroke-width="0" stroke-color="#FF3434FF" fill-color="#000000FF" picking-mode="Ignore" class="artwork-part" style="position: absolute; left: 0%; top: 0%; width: 100%; height: 100%;"/>
-        <ui:VisualElement name="fps-frame" picking-mode="Ignore" class="fps-frame" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-image: none;">
-            <racing:HudVectorPart name="helmet-top-rail" path-data="M 15 75 L 80 13 L 465 30 L 485 10 L 795 26 L 1075 26 L 1375 10 L 1405 29 L 1785 13 L 1855 75" view-width="1870" view-height="90" stroke-width="3" stroke-color="#FF1010FF" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 1.302083%; top: 2.314815%; width: 97.39584%; height: 8.333333%;"/>
-            <racing:HudVectorPart name="helmet-right-rail" path-data="M 100 10 L 110 140 L 40 210 C 104 375 104 540 40 705 L 60 780 L 10 865" view-width="125" view-height="875" stroke-width="3" stroke-color="#FF1010FF" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 92.70834%; top: 8.333333%; width: 6.510417%; height: 81.01852%;"/>
-            <racing:HudVectorPart name="helmet-bottom-rail" path-data="M 1670 10 L 1300 40 L 1170 85 L 505 85 L 375 40 L 10 10" view-width="1680" view-height="100" stroke-width="3" stroke-color="#FF1010FF" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 6.25%; top: 87.5%; width: 87.5%; height: 9.259259%;"/>
-            <racing:HudVectorPart name="helmet-left-rail" path-data="M 115 865 L 65 780 L 85 705 C 21 540 21 375 85 210 L 15 140 L 25 10" view-width="125" view-height="875" stroke-width="3" stroke-color="#FF1010FF" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 0.78125%; top: 8.333333%; width: 6.510417%; height: 81.01852%;"/>
+    <Style src="project://database/Assets/04HYUNWOOK/UI%20Toolkit/RacingHUD/AmberHUD.uss?fileID=7433441132597879392&amp;guid=2e6a06b16c4d4399807a208828fe1d49&amp;type=3#AmberHUD"/>
+    <racing:HudDesignCanvas name="racing-hud" class="production-hud amber-hud fps-document" style="position: absolute; width: 100%; height: 100%;">
+        <racing:FpsAmberFrame name="helmet-frame" style="position: absolute; left: 0; top: 0; width: 1672px; height: 941px;"/>
+        <ui:VisualElement name="ranking-panel" style="position: absolute; left: 94px; top: 78px; width: 300px; height: 150px; rotate: 3deg; transform-origin: 50% 50%;">
+            <racing:AmberHudPanel name="ranking-panel-frame" points="0,0 100,0 100,100 0,100" glass-opacity=".40" glass-color="#000000" draw-outline="false" style="position: absolute; left: 0; top: 0; width: 300px; height: 150px; display: flex;"/>
+            <ui:Label name="rank-head" text="POSITION" class="" style="position: absolute; left: 20px; top: 10px; width: 145px; height: 20px; font-size: 14px;"/>
+            <ui:Label name="progress-head" text="PROGRESS" class="" style="position: absolute; left: 188px; top: 10px; width: 100px; height: 20px; font-size: 14px;"/>
+            <ui:VisualElement name="ranking-row-1" class="ranking-row ranking-player" style="position: absolute; left: 20px; top: 38px; width: 260px; height: 32px;">
+                <ui:Label name="pos-0" text="01" class="rank-pos" style="position: absolute; left: 0; top: 0; width: 30px; height: 30px; font-size: 22px;"/>
+                <ui:Label name="driver-0" text="PLAYER" class="rank-driver" style="position: absolute; left: 42px; top: 0; width: 135px; height: 30px; font-size: 17px;"/>
+                <ui:Label name="progress-0" text="0%" class="rank-time" style="position: absolute; left: 181px; top: 0; width: 79px; height: 30px; font-size: 22px; -unity-text-align: middle-right;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="ranking-row-2" class="ranking-row " style="position: absolute; left: 20px; top: 72px; width: 260px; height: 32px;">
+                <ui:Label name="pos-1" text="02" class="rank-pos" style="position: absolute; left: 0; top: 0; width: 30px; height: 30px; font-size: 22px;"/>
+                <ui:Label name="driver-1" text="---" class="rank-driver" style="position: absolute; left: 42px; top: 0; width: 135px; height: 30px; font-size: 17px;"/>
+                <ui:Label name="progress-1" text="--%" class="rank-time" style="position: absolute; left: 181px; top: 0; width: 79px; height: 30px; font-size: 22px; -unity-text-align: middle-right;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="ranking-row-3" class="ranking-row " style="position: absolute; left: 20px; top: 106px; width: 260px; height: 32px;">
+                <ui:Label name="pos-2" text="03" class="rank-pos" style="position: absolute; left: 0; top: 0; width: 30px; height: 30px; font-size: 22px;"/>
+                <ui:Label name="driver-2" text="---" class="rank-driver" style="position: absolute; left: 42px; top: 0; width: 135px; height: 30px; font-size: 17px;"/>
+                <ui:Label name="progress-2" text="--%" class="rank-time" style="position: absolute; left: 181px; top: 0; width: 79px; height: 30px; font-size: 22px; -unity-text-align: middle-right;"/>
+            </ui:VisualElement>
         </ui:VisualElement>
-        <racing:HudVectorPart name="art-timer-frame" path-data="M 17 30 L 324 30 L 267 91 L 73 91 Z" view-width="345" view-height="105" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="artwork-part" style="position: absolute; left: 41.14583%; top: 1.851852%; width: 17.96875%; height: 9.722222%;"/>
-        <ui:VisualElement name="fps-map-assembly" picking-mode="Ignore" class="fps-map-assembly" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; rotate: -2.316497deg; transform-origin: 85.51875% 17.59259%;">
-            <racing:HudVectorPart name="art-map-frame" path-data="M 18 26 L 35 8 L 315 8 L 333 27 L 333 222 L 315 237 L 34 237 L 18 221 Z" view-width="350" view-height="250" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#000000FF" picking-mode="Position" class="map-artwork" style="position: absolute; left: 76.40416%; top: 6.018519%; width: 18.22917%; height: 23.14815%;"/>
-            <ui:VisualElement name="minimap-panel" picking-mode="Position" class="minimap panel" style="left: 78%; width: 288px;">
-                <ui:VisualElement name="map-viewport" picking-mode="Position" class="map-viewport">
-                    <racing:NavigationMap map-tint="#000000FF" name="navigation-road" road-width="0.55" horizon="0.22" haze="1" class="navigation-road"/>
-                    <ui:Label name="map-north" text="M" picking-mode="Position" class="map-north"/>
-                    <ui:Label text="ROUTE MAP" name="map-title" picking-mode="Position" class="fps-map-title"/>
+        <ui:VisualElement name="minimap-panel" class="map-artwork" style="position: absolute; left: 1325px; top: 75px; width: 250px; height: 180px; rotate: -4deg; transform-origin: 50% 50%;">
+            <racing:AmberMapFrame glass-opacity=".40" glass-color="#000000" style="position: absolute; left: 0; top: 0; width: 250px; height: 180px;"/>
+            <racing:NavigationMap name="navigation-road" amber-route="true" reference-marker="true" style="position: absolute; left: 10px; top: 10px; width: 230px; height: 133px;"/>
+            <ui:Label name="route-distance" text="DISTANCE LEFT" class="" style="position: absolute; left: 12px; top: 148px; width: 226px; height: 23px; font-size: 14px; -unity-text-align: middle-center;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="timer-panel" style="position: absolute; left: 690px; top: 30px; width: 290px; height: 66px;">
+            <racing:AmberHudPanel name="timer-panel-frame" points="0,0 100,0 88,100 12,100" glass-opacity=".40" glass-color="#000000" draw-outline="false" style="position: absolute; left: 0; top: 0; width: 290px; height: 66px; display: flex;"/>
+            <ui:Label name="timer-caption" text="TIMER" class="" style="position: absolute; left: 100px; top: 1px; width: 90px; height: 18px; font-size: 13px; display: none;"/>
+            <racing:DigitalReadout name="time-value" text="00:00.000" optical-center="true" fit-to-bounds="true" style="position: absolute; left: 54px; top: 33px; width: 184px; height: 30px; font-size: 34px; color: rgb(255, 155, 53);"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="instrument-panel" style="position: absolute; left: 338px; top: 706px; width: 997px; height: 210px;">
+            <racing:AmberHudPanel name="instrument-panel-frame" points="-2.6,64 8,14 26,14 26.7,17 27.4,17 30.3,4 69.7,4 72.6,17 73.3,17 74,14 92,14 102.6,64 97.8,91 92,91 91,98 7,98 6,91 2.2,91" edge-accents="false" split-instrument-outline="true" glass-opacity=".40" glass-color="#000000" style="position: absolute; left: 0; top: 0; width: 997px; height: 210px;"/>
+            <racing:DigitalReadout name="speed-value" text="000" optical-center="true" fit-to-bounds="true" style="position: absolute; left: 387px; top: 20px; width: 212px; height: 97px; font-size: 115px; color: rgb(255, 155, 53);"/>
+            <ui:Label name="speed-unit" text="km/h" class="" style="position: absolute; left: 612px; top: 86px; width: 75px; height: 30px; font-size: 24px;"/>
+            <ui:Label name="gear-caption" text="GEAR" class="" style="position: absolute; left: 140px; top: 45px; width: 80px; height: 22px; font-size: 16px;"/>
+            <racing:DigitalReadout name="gear-value" text="1" optical-center="true" fit-to-bounds="true" style="position: absolute; left: 134px; top: 72px; width: 54px; height: 62px; font-size: 70px; color: rgb(255, 155, 53);"/>
+            <ui:Label name="boost-caption" text="BOOST" class="" style="position: absolute; left: 810px; top: 45px; width: 100px; height: 22px; font-size: 16px;"/>
+            <racing:DigitalReadout name="boost-value" text="0" optical-center="true" fit-to-bounds="true" style="position: absolute; left: 815px; top: 76px; width: 57px; height: 33px; font-size: 40px; color: rgb(255, 155, 53);"/>
+            <ui:Label name="boost-unit" text="%" class="" style="position: absolute; left: 877px; top: 82px; width: 28px; height: 25px; font-size: 18px;"/>
+            <ui:VisualElement class="gauge-track" style="position: absolute; left: 783px; top: 116px; width: 133px; height: 10px;">
+                <ui:VisualElement name="boost-fill" class="gauge-fill" style="height: 100%; width: 0%;"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 4.1667%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 8.3333%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 12.5%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 16.6667%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 20.8333%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 25%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 29.1667%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 33.3333%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 37.5%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 41.6667%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 45.8333%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 54.1667%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 58.3333%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 62.5%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 66.6667%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 70.8333%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 75%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 79.1667%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 83.3333%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 87.5%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 91.6667%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 95.8333%; top: 0; bottom: 0; width: 2px; background-color: rgba(24, 32, 40, 0.85);"/>
+            </ui:VisualElement>
+            <ui:Label name="boost-scale" text="0%           100%" class="" style="position: absolute; left: 783px; top: 133px; width: 160px; height: 18px; font-size: 13px;"/>
+            <ui:Label name="rpm-caption" text="RPM x1000" class="" style="position: absolute; left: 143px; top: 127px; width: 160px; height: 20px; font-size: 14px;"/>
+            <ui:VisualElement name="rpm-bar-0" style="position: absolute; left: 143px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-1" style="position: absolute; left: 160.675px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-2" style="position: absolute; left: 178.35px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-3" style="position: absolute; left: 196.025px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-4" style="position: absolute; left: 213.7px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-5" style="position: absolute; left: 231.375px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-6" style="position: absolute; left: 249.05px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-7" style="position: absolute; left: 266.725px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-8" style="position: absolute; left: 284.4px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-9" style="position: absolute; left: 302.075px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-10" style="position: absolute; left: 319.75px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-11" style="position: absolute; left: 337.425px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-12" style="position: absolute; left: 355.1px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-13" style="position: absolute; left: 372.775px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-14" style="position: absolute; left: 390.45px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-15" style="position: absolute; left: 408.125px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-16" style="position: absolute; left: 425.8px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-17" style="position: absolute; left: 443.475px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-18" style="position: absolute; left: 461.15px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-19" style="position: absolute; left: 478.825px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-20" style="position: absolute; left: 496.5px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-21" style="position: absolute; left: 514.175px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-22" style="position: absolute; left: 531.85px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-23" style="position: absolute; left: 549.525px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-24" style="position: absolute; left: 567.2px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-25" style="position: absolute; left: 584.875px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-26" style="position: absolute; left: 602.55px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-27" style="position: absolute; left: 620.225px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-28" style="position: absolute; left: 637.9px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-29" style="position: absolute; left: 655.575px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-30" style="position: absolute; left: 673.25px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-31" style="position: absolute; left: 690.925px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(255, 155, 53); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-32" style="position: absolute; left: 708.6px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(207, 87, 14); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-33" style="position: absolute; left: 726.275px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(207, 87, 14); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-34" style="position: absolute; left: 743.95px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(207, 87, 14); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-35" style="position: absolute; left: 761.625px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(207, 87, 14); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-36" style="position: absolute; left: 779.3px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(207, 87, 14); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-37" style="position: absolute; left: 796.975px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(207, 87, 14); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-38" style="position: absolute; left: 814.65px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(207, 87, 14); opacity: 0.12;"/>
+            <ui:VisualElement name="rpm-bar-39" style="position: absolute; left: 832.325px; top: 151px; width: 15.675px; height: 22px; background-color: rgb(207, 87, 14); opacity: 0.12;"/>
+            <ui:Label name="rpm-tick-0" text="0" class="rpm-tick" style="position: absolute; left: 143px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-1" text="1" class="rpm-tick" style="position: absolute; left: 219.7778px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-2" text="2" class="rpm-tick" style="position: absolute; left: 296.5555px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-3" text="3" class="rpm-tick" style="position: absolute; left: 373.3333px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-4" text="4" class="rpm-tick" style="position: absolute; left: 450.1111px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-5" text="5" class="rpm-tick" style="position: absolute; left: 526.8889px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-6" text="6" class="rpm-tick" style="position: absolute; left: 603.6667px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-7" text="7" class="rpm-tick" style="position: absolute; left: 680.4445px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-8" text="8" class="rpm-tick" style="position: absolute; left: 757.2222px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+            <ui:Label name="rpm-tick-9" text="9" class="rpm-tick" style="position: absolute; left: 834px; top: 176px; width: 23px; height: 22px; font-size: 21px;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="temperature-panel" style="position: absolute; left: 126px; top: 610px; width: 150px; height: 165px;">
+            <racing:AmberHudPanel name="temperature-panel-frame" points="0,0 58,0 72,10 100,91 92,100 42,100 0,7" glass-opacity=".40" glass-color="#000000" corner-radius="7" style="position: absolute; left: 0; top: 0; width: 150px; height: 165px;"/>
+            <racing:AmberHudIcon name="engine-icon" symbol="engine" style="position: absolute; left: 36px; top: 17px; width: 29px; height: 24px;"/>
+            <ui:Label name="engine-caption" text="ENGINE" class="" style="position: absolute; left: 40px; top: 47px; width: 87px; height: 20px; font-size: 13px;"/>
+            <racing:DigitalReadout name="engine-value" text="98" optical-center="true" fit-to-bounds="true" style="position: absolute; left: 47px; top: 68px; width: 32px; height: 19px; font-size: 31px; color: rgb(255, 155, 53);"/>
+            <ui:Label name="engine-unit" text="°C" class="" style="position: absolute; left: 80px; top: 67px; width: 24px; height: 22px; font-size: 14px;"/>
+            <ui:VisualElement class="gauge-track" style="position: absolute; left: 50px; top: 90px; width: 62px; height: 7px; background-color: rgba(255, 155, 53, 0.16); border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-left-radius: 1px; border-bottom-right-radius: 1px;">
+                <ui:VisualElement name="engine-fill" class="gauge-fill" style="height: 100%; width: 0%;">
+                    <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 0; right: 0; top: 0; height: 1px; background-color: rgba(255, 216, 140, 0.7);"/>
                 </ui:VisualElement>
-                <ui:Label name="route-distance" text="DISTANCE LEFT" picking-mode="Position" class="route-distance"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 10%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 20%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 30%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 40%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 60%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 70%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 80%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 90%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
             </ui:VisualElement>
-        </ui:VisualElement>
-        <racing:HudVectorPart name="art-instrument-frame" path-data="M -5 191 L 19 175 L 125 40 L 231 40 L 255 20 L 650 20 L 674 40 L 790 40 L 894 175 L 920 191 L 790 236 L 125 236 Z" view-width="915" view-height="255" stroke-width="0" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="artwork-part" style="position: absolute; left: 26.04167%; top: 794px; width: 47.65625%; height: 23.61111%;"/>
-        <racing:HudVectorPart name="instrument-upper-outline" path-data="M -5 191 L 19 175 L 125 40 L 231 40 L 255 20 L 650 20 L 674 40 L 790 40 L 894 175 L 920 191" view-width="915" view-height="255" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#00000000" picking-mode="Position" class="artwork-part" style="position: absolute; left: 26.04167%; top: 794px; width: 47.65625%; height: 23.61111%;"/>
-        <racing:HudVectorPart name="art-fuel-frame" path-data="M 24 177 L 82 49 L 109 25 L 192 25 L 130 198 L 38 198 Z" view-width="210" view-height="215" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="artwork-part" style="position: absolute; left: 83%; top: 64.35185%; width: 10.9375%; height: 19.90741%;"/>
-        <racing:HudVectorPart name="art-coolant-frame" path-data="M 186 177 L 128 49 L 101 25 L 18 25 L 80 198 L 172 198 Z" view-width="210" view-height="215" stroke-width="2.5" stroke-color="#FF1010FF" fill-color="#18222DFF" picking-mode="Position" class="artwork-part" style="position: absolute; left: 6%; top: 64.35185%; width: 10.9375%; height: 19.90741%;"/>
-        <ui:Label text="RED / RACING" name="theme-title" picking-mode="Position" class="theme-title"/>
-        <ui:VisualElement name="ranking-panel" picking-mode="Position" class="ranking panel" style="position: absolute; left: 5.208333%; right: auto; top: 6.635767%; width: 17.1875%; height: 17.40741%; rotate: 2.411281deg; transform-origin: 50% 50%; overflow: visible; padding: 0;">
-            <racing:HudVectorPart name="art-ranking-frame" path-data="M 15 2 L 312 2 L 328 18 L 328 172 L 314 186 L 15 186 L 2 173 L 2 16 Z" view-width="330" view-height="188" fill-color="#18222DFF" stroke-color="#FF1010FF" stroke-width="2" picking-mode="Position" class="fps-ranking-art artwork-part" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"/>
-            <racing:HudVectorPart name="ranking-row-separators" path-data="M 16 44 L 312 44 M 16 90 L 312 90 M 16 134 L 312 134" view-width="330" view-height="188" fill-color="#00000000" stroke-color="#FF34348C" stroke-width="1" picking-mode="Position" class="fps-ranking-art artwork-part" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"/>
-            <racing:HudVectorPart name="ranking-active-marker" path-data="M 11 59 L 11 74" view-width="330" view-height="188" fill-color="#00000000" stroke-color="#FF3434FF" stroke-width="2.5" picking-mode="Position" class="fps-ranking-art artwork-part" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;"/>
-            <ui:Label text="POSITION" name="caption" picking-mode="Position" class="caption" style="position: absolute; top: 7px; height: 30px; margin: 0; padding: 0; border-width: 0; font-size: 18px; -unity-text-align: middle-left; left: 16px; width: 182px; color: #FFFFFF;"/>
-            <ui:Label text="PROGRESS" name="ranking-progress-caption" picking-mode="Position" class="ranking-progress-caption" style="position: absolute; top: 7px; height: 30px; margin: 0; padding: 0; border-width: 0; font-size: 11px; -unity-text-align: middle-right; left: 213px; width: 91px;"/>
-            <ui:VisualElement name="ranking-row-1" picking-mode="Position" class="ranking-row ranking-player" style="position: absolute; left: 16px; top: 46px; width: 288px; height: 42px; border-width: 0; overflow: hidden;">
-                <ui:Label text="01" name="rank-pos" picking-mode="Position" class="rank-pos ranking-cell" style="position: absolute; left: 0; top: 0; width: 34px; height: 100%; margin: 0; padding: 0; font-size: 25px; -unity-text-align: middle-center;"/>
-                <ui:Label text="PLAYER" name="rank-driver" picking-mode="Position" class="rank-driver ranking-cell" style="position: absolute; left: 43px; top: 0; width: 154px; height: 100%; margin: 0; padding: 0; font-size: 19px; -unity-text-align: middle-left;"/>
-                <ui:Label text="0%" name="rank-time" picking-mode="Position" class="rank-time ranking-cell" style="position: absolute; left: 202px; top: 0; width: 86px; height: 100%; margin: 0; padding: 0; font-size: 24px; -unity-text-align: middle-right;"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="ranking-row-2" picking-mode="Position" class="ranking-row" style="position: absolute; left: 16px; top: 92px; width: 288px; height: 40px; border-width: 0; overflow: hidden;">
-                <ui:Label text="02" name="rank-pos-2" picking-mode="Position" class="rank-pos ranking-cell" style="position: absolute; left: 0; top: 0; width: 34px; height: 100%; margin: 0; padding: 0; font-size: 25px; -unity-text-align: middle-center; color: rgb(218, 225, 230);"/>
-                <ui:Label text="---" name="rank-driver-2" picking-mode="Position" class="rank-driver ranking-cell" style="position: absolute; left: 43px; top: 0; width: 154px; height: 100%; margin: 0; padding: 0; font-size: 19px; -unity-text-align: middle-left;"/>
-                <ui:Label text="--%" name="rank-time-2" picking-mode="Position" class="rank-time ranking-cell" style="position: absolute; left: 202px; top: 0; width: 86px; height: 100%; margin: 0; padding: 0; font-size: 24px; -unity-text-align: middle-right;"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="ranking-row-3" picking-mode="Position" class="ranking-row" style="position: absolute; left: 16px; top: 136px; width: 288px; height: 43px; border-width: 0; overflow: hidden;">
-                <ui:Label text="03" name="rank-pos-3" picking-mode="Position" class="rank-pos ranking-cell" style="position: absolute; left: 0; top: 0; width: 34px; height: 100%; margin: 0; padding: 0; font-size: 25px; -unity-text-align: middle-center; color: rgb(218, 225, 230);"/>
-                <ui:Label text="---" name="rank-driver-3" picking-mode="Position" class="rank-driver ranking-cell" style="position: absolute; left: 43px; top: 0; width: 154px; height: 100%; margin: 0; padding: 0; font-size: 19px; -unity-text-align: middle-left;"/>
-                <ui:Label text="--%" name="rank-time-3" picking-mode="Position" class="rank-time ranking-cell" style="position: absolute; left: 202px; top: 0; width: 86px; height: 100%; margin: 0; padding: 0; font-size: 24px; -unity-text-align: middle-right;"/>
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="side-fuel-panel" picking-mode="Position" class="side-fuel-panel" style="left: 1637px; top: 734px;">
-            <ui:Label text="FUEL" name="side-fuel-title" picking-mode="Position" class="side-fuel-title" style="color: #FFFFFF;"/>
-            <ui:VisualElement name="side-fuel-percent-row" picking-mode="Position" class="side-fuel-percent-row">
-                <racing:DigitalReadout name="fuel-percent" text="100" fit-to-bounds="true" picking-mode="Position" optical-center="true" class="side-fuel-percent digital"/>
-                <ui:Label text="%" name="side-fuel-unit" picking-mode="Position" class="side-fuel-unit"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="side-fuel-litres-row" picking-mode="Position" class="side-fuel-litres-row">
-                <racing:DigitalReadout name="fuel-value" text="60" fit-to-bounds="true" picking-mode="Position" optical-center="true" class="side-fuel-litres digital"/>
-                <ui:Label text="/" name="side-fuel-slash" picking-mode="Position" class="side-fuel-slash"/>
-                <racing:DigitalReadout name="fuel-capacity" text="60" fit-to-bounds="true" picking-mode="Position" optical-center="true" class="side-fuel-litres digital"/>
-                <ui:Label text="L" name="side-fuel-litre-unit" picking-mode="Position" class="side-fuel-litre-unit"/>
-            </ui:VisualElement>
-            <ui:VisualElement name="side-fuel-rail" picking-mode="Position" class="side-fuel-rail">
-                <ui:VisualElement name="fuel-fill" picking-mode="Position" class="side-fuel-fill"/>
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="side-coolant-panel" picking-mode="Position" class="side-fuel-panel side-coolant-panel" style="left: 7.377083%; top: 734px;">
-            <ui:Label text="COOLANT" name="side-coolant-title" picking-mode="Position" class="side-fuel-title side-coolant-title" style="color: #FFFFFF;"/>
-            <ui:VisualElement name="side-coolant-value-row" picking-mode="Position" class="side-fuel-percent-row side-coolant-value-row">
-                <racing:DigitalReadout name="coolant-value" text="80" fit-to-bounds="true" optical-center="true" picking-mode="Position" class="side-fuel-percent side-coolant-value digital"/>
-                <ui:Label text="°C" name="coolant-unit" picking-mode="Position" class="side-fuel-unit side-coolant-unit"/>
-            </ui:VisualElement>
-            <ui:Label text="80°C REF" name="side-coolant-reference" picking-mode="Position" class="side-coolant-reference"/>
-            <ui:VisualElement name="side-coolant-rail" picking-mode="Position" class="side-fuel-rail side-coolant-rail">
-                <ui:VisualElement name="coolant-fill" picking-mode="Position" class="side-fuel-fill side-coolant-fill"/>
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="coolant-panel" picking-mode="Position" class="coolant-panel" style="translate: -75px 0%;">
-            <racing:HudVectorPart name="coolant-symbol" path-data="M 13 18 L 13 5 C 13 1 19 1 19 5 L 19 18 C 27 25 20 34 15 30 C 9 30 7 23 13 18 Z M 19 7 L 25 7 M 19 12 L 23 12 M 3 33 C 7 29 9 37 13 33 M 18 33 C 22 29 25 37 30 33" view-width="34" view-height="38" stroke-width="1.5" stroke-color="#D4E0E6CC" fill-color="#00000000" picking-mode="Position" class="coolant-symbol" style="translate: 0 0%; top: -6px;"/>
-            <ui:Label text="TEMP °C" name="coolant-title" picking-mode="Position" class="coolant-title" style="translate: 0 0%;"/>
-            <racing:DigitalReadout text="100" fit-to-bounds="true" optical-center="true" name="coolant-hot-label" picking-mode="Position" class="coolant-end-label coolant-hot-label" style="translate: 0 0%;"/>
-            <ui:VisualElement name="coolant-gauge-track" picking-mode="Position" class="coolant-gauge-track" style="translate: 0 0%;">
-                <racing:HudVectorPart name="coolant-gauge-rail" path-data="M 53.36 22.2 C 30.32 88.8 33.2 155.4 62 222" view-width="90" view-height="222" stroke-width="3" stroke-color="#D4E0E6FF" fill-color="#00000000" picking-mode="Position" class="coolant-track-art"/>
-                <racing:HudVectorPart name="coolant-gauge-ticks" path-data="M 49.580 20.892 L 57.140 23.508 M 39.864 42.642 L 53.416 46.158 M 37.899 65.918 L 45.781 67.282 M 31.986 88.197 L 45.934 89.403 M 34.000 111.000 L 42.000 111.000 M 31.986 133.803 L 45.934 132.597 M 37.899 156.082 L 45.781 154.718 M 39.864 179.358 L 53.416 175.842 M 49.580 201.108 L 57.140 198.492 M 55.575 224.778 L 68.425 219.222" view-width="90" view-height="222" stroke-width="1.3" stroke-color="#D4E0E6FF" fill-color="#00000000" picking-mode="Position" class="coolant-track-art"/>
-                <racing:HudVectorPart name="coolant-normal-range" path-data="M 53.36 22.2 C 48.24 37 44.4 51.8 41.84 66.6" view-width="90" view-height="222" stroke-width="3" stroke-color="#D4E0E6FF" fill-color="#00000000" picking-mode="Position" class="coolant-track-art"/>
-                <racing:HudVectorPart name="coolant-hot-range" path-data="M 62 0 C 58.8 7.4 55.92 14.8 53.36 22.2" view-width="90" view-height="222" stroke-width="3" stroke-color="#FF2020FF" fill-color="#00000000" picking-mode="Position" class="coolant-track-art"/>
-                <racing:HudVectorPart name="coolant-hot-tick" path-data="M 55.575 -2.778 L 68.425 2.778" view-width="90" view-height="222" stroke-width="1.3" stroke-color="#FF2020FF" fill-color="#00000000" picking-mode="Position" class="coolant-track-art"/>
-                <racing:HudVectorPart name="coolant-needle" path-data="M 1 7 L 18 1 L 18 13 Z" view-width="20" view-height="14" stroke-width="0" stroke-color="#00000000" fill-color="#FF2020FF" picking-mode="Position" class="coolant-needle" style="top: 21%;"/>
-            </ui:VisualElement>
-            <racing:DigitalReadout name="coolant-tick-60" text="60" fit-to-bounds="true" optical-center="true" picking-mode="Position" class="coolant-intermediate-tick digital" style="left: 62.96px; top: 140.8px;"/>
-            <racing:DigitalReadout name="coolant-tick-40" text="40" fit-to-bounds="true" optical-center="true" picking-mode="Position" class="coolant-intermediate-tick digital" style="left: 62.96px; top: 185.2px;"/>
-            <racing:DigitalReadout name="coolant-tick-20" text="20" fit-to-bounds="true" optical-center="true" picking-mode="Position" class="coolant-intermediate-tick digital" style="left: 70.64px; top: 229.6px;"/>
-            <racing:DigitalReadout name="coolant-normal-tick" text="80" fit-to-bounds="true" optical-center="true" picking-mode="Position" class="coolant-normal-tick digital" style="translate: 0 0%;"/>
-            <racing:DigitalReadout text="0" fit-to-bounds="true" optical-center="true" name="coolant-cold-label" picking-mode="Position" class="coolant-end-label coolant-cold-label" style="translate: 0 0%;"/>
-        </ui:VisualElement>
-        <ui:VisualElement name="timer-panel" picking-mode="Position" class="timer panel">
-            <ui:Label text="TIME" name="caption-2" picking-mode="Position" class="caption" style="align-self: center; align-items: center; justify-content: flex-end; color: #FFFFFF;"/>
-            <racing:DigitalReadout name="time-value" text="00:00.000" fit-to-bounds="true" picking-mode="Position" optical-center="true" class="time digital"/>
-        </ui:VisualElement>
-        <ui:VisualElement name="instrument-panel" picking-mode="Position" class="instrument panel" style="top: 859px; left: 537px;">
-            <ui:VisualElement name="gear-pod" picking-mode="Position" class="gear-pod" style="overflow: visible;">
-                <ui:Label text="GEAR" name="gear-caption" picking-mode="Position" class="gear-caption" style="left: -52px; width: 90%; overflow: visible; -unity-text-align: middle-center; top: -6px; color: #FFFFFF;"/>
-                <racing:DigitalReadout name="gear-value" text="1" fit-to-bounds="true" picking-mode="Position" optical-center="true" class="gear-number digital" style="left: -52px; top: 15%;"/>
-            </ui:VisualElement>
-            <racing:DigitalReadout name="speed-value" text="000" segment-thickness="0.16" digit-spacing="0.12" fit-to-bounds="true" picking-mode="Position" optical-center="true" class="speed digital" style="font-size: 160px; top: -12%; left: 309px; width: 215px;"/>
-            <ui:Label text="km/h" name="unit" picking-mode="Position" class="unit" style="width: 48px; top: 48px; left: 65%;"/>
-            <ui:Label text="RPM x1000" name="rpm-title" picking-mode="Position" class="rpm-title" style="width: 67px; top: 38%; left: 27%;"/>
-            <ui:VisualElement name="rpm-bars" picking-mode="Position" class="rpm-bars" style="height: 25px; top: 100px; width: 599px; left: 112px; scale: 1 1;">
-                <ui:VisualElement name="rpm-bar-0" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-1" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-2" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-3" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-4" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-5" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-6" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-7" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-8" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-9" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-10" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-11" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-12" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-13" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-14" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-15" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-16" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-17" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-18" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-19" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-20" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-21" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-22" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-23" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-24" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-25" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-26" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-27" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-28" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-29" picking-mode="Position" class="rpm-segment"/>
-                <ui:VisualElement name="rpm-bar-30" picking-mode="Position" class="rpm-segment" style="position: relative;">
-                    <ui:VisualElement name="rpm-seven-boundary" picking-mode="Ignore" style="position: absolute; left: 12px; top: 0; width: 2px; height: 100%; background-color: rgb(255, 32, 32);"/>
+            <ui:Label name="coolant-caption" text="COOLANT" class="" style="position: absolute; left: 58px; top: 103px; width: 91px; height: 20px; font-size: 13px;"/>
+            <racing:DigitalReadout name="coolant-value" text="80" optical-center="true" fit-to-bounds="true" style="position: absolute; left: 62px; top: 124px; width: 32px; height: 19px; font-size: 31px; color: rgb(255, 155, 53);"/>
+            <ui:Label name="coolant-unit" text="°C" class="" style="position: absolute; left: 95px; top: 123px; width: 24px; height: 22px; font-size: 14px;"/>
+            <ui:VisualElement class="gauge-track" style="position: absolute; left: 69px; top: 148px; width: 64px; height: 7px; background-color: rgba(255, 155, 53, 0.16); border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-left-radius: 1px; border-bottom-right-radius: 1px;">
+                <ui:VisualElement name="coolant-fill" class="gauge-fill" style="height: 100%; width: 0%;">
+                    <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 0; right: 0; top: 0; height: 1px; background-color: rgba(255, 216, 140, 0.7);"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="rpm-bar-31" picking-mode="Position" class="rpm-segment rpm-hot"/>
-                <ui:VisualElement name="rpm-bar-32" picking-mode="Position" class="rpm-segment rpm-hot"/>
-                <ui:VisualElement name="rpm-bar-33" picking-mode="Position" class="rpm-segment rpm-hot"/>
-                <ui:VisualElement name="rpm-bar-34" picking-mode="Position" class="rpm-segment rpm-hot"/>
-                <ui:VisualElement name="rpm-bar-35" picking-mode="Position" class="rpm-segment rpm-hot"/>
-                <ui:VisualElement name="rpm-bar-36" picking-mode="Position" class="rpm-segment rpm-hot"/>
-                <ui:VisualElement name="rpm-bar-37" picking-mode="Position" class="rpm-segment rpm-hot"/>
-                <ui:VisualElement name="rpm-bar-38" picking-mode="Position" class="rpm-segment rpm-hot"/>
-                <ui:VisualElement name="rpm-bar-39" picking-mode="Position" class="rpm-segment rpm-hot" style="margin-right: 0;"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 10%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 20%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 30%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 40%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 60%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 70%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 80%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 90%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
             </ui:VisualElement>
-            <ui:VisualElement name="rpm-ticks" picking-mode="Position" class="rpm-ticks" style="width: 606px; left: 110px; -unity-text-align: middle-center;">
-                <ui:Label text="0" name="rpm-tick" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 0; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
-                <ui:Label text="1" name="rpm-tick-2" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 65px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
-                <ui:Label text="2" name="rpm-tick-3" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 130px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
-                <ui:Label text="3" name="rpm-tick-4" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 195px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
-                <ui:Label text="4" name="rpm-tick-5" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 260px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
-                <ui:Label text="5" name="rpm-tick-6" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 325px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
-                <ui:Label text="6" name="rpm-tick-7" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 390px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(212, 224, 230);"/>
-                <ui:Label text="7" name="rpm-tick-8" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 455px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(255, 32, 32);"/>
-                <ui:Label text="8" name="rpm-tick-9" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 520px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(255, 32, 32);"/>
-                <ui:Label text="9" name="rpm-tick-10" picking-mode="Position" class="rpm-tick" style="position: absolute; left: 585px; width: 14px; margin: 0; padding: 0; -unity-text-align: middle-center; color: rgb(255, 32, 32);"/>
-            </ui:VisualElement>
-            <ui:Label name="drive-status" text="READY" picking-mode="Position" class="drive-status"/>
-            <ui:Label name="gear-limit" text="LIMIT 050" picking-mode="Position" class="gear-limit"/>
         </ui:VisualElement>
-    </ui:VisualElement>
-    <ui:VisualElement name="startup-shield" picking-mode="Ignore" class="startup-shield"/>
+        <ui:VisualElement name="fuel-panel" style="position: absolute; left: 1393px; top: 610px; width: 145px; height: 155px;">
+            <racing:AmberHudPanel name="fuel-panel-frame" points="38,0 100,0 62,91 8,91 0,85 31,7" glass-opacity=".40" glass-color="#000000" corner-radius="7" style="position: absolute; left: 0; top: 0; width: 145px; height: 155px;"/>
+            <racing:AmberHudIcon name="fuel-icon" symbol="fuel" style="position: absolute; left: 60px; top: 9px; width: 20px; height: 24px;"/>
+            <ui:Label name="fuel-caption" text="FUEL" class="" style="position: absolute; left: 45px; top: 38px; width: 65px; height: 20px; font-size: 15px;"/>
+            <racing:DigitalReadout name="fuel-percent" text="100" optical-center="true" fit-to-bounds="true" style="position: absolute; left: 30px; top: 67px; width: 53px; height: 31px; font-size: 37px; color: rgb(255, 155, 53);"/>
+            <ui:Label name="fuel-unit" text="%" class="" style="position: absolute; left: 83px; top: 72px; width: 20px; height: 25px; font-size: 17px;"/>
+            <ui:VisualElement class="gauge-track" style="position: absolute; left: 22px; top: 120px; width: 60px; height: 8px; background-color: rgba(255, 155, 53, 0.16); border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-left-radius: 1px; border-bottom-right-radius: 1px;">
+                <ui:VisualElement name="fuel-fill" class="gauge-fill" style="height: 100%; width: 0%;">
+                    <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 0; right: 0; top: 0; height: 1px; background-color: rgba(255, 216, 140, 0.7);"/>
+                </ui:VisualElement>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 10%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 20%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 30%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 40%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 60%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 70%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 80%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+                <ui:VisualElement picking-mode="Ignore" style="position: absolute; left: 90%; top: 0; bottom: 0; width: 1.5px; background-color: rgba(12, 20, 27, 0.95);"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="startup-shield" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: black; display: none;"/>
+    </racing:HudDesignCanvas>
 </ui:UXML>
