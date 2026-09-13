@@ -1,6 +1,0 @@
-v1_exterior -> RedCarCockpit
-v2_exterior -> BlueCarCockpit
-v3_exterior -> GreenCarCockpit
-localPosition=(0, 1.85, -10.5)
-localRotation=(0,0,0)
-localScale=(89,75,75)

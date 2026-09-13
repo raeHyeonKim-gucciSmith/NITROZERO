@@ -1,0 +1,380 @@
+fileFormatVersion: 2
+guid: cb9ee8b4deeeaf07779c86847206e3c6
+ModelImporter:
+  serializedVersion: 24200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Dark
+    second: {fileID: 2100000, guid: 78c2008e5ad5b9741894499c39093ad8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Lamp
+    second: {fileID: 2100000, guid: 957779ee74b006149ab5c84ed61ca9db, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Rubber
+    second: {fileID: 2100000, guid: 35846bf6a307ef646a242f2ac83b59e8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Steel
+    second: {fileID: 2100000, guid: 78f308c3c7a41744587a42b1942501fe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_00
+    second: {fileID: 2100000, guid: 823fe5c3492eb3242bc671b5678ea0f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_01
+    second: {fileID: 2100000, guid: ff76466954d3895448752631be42daa6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_02
+    second: {fileID: 2100000, guid: 8233f701919e7c14d95f82cb778d11f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_03
+    second: {fileID: 2100000, guid: 84e3153488e0b7742bd2f19387974b52, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_04
+    second: {fileID: 2100000, guid: 75eb9a61cc7a73242952624ca672cf27, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_05
+    second: {fileID: 2100000, guid: 8ec6bd3162daa4c47a2841f5893b380a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_06
+    second: {fileID: 2100000, guid: f038545e4254afe4a8e4d1979e01efbb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_07
+    second: {fileID: 2100000, guid: 65a08b42154b4ce49a60d9265f3d32d0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_08
+    second: {fileID: 2100000, guid: f72ce0642621d0441a31351822183700, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_09
+    second: {fileID: 2100000, guid: f5620a60bef090448b8e4bf08d821bc4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BT_Tick_10
+    second: {fileID: 2100000, guid: 274c43cac2af0be43b08da9d21f78dc1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cage_Foam
+    second: {fileID: 2100000, guid: 09e033476337eb444a502243d8513686, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cage_Foam_Band
+    second: {fileID: 2100000, guid: 96e8c0e7976a41347b16c17965ddcd19, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cage_Gunmetal
+    second: {fileID: 2100000, guid: 0e15fb49e47f9214ea2fb7d51d842361, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Console_Carbon
+    second: {fileID: 2100000, guid: 5dc8ef02ffb0b2b448c9223f73dc1e4e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Console_LED
+    second: {fileID: 2100000, guid: eb0bc4f3faa81db41b96338bf55cf1f9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Console_Metal
+    second: {fileID: 2100000, guid: 641a60b69b7e67c4a96c0f427abd7dec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Console_Plate_Dummy
+    second: {fileID: 2100000, guid: 19ed5e45fba5448792d8f461f91d3185, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Console_Rail
+    second: {fileID: 2100000, guid: 80c62334e7c22c149b31da0670263662, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Console_StartBtn
+    second: {fileID: 2100000, guid: f6c3b83ccf87473b8800ca8d0417b187, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Ctrl_SwitchPanel_Plate
+    second: {fileID: 2100000, guid: 19ed5e45fba5448792d8f461f91d3185, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Disp_Cluster_Bezel
+    second: {fileID: 2100000, guid: 4eb78bb250b041e43a2747f0fce0bfc6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Disp_Cluster_Screen
+    second: {fileID: 2100000, guid: 1b8ff55aaf744d2d8bcbaf41cd757d5c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Disp_Monitor_Bezel
+    second: {fileID: 2100000, guid: 6242c7cced1993845be5dd21a3b8b0d0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Disp_Monitor_Dash
+    second: {fileID: 2100000, guid: 0c2d7a88056d49d48c1b96d09c91bb7b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Disp_Monitor_Tunnel
+    second: {fileID: 2100000, guid: 557bbc964d44499f8c9c23c2fc904a4a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DoorNet_Alloy
+    second: {fileID: 2100000, guid: c05496d060f0470428b370094107334d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DoorNet_Binding
+    second: {fileID: 2100000, guid: d92627ec26263b94da02b5969eb0a604, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DoorNet_Webbing
+    second: {fileID: 2100000, guid: d37f8759a8b1cf949a2ac720fc644cf2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Extinguisher_Black
+    second: {fileID: 2100000, guid: 8c99c7670f212c442ad9846cee4cf88e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Extinguisher_Brass
+    second: {fileID: 2100000, guid: 69d154b4d3b02c144bc673c3875b36b6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Extinguisher_Label
+    second: {fileID: 2100000, guid: b2efc2e867bb1d845a6a6d0b75b466a0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Extinguisher_Red
+    second: {fileID: 2100000, guid: 34643ee82a0398c4ea815a36a855eb7a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Extinguisher_Steel
+    second: {fileID: 2100000, guid: f5a8e68968ed2664eadada1f19b05627, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HB_Alloy
+    second: {fileID: 2100000, guid: ea7352f7af6af124299d3156ba980a63, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HB_Dark
+    second: {fileID: 2100000, guid: 990a705419090ce47b875fb545b2be94, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HB_Grip
+    second: {fileID: 2100000, guid: 7e85132ef1714a349b3304a9df5255ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Holster_Kydex
+    second: {fileID: 2100000, guid: 95015ea807ad68c49b6fdc9453867827, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Holster_Steel
+    second: {fileID: 2100000, guid: 086b8ef670ed3c446bb1ffc5585c1b03, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lever_Alloy
+    second: {fileID: 2100000, guid: 5194b26bc2373284cbea26b9b338334f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lever_Carbon
+    second: {fileID: 2100000, guid: c607e6ec441b45e0af869ca40a92a2e8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lever_Gate_Glow
+    second: {fileID: 2100000, guid: f8643f891a7e40d6b6cc1aabec177188, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lever_Grip
+    second: {fileID: 2100000, guid: 28c8131cf2616224ab45ca375739a3ef, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pedal_Mount
+    second: {fileID: 2100000, guid: 24bc8424b49e66c418c26b0bc4ce7cdb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pedal_Steel
+    second: {fileID: 2100000, guid: d928fc5b1838fbe4b884bb41f11b437a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wheel_Button
+    second: {fileID: 2100000, guid: 844556a74994b244aa87f44223ee0894, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wheel_Carbon
+    second: {fileID: 2100000, guid: d1b27df2d9693aa478de1086f842498f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wheel_Hub
+    second: {fileID: 2100000, guid: 5a09c90b765c8ac4e84d915d2bf68b4b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wheel_Suede
+    second: {fileID: 2100000, guid: e75b4b8b3c9a8424c96e322dcef7a0c1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_dark
+    second: {fileID: 2100000, guid: 056f9695fe96dbe409b56a6b8e5be803, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
