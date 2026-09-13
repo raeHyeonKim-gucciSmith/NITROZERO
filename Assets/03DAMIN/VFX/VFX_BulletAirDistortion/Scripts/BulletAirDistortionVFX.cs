@@ -10,6 +10,7 @@ namespace Damin.VFX.AirDistortion
     public sealed class BulletAirDistortionVFX : MonoBehaviour
     {
         [Header("연결 / 실제 총알로 교체할 때 Target만 지정")]
+        [InspectorName("따라갈 총알"),Tooltip("지금은 내부 테스트 큐브. 나중에는 씬에서 실제 총알 Transform을 드래그하세요. 총알 에셋을 자동 생성하거나 이동시키지는 않습니다.")]
         public Transform Target;
         public Camera ViewCamera;
         public Material DistortionMaterial;
@@ -29,7 +30,8 @@ namespace Damin.VFX.AirDistortion
         [Range(0,1),Tooltip("연기 불투명도가 아니라 굴절 마스크의 가중치")]
         public float OpacityMask=.8f;
         [Header("속도 반응 / 총알 이동 제어와 독립")]
-        public bool MeasureTargetSpeed=true;
+        [InspectorName("실제 이동 속도로 왜곡 조절"),Tooltip("영화 슬로모션은 끈 상태로 사용하세요. Bullet Speed는 왜곡 반응에만 쓰며 총알을 움직이지 않습니다.")]
+        public bool MeasureTargetSpeed=false;
         [Min(0)] public float MinimumSpeed=3;
         [Min(.01f)] public float FullStrengthSpeed=60;
         [Min(.01f)] public float CoreLength=.23f;
@@ -61,7 +63,7 @@ namespace Damin.VFX.AirDistortion
             Noise=Shader.PropertyToID("_NoiseSpeed"),Offset=Shader.PropertyToID("_RefractionOffset"),Mask=Shader.PropertyToID("_OpacityMask"),
             Clock=Shader.PropertyToID("_EffectTime");
 
-        void OnEnable(){Create();ClearTrail();}
+        void OnEnable(){if(Application.isPlaying){Create();ClearTrail();}}
         void LateUpdate(){if(!ManualSimulation)Simulate(Time.deltaTime*SimulationTimeScale);}
         void Create(){
             if(coreMesh)return;properties=new MaterialPropertyBlock();
@@ -90,7 +92,7 @@ namespace Damin.VFX.AirDistortion
             if(!warned){
                 var urp=camera.GetComponent<UniversalAdditionalCameraData>();
                 bool available=urp?urp.requiresColorTexture:GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline&&pipeline.supportsCameraOpaqueTexture;
-                if(!available){Debug.LogWarning("[Bullet Air Distortion] 이 카메라의 Opaque Texture가 필요합니다. 전용 테스트 카메라는 설정되어 있습니다. 공용 렌더 설정은 자동 변경하지 않습니다.",this);warned=true;}
+                if(!available){Debug.LogWarning("[Bullet Air Distortion] View Camera 또는 Main Camera의 Opaque Texture를 On으로 설정하세요. 공용 렌더 설정은 자동 변경하지 않습니다.",this);warned=true;}
             }
             bool active=Target&&Target.gameObject.activeInHierarchy;
             if(boundTarget!=Target){samples.Clear();tracked=false;boundTarget=Target;}
