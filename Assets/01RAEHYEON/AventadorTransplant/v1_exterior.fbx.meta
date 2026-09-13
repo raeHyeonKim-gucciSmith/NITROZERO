@@ -3,7 +3,132 @@ guid: b8ed86a6b42a4645a59fd48df832a1a9
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__BrakeLights_png
+    second: {fileID: 2100000, guid: f6c3b83ccf87473b8800ca8d0417b187, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Color_png
+    second: {fileID: 2100000, guid: 3f756e4612d74e46a2c7de900b1bd07c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Color_png.001
+    second: {fileID: 2100000, guid: 3f756e4612d74e46a2c7de900b1bd07c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Color_png.002
+    second: {fileID: 2100000, guid: 3f756e4612d74e46a2c7de900b1bd07c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Disks_png
+    second: {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__FrontLights_png
+    second: {fileID: 2100000, guid: f8643f891a7e40d6b6cc1aabec177188, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Glass1_png
+    second: {fileID: 2100000, guid: f505fe077ab94b0da1cc22bbb34b6d0a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Glass2_png
+    second: {fileID: 2100000, guid: f505fe077ab94b0da1cc22bbb34b6d0a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__LeftIndicator_png
+    second: {fileID: 2100000, guid: 34016a02b0a24827927018c5c4db893f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__LicensePlate_png
+    second: {fileID: 2100000, guid: 9ef4806f6ede4fcf83d52368af739eb0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Ligths_png
+    second: {fileID: 2100000, guid: f8643f891a7e40d6b6cc1aabec177188, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Parts_jpg
+    second: {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Parts_png
+    second: {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Parts_png.001
+    second: {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Parts_png.002
+    second: {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Parts_png_004
+    second: {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__ReverseLights_png
+    second: {fileID: 2100000, guid: f8643f891a7e40d6b6cc1aabec177188, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__RightIndicator_png
+    second: {fileID: 2100000, guid: 34016a02b0a24827927018c5c4db893f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Tire_jpg
+    second: {fileID: 2100000, guid: c45fad1ab92645d78eb144c45ada43c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Tire_jpg_001
+    second: {fileID: 2100000, guid: c45fad1ab92645d78eb144c45ada43c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Tire_jpg_002
+    second: {fileID: 2100000, guid: c45fad1ab92645d78eb144c45ada43c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: None__Tire_jpg_003
+    second: {fileID: 2100000, guid: c45fad1ab92645d78eb144c45ada43c0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: unnamed
+    second: {fileID: 2100000, guid: 3f756e4612d74e46a2c7de900b1bd07c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: unnamed.001
+    second: {fileID: 2100000, guid: 3f756e4612d74e46a2c7de900b1bd07c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: unnamed.002
+    second: {fileID: 2100000, guid: 3f756e4612d74e46a2c7de900b1bd07c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

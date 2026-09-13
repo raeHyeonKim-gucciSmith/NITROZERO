@@ -69,7 +69,10 @@ public sealed class TrailerCruiseMixer : PlayableBehaviour
         }
         double time = director != null ? director.time : playable.GetTime();
         Sample(time, car, out double distance, out float handleAngle);
-        car.ApplyTimelinePose(this, time, distance, handleAngle);
+        TimelineClip active = ActiveAt(time);
+        float manualWeight = active == null ? car.manualSteeringWeight :
+            ((TrailerCruiseClip)active.asset).SampleManualWeight(time - active.start, active.duration);
+        car.ApplyTimelinePose(this, time, distance, handleAngle, manualWeight);
     }
 
     public void Sample(double seconds, TrailerCruiseMotion car, out double distance, out float handleAngle)

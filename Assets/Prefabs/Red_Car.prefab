@@ -10389,6 +10389,17 @@ MonoBehaviour:
   maxHandleAngle: 360
   wheelAngleAt360: 30
   steeringWheelAngle: 0
+  automaticSteering: 1
+  steeringSpline: {fileID: 0}
+  steeringSplineIndex: 0
+  useSplineProgress: 0
+  splineProgress: 0
+  steeringLookAhead: 0.3
+  steeringSmoothingDistance: 1
+  steeringWheelbase: 0
+  automaticSteeringStrength: 1
+  maxAutomaticWheelAngle: 30
+  manualSteeringWeight: 0
   suspensionIntensity: 0.3
   heaveAmplitude: 0.001
   pitchDegrees: 0.035
