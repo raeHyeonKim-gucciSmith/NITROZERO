@@ -24,6 +24,8 @@ public sealed class TrailerCruiseTrack : TrackAsset
             RegisterTransform(car.BodyMotionRoot, driver);
             if (car.Wheels != null)
                 foreach (var wheel in car.Wheels) RegisterTransform(wheel, driver);
+            if (car.WheelSpinRoots != null)
+                foreach (var spin in car.WheelSpinRoots) RegisterTransform(spin, driver);
         }
         base.GatherProperties(director, driver);
     }

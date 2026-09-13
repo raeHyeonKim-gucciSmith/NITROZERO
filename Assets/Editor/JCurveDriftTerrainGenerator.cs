@@ -18,7 +18,7 @@ public static class JCurveDriftTerrainGenerator
     private const float Height = 520f;
     private const float OriginY = -80f;
     private const float RoadY = -20f;
-    private const float RoadHalfWidth = 75f;
+    private const float RoadHalfWidth = 10f;
     private const float RoadBlendWidth = 245f;
     private const float AsphaltTileWorldSize = 4f;
 

@@ -15,38 +15,13 @@ public static class DomeInTheMoonTerrainGenerator
     private const float Height = 560f;
     private const float OriginY = -100f;
     private const float RoadY = -20f;
-    private const float DomeX = -1500f;
-    private const float DomeZ = 0f;
-    private const float DomeFlatRadius = 650f;
-    private const float DomeBlendRadius = 1080f;
-    private const float RoadStartX = -930f;
-    private const float RoadFlatHalfWidth = 75f;
-    private const float RoadBlendHalfWidth = 1550f;
-    private const int Version = 5;
-
-    private readonly struct Crater
-    {
-        public readonly float X, Z, Radius, Depth, Rim, GapAngle, GapSize;
-        public Crater(float x, float z, float radius, float depth, float rim, float gapAngle, float gapSize)
-        { X = x; Z = z; Radius = radius; Depth = depth; Rim = rim; GapAngle = gapAngle; GapSize = gapSize; }
-    }
-
-    // Five outer craters. Together with the two pad-side craters this keeps about 28% intact rims.
-    private static readonly Crater[] OuterCraters =
-    {
-        new Crater(-2550f, -1350f, 185f, 25f, 14f, 0.4f, 0f),
-        new Crater( 2180f,  1420f, 230f, 31f, 17f, 2.1f, 0f),
-        new Crater(-2500f,  1300f, 150f, 20f, 12f, 1.2f, 0.72f),
-        new Crater( -300f, -1520f, 115f, 15f,  9f, 4.5f, 0.60f),
-        new Crater( 1900f, -1320f, 170f, 23f, 13f, 5.4f, 0.68f)
-    };
-
-    // Small collapsed craters moved onto the broad dome-side flat, outside the protected installation core.
-    private static readonly Crater[] PadSideCraters =
-    {
-        new Crater(-1970f,  520f, 65f, 8f, 5f, 2.5f, 0.72f),
-        new Crater(-1180f, -650f, 72f, 9f, 6f, 5.7f, 0.76f)
-    };
+    private const float DefaultDomeX = -722.1f;
+    private const float DefaultDomeZ = 28f;
+    private const float DomeFlatRadius = 195f;
+    private const float RoadStartX = -925f;
+    private const float RoadFlatHalfWidth = 10.5f;
+    private const float RoadBlendHalfWidth = 240f;
+    private const int Version = 11;
 
     [InitializeOnLoadMethod]
     private static void GenerateOnce()
@@ -54,12 +29,21 @@ public static class DomeInTheMoonTerrainGenerator
         string key = $"NITROZERO.DomeInTheMoonTerrain.{Application.dataPath.GetHashCode()}";
         if (AssetDatabase.LoadAssetAtPath<TerrainData>(DataPath) != null && EditorPrefs.GetInt(key, 0) >= Version)
             return;
-        EditorApplication.delayCall += () =>
+        EditorApplication.delayCall += TryGenerateOnce;
+    }
+
+    private static void TryGenerateOnce()
+    {
+        if (EditorApplication.isCompiling || EditorApplication.isUpdating)
         {
-            if (EditorApplication.isCompiling || EditorApplication.isUpdating) return;
-            try { Generate(); EditorPrefs.SetInt(key, Version); }
-            catch (Exception exception) { Debug.LogException(exception); }
-        };
+            EditorApplication.delayCall += TryGenerateOnce;
+            return;
+        }
+        string key = $"NITROZERO.DomeInTheMoonTerrain.{Application.dataPath.GetHashCode()}";
+        if (AssetDatabase.LoadAssetAtPath<TerrainData>(DataPath) != null && EditorPrefs.GetInt(key, 0) >= Version)
+            return;
+        try { Generate(); EditorPrefs.SetInt(key, Version); }
+        catch (Exception exception) { Debug.LogException(exception); }
     }
 
     [MenuItem("NITRO ZERO/Moon Terrain/Generate domeInTheMoon Basin")]
@@ -68,6 +52,9 @@ public static class DomeInTheMoonTerrainGenerator
         Scene scene = SceneManager.GetSceneByPath(ScenePath);
         bool close = !scene.isLoaded;
         if (close) scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Additive);
+        GameObject dome = FindRoot(scene, "industrial_dome");
+        float domeX = dome != null ? dome.transform.position.x : DefaultDomeX;
+        float domeZ = dome != null ? dome.transform.position.z : DefaultDomeZ;
 
         TerrainData data = AssetDatabase.LoadAssetAtPath<TerrainData>(DataPath);
         if (data == null)
@@ -79,10 +66,10 @@ public static class DomeInTheMoonTerrainGenerator
         data.size = new Vector3(Length, Height, Width);
         data.alphamapResolution = 1024;
         data.baseMapResolution = 2048;
-        data.SetHeights(0, 0, BuildHeights());
+        data.SetHeights(0, 0, BuildHeights(domeX, domeZ));
 
         TerrainLayer layer = AssetDatabase.LoadAssetAtPath<TerrainLayer>(LayerPath);
-        if (layer != null)
+        if (layer != null && data.terrainLayers.Length == 0)
         {
             data.terrainLayers = new[] { layer };
             float[,,] alpha = new float[data.alphamapResolution, data.alphamapResolution, 1];
@@ -110,7 +97,7 @@ public static class DomeInTheMoonTerrainGenerator
         if (collider == null) collider = terrain.gameObject.AddComponent<TerrainCollider>();
         collider.terrainData = data;
 
-        CreateGuides(scene);
+        CreateGuides(scene, domeX, domeZ);
         foreach (GameObject root in scene.GetRootGameObjects())
             foreach (Camera camera in root.GetComponentsInChildren<Camera>(true))
                 camera.farClipPlane = Mathf.Max(camera.farClipPlane, 8000f);
@@ -123,101 +110,82 @@ public static class DomeInTheMoonTerrainGenerator
         Debug.Log("[NITRO ZERO] domeInTheMoon 6000x6500 basin terrain generated.");
     }
 
-    private static float[,] BuildHeights()
+    private static float[,] BuildHeights(float domeX, float domeZ)
     {
         float[,] result = new float[Resolution, Resolution];
-        float roadLocal = RoadY - OriginY;
+        const float groundY = -20.45f; // 0.8m below the asphalt mesh.
+        float roadLocal = groundY - OriginY;
+        float craterX = Mathf.Lerp(domeX, 0f, 0.48f);
+        float craterZ = Mathf.Lerp(domeZ, 0f, 0.35f);
         for (int z = 0; z < Resolution; z++)
         {
             float worldZ = z / (float)(Resolution - 1) * Width - Width * 0.5f;
             for (int x = 0; x < Resolution; x++)
             {
                 float worldX = x / (float)(Resolution - 1) * Length - Length * 0.5f;
-                Vector2 warp = Warp(worldX, worldZ);
-                float basinDistance = Mathf.Sqrt(
-                    Mathf.Pow((worldX - DomeX * 0.25f) / (Length * 0.54f), 2f) +
-                    Mathf.Pow(worldZ / (Width * 0.54f), 2f));
-                float edgeRise = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.27f, 0.98f, basinDistance));
-                float edgeVariation = Mathf.Lerp(0.68f, 1.28f, Fbm(warp.x, warp.y, 0.00055f, 3, 313f));
-                float h = roadLocal + edgeRise * Mathf.Lerp(178f, 292f, edgeVariation);
-                h += (Fbm(warp.x, warp.y, 0.0011f, 4, 41f) - 0.5f) * (9f + edgeRise * 44f);
-                h += BroadRidge(worldX, worldZ, -2350f, 1250f, 820f, 430f, 58f);
-                h += BroadRidge(worldX, worldZ, 900f, -1550f, 1050f, 390f, 64f);
-                h += BroadRidge(worldX, worldZ, 2380f, 1280f, 720f, 360f, 52f);
-                // Wide, overlapping horizon shoulders conceal the rectangular side boundaries.
-                h += BroadRidge(worldX, worldZ, -2050f, 2780f, 1150f, 610f, 54f);
-                h += BroadRidge(worldX, worldZ,   150f, 2870f, 1420f, 560f, 67f);
-                h += BroadRidge(worldX, worldZ,  2240f, 2740f, 1080f, 640f, 49f);
-                h += BroadRidge(worldX, worldZ, -2200f,-2810f, 1080f, 620f, 61f);
-                h += BroadRidge(worldX, worldZ,   -50f,-2890f, 1460f, 570f, 52f);
-                h += BroadRidge(worldX, worldZ,  2160f,-2760f, 1120f, 650f, 64f);
-                for (int i = 0; i < OuterCraters.Length; i++) h += CraterHeight(worldX, worldZ, OuterCraters[i], i);
+                float dx = worldX - craterX;
+                float dz = worldZ - craterZ;
+                float distance = Mathf.Sqrt(dx * dx + dz * dz);
+                float signedAngle = Mathf.Atan2(dz, dx);
+                float angle = Mathf.Abs(signedAngle);
+                float broadNoise = Fbm(worldX, worldZ, 0.00085f, 4, 311f);
+                float detailNoise = Fbm(worldX, worldZ, 0.0032f, 3, 109f);
 
-                float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(DomeX, DomeZ));
-                float domeBoundaryNoise = Fbm(worldX, worldZ, 0.0017f, 3, 811f) - 0.5f;
-                float domeFlatEdge = DomeFlatRadius + domeBoundaryNoise * 110f;
-                float domeBlendEdge = DomeBlendRadius + domeBoundaryNoise * 190f;
-                float domeBlend = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(domeFlatEdge, domeBlendEdge, domeDistance));
-                h = Mathf.Lerp(roadLocal, h, domeBlend);
-                if (domeDistance <= DomeFlatRadius - 60f) h = roadLocal;
-                for (int i = 0; i < PadSideCraters.Length; i++)
-                    h += CraterHeight(worldX, worldZ, PadSideCraters[i], i + OuterCraters.Length);
+                // A roughly 4.2km impact crater, shifted from the dome toward map center.
+                float westFactor = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(2.2f, 3.14f, angle));
+                float westClearance = 230f * westFactor;
+                float rimRadius = 2100f - westClearance + (broadNoise - 0.5f) * 175f +
+                    Mathf.Sin(signedAngle * 5f + 0.7f) * 42f;
+                float crestNoise = Fbm(worldX, worldZ, 0.00125f, 4, 533f);
+                float crestVariation = 0.5f +
+                    Mathf.Sin(signedAngle * 3f + 0.6f) * 0.23f +
+                    Mathf.Sin(signedAngle * 7f - 1.3f) * 0.16f +
+                    Mathf.Sin(signedAngle * 11f + 2f) * 0.08f +
+                    (crestNoise - 0.5f) * 0.62f;
+                float rimHeight = Mathf.Lerp(135f, 365f, Mathf.Clamp01(crestVariation));
 
-                if (worldX >= RoadStartX)
+                // Higher sections have a slightly broader inner foot, never a needle-like crest.
+                float innerWidth = Mathf.Lerp(235f, 315f, crestNoise) + (rimHeight - 250f) * 0.17f;
+                float outerWidth = Mathf.Lerp(615f, 805f, crestNoise) * (1f - westFactor * 0.23f);
+                float radial = (distance - rimRadius) / (distance < rimRadius ? innerWidth : outerWidth);
+                float rimProfile = Mathf.Exp(-radial * radial);
+
+                // The road-side ends reach nearer the road, then taper over a longer arc.
+                float heightFactor = Mathf.InverseLerp(135f, 365f, rimHeight);
+                float openingStart = Mathf.Lerp(0.075f, 0.045f, heightFactor);
+                float openingEnd = Mathf.Lerp(0.47f, 0.59f, heightFactor);
+                float gapVariation = (Fbm(worldX, worldZ, 0.00065f, 3, 719f) - 0.5f) * 0.045f;
+                float opening = Mathf.SmoothStep(0f, 1f,
+                    Mathf.InverseLerp(openingStart, openingEnd, angle + gapVariation));
+                float rim = rimProfile * rimHeight * opening;
+
+                // The interior is a broad floor, not a steep, cup-shaped pit.
+                float floorRise = 8f * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(550f, 1550f, distance));
+                float outerRise = 16f * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(2500f, 3300f, distance));
+                float surface = (broadNoise - 0.5f) * 9f + (detailNoise - 0.5f) * 3.5f;
+                surface *= Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(190f, 420f, distance));
+                float h = groundY + floorRise + outerRise + surface + rim;
+
+                // Level only the actual dome footprint, blending into the crater floor.
+                float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(domeX, domeZ));
+                float domeFlat = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(185f, 355f, domeDistance));
+                h = Mathf.Lerp(h, groundY, domeFlat);
+
+                // The east rim is broken for the straight 20m road; its shoulders fade gradually.
+                if (worldX >= RoadStartX - 180f)
                 {
-                    bool upperSide = worldZ >= 0f;
-                    float sideSeed = upperSide ? 227f : 563f;
-                    float broad = Mathf.PerlinNoise(worldX * 0.00046f + sideSeed, sideSeed * 0.019f);
-                    float detail = Mathf.PerlinNoise(worldX * 0.00105f + sideSeed * 0.21f, sideSeed * 0.031f);
-                    float riseStart = Mathf.Lerp(260f, 520f, broad);
-                    float fullHeightAt = Mathf.Lerp(1850f, 2750f, broad * 0.65f + detail * 0.35f);
-                    float roadBlend = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(riseStart, fullHeightAt, Mathf.Abs(worldZ)));
-                    h = Mathf.Lerp(roadLocal, h, roadBlend);
-                    if (Mathf.Abs(worldZ) <= RoadFlatHalfWidth) h = roadLocal;
+                    float along = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(RoadStartX - 180f, RoadStartX + 100f, worldX));
+                    float fromRoad = Mathf.Abs(worldZ - domeZ);
+                    float cross = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(RoadFlatHalfWidth, RoadBlendHalfWidth, fromRoad));
+                    h = Mathf.Lerp(h, groundY, along * cross);
+                    if (worldX >= RoadStartX && fromRoad <= RoadFlatHalfWidth) h = groundY;
                 }
-                result[z, x] = Mathf.Clamp01(h / Height);
+
+                result[z, x] = Mathf.Clamp01((h - OriginY) / Height);
             }
         }
-        Smooth(result, 2, roadLocal / Height);
+        Smooth(result, 2, roadLocal / Height, domeX, domeZ);
         return result;
-    }
-
-    private static float CraterHeight(float x, float z, Crater crater, int index)
-    {
-        float dx = x - crater.X;
-        float dz = z - crater.Z;
-        float d = Mathf.Sqrt(dx * dx + dz * dz) / crater.Radius;
-        if (d > 1.32f) return 0f;
-        float angle = Mathf.Atan2(dz, dx);
-        float angleNoise = Fbm(x, z, 0.014f, 3, 71f + index * 29f);
-        float rimWidth = Mathf.Lerp(0.075f, 0.15f, angleNoise);
-        float rimHeight = Mathf.Lerp(0.58f, 1.38f, Fbm(x, z, 0.021f, 3, 109f + index * 17f));
-        float gap = 1f;
-        if (crater.GapSize > 0f)
-        {
-            float delta = Mathf.Abs(Mathf.DeltaAngle(angle * Mathf.Rad2Deg, crater.GapAngle * Mathf.Rad2Deg)) * Mathf.Deg2Rad;
-            gap = Mathf.SmoothStep(0.03f, 1f, Mathf.InverseLerp(crater.GapSize * 0.4f, crater.GapSize, delta));
-        }
-        float bowl = -crater.Depth * Mathf.Pow(Mathf.Clamp01(1f - d), 2.1f);
-        float rim = crater.Rim * rimHeight * gap * Mathf.Exp(-Mathf.Pow((d - 1f) / rimWidth, 2f));
-        return bowl + rim;
-    }
-
-    private static float BroadRidge(float x, float z, float cx, float cz, float rx, float rz, float height)
-    {
-        float dx = (x - cx) / rx;
-        float dz = (z - cz) / rz;
-        float d = Mathf.Sqrt(dx * dx + dz * dz);
-        if (d >= 1.4f) return 0f;
-        float body = Mathf.Pow(Mathf.Clamp01(1f - d / 1.4f), 2.5f);
-        return height * body * Mathf.Lerp(0.78f, 1.16f, Fbm(x, z, 0.0017f, 3, cx * 0.01f));
-    }
-
-    private static Vector2 Warp(float x, float z)
-    {
-        float wx = (Mathf.PerlinNoise(x * 0.00065f + 31f, z * 0.00065f + 17f) - 0.5f) * 220f;
-        float wz = (Mathf.PerlinNoise(x * 0.00057f + 73f, z * 0.00057f + 47f) - 0.5f) * 220f;
-        return new Vector2(x + wx, z + wz);
     }
 
     private static float Fbm(float x, float z, float scale, int octaves, float seed)
@@ -233,7 +201,7 @@ public static class DomeInTheMoonTerrainGenerator
         return sum / total;
     }
 
-    private static void Smooth(float[,] heights, int passes, float roadHeight)
+    private static void Smooth(float[,] heights, int passes, float roadHeight, float domeX, float domeZ)
     {
         int size = heights.GetLength(0);
         float[,] copy = new float[size, size];
@@ -245,8 +213,8 @@ public static class DomeInTheMoonTerrainGenerator
                 {
                     float worldX = x / (float)(size - 1) * Length - Length * 0.5f;
                     float worldZ = z / (float)(size - 1) * Width - Width * 0.5f;
-                    float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(DomeX, DomeZ));
-                    if (domeDistance <= DomeFlatRadius - 60f || (worldX >= RoadStartX && Mathf.Abs(worldZ) <= RoadFlatHalfWidth))
+                    float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(domeX, domeZ));
+                    if (domeDistance <= DomeFlatRadius - 10f || (worldX >= RoadStartX && Mathf.Abs(worldZ - domeZ) <= RoadFlatHalfWidth))
                     { heights[z, x] = roadHeight; continue; }
                     heights[z, x] = (copy[z, x] * 4f + copy[z - 1, x] + copy[z + 1, x] + copy[z, x - 1] + copy[z, x + 1]) / 8f;
                 }
@@ -263,30 +231,32 @@ public static class DomeInTheMoonTerrainGenerator
         return null;
     }
 
-    private static void CreateGuides(Scene scene)
+    private static void CreateGuides(Scene scene, float domeX, float domeZ)
     {
         GameObject domeGuide = FindRoot(scene, "Dome Flat Area Guide (1300m)");
+        if (domeGuide == null) domeGuide = FindRoot(scene, "Dome Crater Floor Guide (390m)");
         if (domeGuide == null)
         {
-            domeGuide = new GameObject("Dome Flat Area Guide (1300m)");
+            domeGuide = new GameObject("Dome Crater Floor Guide (390m)");
             SceneManager.MoveGameObjectToScene(domeGuide, scene);
         }
-        domeGuide.transform.position = new Vector3(DomeX, RoadY, DomeZ);
+        domeGuide.name = "Dome Crater Floor Guide (390m)";
+        domeGuide.transform.position = new Vector3(domeX, RoadY, domeZ);
         domeGuide.transform.localScale = new Vector3(DomeFlatRadius * 2f, 1f, DomeFlatRadius * 2f);
 
-        GameObject roadGuide = FindRoot(scene, "Dome Exit Road Guide (150m)");
+        GameObject roadGuide = FindRoot(scene, "Dome Exit Road Guide (20m)");
         if (roadGuide == null)
         {
-            roadGuide = new GameObject("Dome Exit Road Guide (150m)");
+            roadGuide = new GameObject("Dome Exit Road Guide (20m)");
             SceneManager.MoveGameObjectToScene(roadGuide, scene);
             roadGuide.AddComponent<MoonRoadPlacementGuide>();
         }
         float roadLength = Length * 0.5f - RoadStartX;
-        roadGuide.transform.position = new Vector3(RoadStartX + roadLength * 0.5f, RoadY, 0f);
-        roadGuide.transform.localScale = new Vector3(roadLength, 1f, RoadFlatHalfWidth * 2f);
+        roadGuide.transform.position = new Vector3(RoadStartX + roadLength * 0.5f, RoadY, 28f);
+        roadGuide.transform.localScale = new Vector3(roadLength, 1f, 20f);
         MoonRoadPlacementGuide info = roadGuide.GetComponent<MoonRoadPlacementGuide>();
         info.mapLength = roadLength;
-        info.flatWidth = RoadFlatHalfWidth * 2f;
+        info.flatWidth = 20f;
         info.blendedWidth = RoadBlendHalfWidth * 2f;
         info.roadSurfaceY = RoadY;
     }

@@ -208,7 +208,7 @@ public static class AvoidMissileMoonTerrainGenerator
         GameObject existing = null;
         foreach (GameObject root in scene.GetRootGameObjects())
         {
-            if (root.name == "Road Placement Guide (100m Flat Corridor)")
+            if (root.name == "Road Placement Guide (20m Flat Corridor)")
             {
                 existing = root;
                 break;
@@ -217,15 +217,15 @@ public static class AvoidMissileMoonTerrainGenerator
         if (existing != null)
             UnityEngine.Object.DestroyImmediate(existing);
 
-        GameObject guide = new GameObject("Road Placement Guide (100m Flat Corridor)");
+        GameObject guide = new GameObject("Road Placement Guide (20m Flat Corridor)");
         guide.transform.position = new Vector3(0f, RoadWorldHeight, 0f);
         guide.transform.rotation = Quaternion.identity;
-        guide.transform.localScale = new Vector3(MapLength, 1f, RoadFlatHalfWidth * 2f);
+        guide.transform.localScale = new Vector3(MapLength, 1f, 20f);
         guide.isStatic = true;
 
         MoonRoadPlacementGuide component = guide.AddComponent<MoonRoadPlacementGuide>();
         component.mapLength = MapLength;
-        component.flatWidth = RoadFlatHalfWidth * 2f;
+        component.flatWidth = 20f;
         component.blendedWidth = RoadBlendHalfWidth * 2f;
         component.roadSurfaceY = RoadWorldHeight;
 

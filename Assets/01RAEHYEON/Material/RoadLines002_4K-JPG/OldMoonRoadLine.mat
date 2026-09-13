@@ -39,6 +39,6 @@ Material:
     - _Opacity: 0.92
     - _RepeatLength: 3.95
     m_Colors:
-    - _Tint: {r: 0.76, g: 0.75, b: 0.7, a: 1}
+    - _Tint: {r: 0.96, g: 0.95, b: 0.91, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -11,6 +11,10 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
     [Header("Rig (FL, FR, RL, RR)")]
     [SerializeField] private Transform bodyMotionRoot;
     [SerializeField] private Transform[] wheels = new Transform[4];
+    [Tooltip("Optional rolling pivots, in FL/FR/RL/RR order. Calipers stay on the steering pivots.")]
+    [SerializeField] private Transform[] wheelSpinRoots = new Transform[0];
+    [SerializeField] private float[] wheelRadii = new float[0];
+    [SerializeField] private Vector3 bodyPivot;
 
     [Header("Body motion speed")]
     [Tooltip("Controls suspension/vibration only. The spline owns vehicle movement.")]
@@ -73,6 +77,7 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
     private Quaternion[] wheelLocalRotations;
     private Vector3[] wheelRootPositions;
     private Quaternion[] wheelRootRotations;
+    private Quaternion[] spinRestRotations;
     private double startTime;
     private bool initialized;
     private double lastCruiseTime;
@@ -85,6 +90,18 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
 
     public Transform BodyMotionRoot => bodyMotionRoot;
     public Transform[] Wheels => wheels;
+    public Transform[] WheelSpinRoots => wheelSpinRoots;
+    public float[] WheelRadii => wheelRadii;
+
+    public void ConfigureRig(Transform body, Transform[] hubs, Transform[] rolling, float[] radii, Vector3 pivot)
+    {
+        RestorePose();
+        bodyMotionRoot = body;
+        wheels = hubs;
+        wheelSpinRoots = rolling;
+        wheelRadii = radii;
+        bodyPivot = pivot;
+    }
     public float CurrentHandleAngle { get; private set; }
     public float CurrentFrontWheelAngle => CurrentHandleAngle / 360f * wheelAngleAt360;
     public bool IsTimelineControlled => timelineOwner != null;
@@ -114,12 +131,14 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
         wheelLocalRotations = new Quaternion[4];
         wheelRootPositions = new Vector3[4];
         wheelRootRotations = new Quaternion[4];
+        spinRestRotations = new Quaternion[4];
         for (int i = 0; i < 4; i++)
         {
             wheelLocalPositions[i] = wheels[i].localPosition;
             wheelLocalRotations[i] = wheels[i].localRotation;
             wheelRootPositions[i] = transform.InverseTransformPoint(wheels[i].position);
             wheelRootRotations[i] = Quaternion.Inverse(transform.rotation) * wheels[i].rotation;
+            if (HasSpinRoot(i)) spinRestRotations[i] = wheelSpinRoots[i].localRotation;
         }
         initialized = true;
         return true;
@@ -207,7 +226,7 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(
             pitch + Wave(fast * 0.83, 2.2) * vibrationDegrees * vibration,
             0f, roll + Wave(fast * 0.77, 6.4) * vibrationDegrees * vibration);
-        bodyMotionRoot.SetLocalPositionAndRotation(position, rotation);
+        bodyMotionRoot.SetLocalPositionAndRotation(position + bodyPivot - rotation * bodyPivot, rotation);
 
         double degrees = distance /
             (2.0 * Math.PI * Math.Max(0.01f, wheelRadius)) * 360.0;
@@ -228,10 +247,22 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
             if (wheels[i] == null) continue;
             // Flat-road contact: body moves over planted wheels, creating relative suspension travel.
             // Root-relative poses also work when a spline translates or rotates the vehicle.
+            bool separate = HasSpinRoot(i);
             wheels[i].SetPositionAndRotation(transform.TransformPoint(wheelRootPositions[i]),
-                transform.rotation * (i < 2 ? steer : Quaternion.identity) * spin * wheelRootRotations[i]);
+                transform.rotation * (i < 2 ? steer : Quaternion.identity) *
+                (separate ? Quaternion.identity : spin) * wheelRootRotations[i]);
+            if (separate)
+            {
+                float radius = wheelRadii != null && wheelRadii.Length == 4 ? Mathf.Max(0.01f, wheelRadii[i]) : wheelRadius;
+                float angle = (float)(distance / (2 * Math.PI * radius) * 360 % 360) * (reverseWheelSpin ? -1 : 1);
+                Vector3 axle = Quaternion.Inverse(wheelRootRotations[i]) * Vector3.right;
+                wheelSpinRoots[i].localRotation = Quaternion.AngleAxis(angle, axle) * spinRestRotations[i];
+            }
         }
     }
+
+    private bool HasSpinRoot(int i) => wheelSpinRoots != null && wheelSpinRoots.Length == 4 &&
+        wheelSpinRoots[i] != null && wheelSpinRoots[i].parent == wheels[i];
 
     public bool TryGetAutomaticWheelAngle(out float angle)
     {
@@ -303,8 +334,11 @@ public sealed class TrailerCruiseMotion : MonoBehaviour
         if (bodyMotionRoot != null)
             bodyMotionRoot.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         for (int i = 0; i < 4; i++)
+        {
             if (wheels[i] != null)
                 wheels[i].SetLocalPositionAndRotation(wheelLocalPositions[i], wheelLocalRotations[i]);
+            if (HasSpinRoot(i)) wheelSpinRoots[i].localRotation = spinRestRotations[i];
+        }
         initialized = false;
     }
 }

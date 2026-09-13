@@ -1,0 +1,7 @@
+boostOn: 140m -> 20m, factor 0.142857; road, edge lines, edge dust, guide and 138 red marker positions updated.
+domeInTheMoon: 150m -> 20m, factor 0.133333; road, edge lines, edge dust, guide and 42 red marker positions updated.
+racing: 150m -> 20m, factor 0.133333; curved road, edge lines, edge dust and 28 red marker positions updated.
+avoidMissile: 100m -> 20m, factor 0.200000; road, edge lines, edge dust, guide and 140 red marker positions updated.
+Red markers were corrected after the first pass: all 348 were uniformly scaled by their scene's road-width ratio. Their longitudinal placement remains unchanged. The pre-correction scenes are backed up in Documentation/Road20BeforeGuideCorrection-20260914.
+Final red-marker placement: all 348 marker centers were calculated from each road and white edge-line mesh, then placed at the exact midpoint between the white line's outer edge and the asphalt edge. Their bases are at asphalt surface + 0.003m. Straight-road center offsets are boostOn 9.714286m, domeInTheMoon 9.733334m, avoidMissile 9.600000m; racing uses each curved section's measured midpoint. All positions and heights were checked in the saved scene data. Previous scene state: Documentation/Road20BeforeExactGuideAlignment-20260914.
+Existing terrain data, road centerlines and road lengths remain unchanged.

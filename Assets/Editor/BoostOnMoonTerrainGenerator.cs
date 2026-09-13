@@ -101,7 +101,7 @@ public static class BoostOnMoonTerrainGenerator
         data.SetHeights(0, 0, BuildHeights());
 
         TerrainLayer layer = AssetDatabase.LoadAssetAtPath<TerrainLayer>(LayerPath);
-        if (layer != null)
+        if (layer != null && data.terrainLayers.Length == 0)
         {
             data.terrainLayers = new[] { layer };
             float[,,] alpha = new float[data.alphamapResolution, data.alphamapResolution, 1];
@@ -157,18 +157,18 @@ public static class BoostOnMoonTerrainGenerator
     {
         GameObject guide = null;
         foreach (GameObject root in scene.GetRootGameObjects())
-            if (root.name == "Boost Road Guide (140m Flat Corridor)") guide = root;
+            if (root.name == "Boost Road Guide (20m Flat Corridor)") guide = root;
         if (guide == null)
         {
-            guide = new GameObject("Boost Road Guide (140m Flat Corridor)");
+            guide = new GameObject("Boost Road Guide (20m Flat Corridor)");
             SceneManager.MoveGameObjectToScene(guide, scene);
             guide.AddComponent<MoonRoadPlacementGuide>();
         }
         guide.transform.position = new Vector3(0f, RoadY, 0f);
-        guide.transform.localScale = new Vector3(Length, 1f, FlatHalfWidth * 2f);
+        guide.transform.localScale = new Vector3(Length, 1f, 20f);
         MoonRoadPlacementGuide info = guide.GetComponent<MoonRoadPlacementGuide>();
         info.mapLength = Length;
-        info.flatWidth = FlatHalfWidth * 2f;
+        info.flatWidth = 20f;
         info.blendedWidth = BlendHalfWidth * 2f;
         info.roadSurfaceY = RoadY;
     }
@@ -189,8 +189,8 @@ public static class BoostOnMoonTerrainGenerator
                 h += (Fbm(warp.x, warp.y, 0.0032f, 3, 71f) - 0.5f) * 8f;
                 for (int i = 0; i < Hills.Length; i++) h += HillHeight(worldX, worldZ, Hills[i]);
                 for (int i = 0; i < Basins.Length; i++) h += BasinHeight(worldX, worldZ, Basins[i]);
-                h += ScatteredCrater(worldX, worldZ, 420f, 0.38f, 37);
-                h += ScatteredCrater(worldX, worldZ, 180f, 0.28f, 73);
+                h += ScatteredCrater(worldX, worldZ, 420f, 0.28f, 37);
+                h += ScatteredCrater(worldX, worldZ, 180f, 0.16f, 73);
                 h += IrregularSideElevation(worldX, worldZ);
 
                 float varyingBlend = BlendHalfWidth + (Mathf.PerlinNoise(worldX * 0.0011f + 5f, 8f) - 0.5f) * 38f;
@@ -238,7 +238,8 @@ public static class BoostOnMoonTerrainGenerator
         return hill.Height * body * asymmetry;
     }
 
-    private static float ScatteredCrater(float x, float z, float cellSize, float probability, int seed)
+    private static float ScatteredCrater(float x, float z, float cellSize, float probability, int seed,
+        float minimumProbability = -1f)
     {
         int cellX = Mathf.FloorToInt(x / cellSize);
         int cellZ = Mathf.FloorToInt(z / cellSize);
@@ -249,7 +250,7 @@ public static class BoostOnMoonTerrainGenerator
                 int cx = cellX + ox;
                 int cz = cellZ + oz;
                 float spawn = Hash(cx, cz, seed);
-                if (spawn > probability) continue;
+                if (spawn > probability || spawn <= minimumProbability) continue;
                 float centerX = (cx + 0.18f + Hash(cx, cz, seed + 11) * 0.64f) * cellSize;
                 float centerZ = (cz + 0.18f + Hash(cx, cz, seed + 23) * 0.64f) * cellSize;
                 float radius = cellSize * Mathf.Lerp(0.13f, 0.30f, Hash(cx, cz, seed + 41));
@@ -274,6 +275,12 @@ public static class BoostOnMoonTerrainGenerator
                 total += bowl + rim;
             }
         return total;
+    }
+
+    public static float RemovedScatteredCraterHeight(float x, float z)
+    {
+        return ScatteredCrater(x, z, 420f, 0.38f, 37, 0.28f)
+             + ScatteredCrater(x, z, 180f, 0.28f, 73, 0.16f);
     }
 
     private static float Hash(int x, int z, int seed)

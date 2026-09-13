@@ -1,0 +1,14 @@
+Backup: Documentation/CarTestCruiseBackup-20260913-233950/CarTest-before.unity
+Red_Car_Final: radii(m)=0.335, 0.335, 0.356, 0.356; 4 steering/rolling pairs; mesh placement preserved; existing transformation components retained.
+Blue_Car_Final: radii(m)=0.335, 0.335, 0.350, 0.350; 4 steering/rolling pairs; mesh placement preserved; existing transformation components retained.
+Green_Car_Final: radii(m)=0.341, 0.341, 0.350, 0.350; 4 steering/rolling pairs; mesh placement preserved; existing transformation components retained.
+extraCar1_Final: radii(m)=0.443, 0.443, 0.443, 0.443; 4 steering/rolling pairs; mesh placement preserved; existing transformation components retained.
+extraCar2_Final: radii(m)=0.247, 0.247, 0.247, 0.247; 4 steering/rolling pairs; mesh placement preserved; existing transformation components retained.
+extraCar3_Final: radii(m)=0.330, 0.330, 0.345, 0.345; 4 steering/rolling pairs; mesh placement preserved; existing transformation components retained.
+Red_Car_Final: PASS steering, stationary hubs/brakes, rolling, contact, repeatable sampling.
+Blue_Car_Final: PASS steering, stationary hubs/brakes, rolling, contact, repeatable sampling.
+Green_Car_Final: PASS steering, stationary hubs/brakes, rolling, contact, repeatable sampling.
+extraCar1_Final: PASS steering, stationary hubs/brakes, rolling, contact, repeatable sampling.
+extraCar2_Final: PASS steering, stationary hubs/brakes, rolling, contact, repeatable sampling.
+extraCar3_Final: PASS steering, stationary hubs/brakes, rolling, contact, repeatable sampling.
+PASS: six scene cars configured and validated. No prefab assets created or modified.

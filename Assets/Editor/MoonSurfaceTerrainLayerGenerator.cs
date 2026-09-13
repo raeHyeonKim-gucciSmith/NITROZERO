@@ -50,6 +50,50 @@ public static class MoonSurfaceTerrainLayerGenerator
         Debug.Log("[NITRO ZERO] Five-layer moon surface applied without changing terrain heights.");
     }
 
+    [MenuItem("NITRO ZERO/Moon Terrain/Repair Dome Surface Layer Mix")]
+    public static void ApplyDomeOnly()
+    {
+        string[] names = { "Base", "Dust", "Rock", "Gravel", "Ground" };
+        TerrainLayer[] sourceLayers = new TerrainLayer[names.Length];
+        for (int i = 0; i < names.Length; i++)
+        {
+            string path = OutputFolder + "/HighQualityMoon_" + names[i] + ".terrainlayer";
+            sourceLayers[i] = AssetDatabase.LoadAssetAtPath<TerrainLayer>(path);
+            if (sourceLayers[i] == null) throw new MissingReferenceException(path);
+        }
+
+        const string domePath = "Assets/Terrain/DomeInTheMoon_Basin.asset";
+        ApplyToTerrain(domePath, sourceLayers, 79f, SceneKind.Dome);
+        TerrainData data = AssetDatabase.LoadAssetAtPath<TerrainData>(domePath);
+        int resolution = data.alphamapResolution;
+        float[,,] weights = data.GetAlphamaps(0, 0, resolution, resolution);
+        TerrainLayer[] domeLayers = new TerrainLayer[sourceLayers.Length];
+        int[] tileX = { 61, 101, 43, 53, 139 };
+        int[] tileZ = { 73, 89, 51, 47, 121 };
+        for (int i = 0; i < sourceLayers.Length; i++)
+        {
+            string path = OutputFolder + "/DomeIrregular_" + i + ".terrainlayer";
+            TerrainLayer layer = AssetDatabase.LoadAssetAtPath<TerrainLayer>(path);
+            if (layer == null)
+            {
+                layer = Object.Instantiate(sourceLayers[i]);
+                layer.name = "DomeIrregular_" + i;
+                AssetDatabase.CreateAsset(layer, path);
+            }
+            else EditorUtility.CopySerialized(sourceLayers[i], layer);
+            layer.name = "DomeIrregular_" + i;
+            layer.tileSize = new Vector2(tileX[i], tileZ[i]);
+            layer.tileOffset = new Vector2(11f + i * 23.7f, 29f + i * 17.9f);
+            domeLayers[i] = layer;
+            EditorUtility.SetDirty(layer);
+        }
+        data.terrainLayers = domeLayers;
+        data.SetAlphamaps(0, 0, weights);
+        EditorUtility.SetDirty(data);
+        AssetDatabase.SaveAssets();
+        Debug.Log("[NITRO ZERO] Dome now uses five irregular moon layers without changing its heightmap.");
+    }
+
     private enum SceneKind { AvoidMissile, BoostOn, Dome, Racing }
 
     private static void ApplyToTerrain(string path, TerrainLayer[] layers, float seed, SceneKind kind)
@@ -70,10 +114,18 @@ public static class MoonSurfaceTerrainLayerGenerator
                 float slope = data.GetSteepness(nx, nz);
                 float normalizedHeight = data.GetInterpolatedHeight(nx, nz) / data.size.y;
 
-                float broad = Fbm(worldX, worldZ, 0.0027f, seed);
-                float regional = Fbm(worldX, worldZ, 0.00083f, seed + 31f);
-                float crossNoise = Fbm(worldX + worldZ * 0.37f, worldZ - worldX * 0.29f, 0.0051f, seed + 53f);
-                float warped = Fbm(worldX + (broad - 0.5f) * 260f, worldZ + (regional - 0.5f) * 230f, 0.0044f, seed + 67f);
+                float sampleX = worldX, sampleZ = worldZ;
+                if (kind == SceneKind.Dome)
+                {
+                    float warpX = (Fbm(worldX, worldZ, 0.0012f, seed + 101f) - 0.5f) * 180f;
+                    float warpZ = (Fbm(worldX, worldZ, 0.0010f, seed + 137f) - 0.5f) * 170f;
+                    sampleX = (worldX + warpX) * 0.819f - (worldZ + warpZ) * 0.574f;
+                    sampleZ = (worldX + warpX) * 0.574f + (worldZ + warpZ) * 0.819f;
+                }
+                float broad = Fbm(sampleX, sampleZ, 0.0027f, seed);
+                float regional = Fbm(sampleX, sampleZ, 0.00083f, seed + 31f);
+                float crossNoise = Fbm(sampleX + sampleZ * 0.37f, sampleZ - sampleX * 0.29f, 0.0051f, seed + 53f);
+                float warped = Fbm(sampleX + (broad - 0.5f) * 260f, sampleZ + (regional - 0.5f) * 230f, 0.0044f, seed + 67f);
 
                 float rockBySlope = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(11f, 36f, slope));
                 float rockByHeight = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.22f, 0.55f, normalizedHeight));
@@ -86,7 +138,7 @@ public static class MoonSurfaceTerrainLayerGenerator
                 float dust = flatness * Mathf.Lerp(0.16f, 0.62f, dustPattern) * (1f - rock * 0.72f);
                 if (kind == SceneKind.Dome)
                 {
-                    float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(-1500f, 0f));
+                    float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(-722.1f, 28f));
                     dust += (1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(430f, 900f, domeDistance))) * 0.24f;
                 }
                 bool road = IsRoad(kind, worldX, worldZ);
@@ -112,10 +164,10 @@ public static class MoonSurfaceTerrainLayerGenerator
 
     private static bool IsRoad(SceneKind kind, float x, float z)
     {
-        if (kind == SceneKind.AvoidMissile) return Mathf.Abs(z) <= 62f;
-        if (kind == SceneKind.BoostOn) return Mathf.Abs(z) <= 82f;
-        if (kind == SceneKind.Dome) return x >= -950f && Mathf.Abs(z - 32f) <= 88f;
-        return DistanceToRacingRoad(x, z) <= 90f;
+        if (kind == SceneKind.AvoidMissile) return Mathf.Abs(z) <= 12f;
+        if (kind == SceneKind.BoostOn) return Mathf.Abs(z) <= 12f;
+        if (kind == SceneKind.Dome) return x >= -925f && Mathf.Abs(z - 28f) <= 12f;
+        return DistanceToRacingRoad(x, z) <= 12f;
     }
 
     private static float DistanceToRacingRoad(float x, float z)

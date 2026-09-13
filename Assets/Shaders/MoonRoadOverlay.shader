@@ -52,17 +52,22 @@ Shader "NITRO ZERO/Moon Road Overlay"
                 half broad=Noise(i.positionWS.xz/max(_NoiseScale,0.01));
                 half fine=Noise(i.positionWS.xz/max(_NoiseScale*0.27,0.01)+19.3);
                 half wear=smoothstep(0.16h,0.78h,broad*0.7h+fine*0.3h);
-                half edgeDust=smoothstep(0.05h,0.92h,1.0h-i.uv.x);
+                half wander=(broad-0.5h)*0.26h+(fine-0.5h)*0.12h;
+                half edgeDust=1.0h-smoothstep(0.19h,0.98h,saturate(i.uv.x+wander));
                 half lineEdge=smoothstep(0.0h,0.08h,i.uv.x)*smoothstep(0.0h,0.08h,1.0h-i.uv.x);
                 half chips=smoothstep(0.82h,0.95h,Noise(i.positionWS.xz*1.37h+31.7h));
                 half lineAlpha=lineEdge*lerp(0.70h,1.0h,wear)*(1.0h-chips*0.78h);
-                half dustAlpha=edgeDust*lerp(0.18h,0.88h,wear);
+                half scattered=smoothstep(0.66h,0.86h,Noise(i.positionWS.xz/8.5h+47.1h));
+                half dustAlpha=saturate(edgeDust*lerp(0.42h,0.82h,wear)+scattered*0.06h);
                 half alpha=lerp(lineAlpha,dustAlpha,_IsDust)*_Opacity;
                 clip(alpha-_Cutoff);
-                half3 albedo=lerp(_Tint.rgb,tex*_Tint.rgb,_IsDust);
+                half3 albedo=lerp(_Tint.rgb,tex*_Tint.rgb*1.12h,_IsDust);
                 Light light=GetMainLight(TransformWorldToShadowCoord(i.positionWS));
                 half lighting=0.28h+0.72h*saturate(light.direction.y)*light.shadowAttenuation;
-                return half4(albedo*light.color*lighting,alpha);
+                half3 dustColor=albedo*light.color*lighting;
+                // Painted lines stay pale even when the road sits in a lunar shadow.
+                half3 paintColor=lerp(_Tint.rgb*0.88h,dustColor,0.16h);
+                return half4(lerp(paintColor,dustColor,_IsDust),alpha);
             }
             ENDHLSL
         }

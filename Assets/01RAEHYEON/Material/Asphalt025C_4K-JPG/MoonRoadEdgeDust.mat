@@ -33,12 +33,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 0.035
+    - _Cutoff: 0.012
     - _IsDust: 1
-    - _NoiseScale: 23
-    - _Opacity: 0.54
-    - _RepeatLength: 19
+    - _NoiseScale: 37
+    - _Opacity: 0.62
+    - _RepeatLength: 31
     m_Colors:
-    - _Tint: {r: 0.46, g: 0.47, b: 0.48, a: 1}
+    - _Tint: {r: 0.82, g: 0.84, b: 0.88, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
