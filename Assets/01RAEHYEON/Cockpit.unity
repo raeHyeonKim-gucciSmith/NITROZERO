@@ -543,7 +543,7 @@ MeshRenderer:
   - {fileID: 2100000, guid: 7b333c280a1743b478b3b26e658190b4, type: 2}
   - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   - {fileID: 2100000, guid: 7b333c280a1743b478b3b26e658190b4, type: 2}
-  - {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1225,7 +1225,7 @@ MeshRenderer:
   - {fileID: 2100000, guid: 94fcba23245d784459d39a291db10392, type: 2}
   - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   - {fileID: 2100000, guid: 94fcba23245d784459d39a291db10392, type: 2}
-  - {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2588,7 +2588,7 @@ MeshRenderer:
   - {fileID: 2100000, guid: 94fcba23245d784459d39a291db10392, type: 2}
   - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   - {fileID: 2100000, guid: 94fcba23245d784459d39a291db10392, type: 2}
-  - {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3616,7 +3616,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1478356666}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -4687,7 +4687,7 @@ MeshRenderer:
   - {fileID: 2100000, guid: 7b333c280a1743b478b3b26e658190b4, type: 2}
   - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   - {fileID: 2100000, guid: 7b333c280a1743b478b3b26e658190b4, type: 2}
-  - {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4907,7 +4907,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1886951403}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -15966,7 +15966,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7462657854122980721}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -16755,7 +16755,7 @@ MeshRenderer:
   - {fileID: 2100000, guid: 2534c925d11d5334e8df72b77e1f8b94, type: 2}
   - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   - {fileID: 2100000, guid: 2534c925d11d5334e8df72b77e1f8b94, type: 2}
-  - {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -28673,7 +28673,7 @@ MeshRenderer:
   - {fileID: 2100000, guid: 2534c925d11d5334e8df72b77e1f8b94, type: 2}
   - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   - {fileID: 2100000, guid: 2534c925d11d5334e8df72b77e1f8b94, type: 2}
-  - {fileID: 2100000, guid: b9513cb804564fe7818ed8927751c641, type: 2}
+  - {fileID: 2100000, guid: d4d3463a9223d5f49a4682c77952a26f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
