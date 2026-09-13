@@ -315,7 +315,7 @@ public class RacingHudController : MonoBehaviour
     void SelectViewDocument()
     {
         // Swap only the visual tree: race time, fuel, startup and alarms stay on this controller.
-        if (fpsDocument == null || viewCamera == null) return;
+        if (document == null || !document.isActiveAndEnabled || fpsDocument == null || viewCamera == null) return;
         var next = viewCamera.ViewBlend >= 0.5f ? fpsDocument : runtimeTpsDocument;
         if (next == null || document.visualTreeAsset == next) return;
         document.visualTreeAsset = next;
@@ -367,7 +367,11 @@ public class RacingHudController : MonoBehaviour
         SetStartupLocks(false);
         if (startupAudio != null) startupAudio.Stop();
         if (startupShield != null) startupShield.style.display = DisplayStyle.None;
-        if (document != null && originalDocument != null && document.visualTreeAsset != originalDocument)
+        // UIDocument may already have run OnDisable during scene/play-mode teardown.
+        // Assigning visualTreeAsset then recreates its root and live-reload tracker,
+        // which would outlive the document because its cleanup has already run.
+        if (document != null && document.isActiveAndEnabled && document.rootVisualElement != null &&
+            originalDocument != null && document.visualTreeAsset != originalDocument)
             document.visualTreeAsset = originalDocument;
     }
 
