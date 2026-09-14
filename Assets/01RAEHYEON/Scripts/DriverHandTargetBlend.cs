@@ -3,7 +3,7 @@ using UnityEngine.Animations.Rigging;
 
 /// <summary>
 /// Moves one internal hand IK target between a steering-wheel target and a
-/// shifter, booster, or handbrake target. The original hand pose is retained at blend zero.
+/// shifter, booster, handbrake, or gun target. The original hand pose is retained at blend zero.
 /// </summary>
 [DefaultExecutionOrder(-400)]
 public sealed class DriverHandTargetBlend : MonoBehaviour
@@ -15,6 +15,10 @@ public sealed class DriverHandTargetBlend : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float boosterBlend;
     [SerializeField] private Transform handbrakeSource;
     [SerializeField, Range(0f, 1f)] private float handbrakeBlend;
+    [SerializeField] private Transform gunSource;
+    [SerializeField, Range(0f, 1f)] private float gunBlend;
+    [SerializeField] private Transform buttonSource;
+    [SerializeField, Range(0f, 1f)] private float buttonBlend;
     [SerializeField] private TwoBoneIKConstraint rightArmIK;
 
     private Transform capturedSteeringSource;
@@ -29,7 +33,7 @@ public sealed class DriverHandTargetBlend : MonoBehaviour
     private void Update()
     {
         // Never overwrite a hand pose that is being calibrated in Edit mode.
-        if (!Application.isPlaying || steeringSource == null || shifterSource == null)
+        if (!Application.isPlaying || steeringSource == null)
         {
             return;
         }
@@ -46,7 +50,9 @@ public sealed class DriverHandTargetBlend : MonoBehaviour
             ref var ikData = ref rightArmIK.data;
             float boosterWrist = boosterSource != null ? boosterBlend : 0f;
             float handbrakeWrist = handbrakeSource != null ? handbrakeBlend : 0f;
-            ikData.targetRotationWeight = Mathf.Max(boosterWrist, handbrakeWrist);
+            float gunWrist = gunSource != null ? gunBlend : 0f;
+            float buttonWrist = buttonSource != null ? buttonBlend : 0f;
+            ikData.targetRotationWeight = Mathf.Max(boosterWrist, handbrakeWrist, gunWrist, buttonWrist);
         }
 
         Vector3 steeringPosition = steeringSource.TransformPoint(steeringPositionOffset);
@@ -54,8 +60,13 @@ public sealed class DriverHandTargetBlend : MonoBehaviour
 
         // The shifter marker is the desired IK pose at blend one. Adjust that
         // marker on the lever to fine-tune the final hand contact.
-        Vector3 handPosition = Vector3.Lerp(steeringPosition, shifterSource.position, shifterBlend);
-        Quaternion handRotation = Quaternion.Slerp(steeringRotation, shifterSource.rotation, shifterBlend);
+        Vector3 handPosition = steeringPosition;
+        Quaternion handRotation = steeringRotation;
+        if (shifterSource != null && shifterBlend > 0f)
+        {
+            handPosition = Vector3.Lerp(handPosition, shifterSource.position, shifterBlend);
+            handRotation = Quaternion.Slerp(handRotation, shifterSource.rotation, shifterBlend);
+        }
 
         // At zero, the existing steering-to-shifter animation is unchanged.
         if (boosterSource != null && boosterBlend > 0f)
@@ -68,6 +79,18 @@ public sealed class DriverHandTargetBlend : MonoBehaviour
         {
             handPosition = Vector3.Lerp(handPosition, handbrakeSource.position, handbrakeBlend);
             handRotation = Quaternion.Slerp(handRotation, handbrakeSource.rotation, handbrakeBlend);
+        }
+
+        if (gunSource != null && gunBlend > 0f)
+        {
+            handPosition = Vector3.Lerp(handPosition, gunSource.position, gunBlend);
+            handRotation = Quaternion.Slerp(handRotation, gunSource.rotation, gunBlend);
+        }
+
+        if (buttonSource != null && buttonBlend > 0f)
+        {
+            handPosition = Vector3.Lerp(handPosition, buttonSource.position, buttonBlend);
+            handRotation = Quaternion.Slerp(handRotation, buttonSource.rotation, buttonBlend);
         }
 
         transform.SetPositionAndRotation(handPosition, handRotation);

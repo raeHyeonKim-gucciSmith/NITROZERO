@@ -71,3 +71,23 @@
 - [x] 완료됨 · Codex — `DriverHandTargetBlend`에 `Handbrake Source`, `Handbrake Blend`를 추가하고 핸드브레이크 블렌드가 오른손 위치·회전과 오른팔 IK 회전 영향도를 함께 조절하도록 확장. 기존 시프터·부스터 필드와 키는 유지.
 - [ ] 진행 전 · 사용자 — 내부 `v1_RightHandIKTarget`의 `Handbrake Source`에 빨간 차의 `v1_HandbrakeGripTarget`을 연결. 기존 내부 IK Transform 값은 수정하지 않음.
 - [ ] 진행 전 · 사용자 — 타임라인에 오른손 내부 타겟, 빨간 차 핸드브레이크 레버, 핸들 피벗, 엑셀·클러치 피벗 트랙을 연결하고 기본자세→엑셀 해제·클러치 작동→손잡이 접촉→핸드브레이크 당김·핸들 시계방향 90°를 키로 기록. 복귀 키 없음.
+
+## 권총 조준과 시선 (`v1_Drift` 250번 이후)
+
+- [ ] 진행 중 · 사용자 — 씬의 `Gun`에 `v1_GunGripTarget`·`v1_GunMuzzleTarget`, Cockpit에 독립적인 `v1_WindowAimTarget`을 배치한다. 씬 저장 후 배치 검증.
+- [x] 완료됨 · Codex — `DriverHandTargetBlend`에 `Gun Source`·`Gun Blend`를 추가했다. Gun Blend가 손 위치·손목 방향의 마지막 전환을 제어하며 기존 시프터·부스터·핸드브레이크 블렌드는 유지한다.
+- [ ] 진행 전 · 사용자 — 내부 `v1_RightHandIKTarget`에 `Gun Source`를 연결하고, 권총 Animator·Timeline 트랙을 연결한다. 권총은 300번까지 홀스터에 고정, 340번에 꺼낸 중간 자세, 380번에 창문 조준, 420번에 유지한다.
+- [ ] 진행 중 · 사용자/Codex — 기존 Rig의 `V1_HeadAim` Multi-Aim Constraint가 `v1_WindowAimTarget`을 바라보게 구성한다. 현재 저장된 씬에서는 Source Objects 첫 항목 Weight가 0이므로 이를 1로 맞춰야 한다. `DriverHeadAimBlend`를 내부 `v1_RightHandIKTarget`에 추가하고 `Head Aim`에 `V1_HeadAim`을 연결한다. 기존 오른손 Animator 트랙에서 `Head Aim Blend`를 기록해 Play 중 Constraint Weight를 제어한다. 시선 타겟은 권총 자식으로 두지 않는다.
+
+## 다른 운전자에게 적용
+
+- [x] 완료됨 · 사용자 확인 — v1 운전자의 드리프트·권총 조준·고개 회전 동작을 1차로 완성했다. 접촉·관통의 최종 파일 기반 검증은 별도다.
+- [x] 완료됨 · Codex — v2는 파란 차, v3는 초록 차의 좌석 기준점 아래로 배치했다. 기존 배율과 IK 보정값은 유지했다.
+- [x] 완료됨 · Codex — v1의 내부 IK Target 규칙을 따르는 v2·v3 손 IK 설치 도구를 추가했다. v2는 핸들·시프터·`Ctrl_SwitchPanel_Toggles`의 빨간 스위치 손 목표점, v3는 양손 핸들 목표점을 생성한다. 설치 도구의 Unity 메뉴 실행과 화면 접점 보정은 아직 하지 않았다.
+- [x] 완료됨 · Codex — `DriverHandTargetBlend`에 빨간 스위치 접촉용 Button Source·Button Blend를 추가했다. 기존 v1 블렌드 필드와 수동 IK Transform은 유지했다.
+- [ ] 진행 전 · 사용자/Codex — Unity에서 `NITROZERO > Drivers > Set up v2 and v3 hand IK`를 실행하고 RigBuilder·양팔 Constraint 연결을 확인한다. 설치 도구는 기존 작업을 보존하도록 이름으로 중복 생성을 피한다.
+- [ ] 진행 전 · 사용자/Codex — v2의 `v2_RedSwitchPressTarget`을 패널 가운데가 아니라 **빨간 스위치 표면**에 맞춘다. 현재 `Ctrl_SwitchPanel_Toggles`는 단일 씬 오브젝트이므로 빨간 스위치 자체의 독립 운동 가능 여부를 Unity 화면에서 확인한다.
+- [ ] 진행 전 · 사용자/Codex — v2 시프터 접점, v3 양손 핸들 접점을 각각 맞추고 Play 상태에서 팔꿈치 굽힘·관통을 확인한다.
+- [ ] 진행 전 · Codex — v2 기어 변경 및 빨간 스위치 누르기 Timeline 클립을 v1 동작을 참고해 별도로 생성·바인딩한다. v3는 양손 핸들 기본자세만 사용한다.
+- [ ] 진행 전 · Codex/사용자 — v2·v3 운전자의 Rig 구성, 차량 조작계와 권총 배치를 개별 확인한다. v1의 코드와 눈금 배치는 재사용하되 IK 타겟 Position·Rotation·Scale과 팔·발 접점은 각 캐릭터/차량에 맞춰 별도 보정한다.
+- [ ] 진행 전 · Codex/사용자 — 각 차량용 Timeline 복사본을 만들고 해당 차량의 Animator·조작계·권총·시선 타겟으로 바인딩한다. v1 씬의 바인딩을 그대로 쓰지 않는다.
