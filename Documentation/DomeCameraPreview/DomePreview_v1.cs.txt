@@ -1,0 +1,80 @@
+using System;
+using System.IO;
+using System.Linq;
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+public static class DomePreview {
+ const string Out="C:/UnityProject/NITROZERO/Documentation/DomeCameraPreview";
+ static Camera cam; static Transform car; static Vector3 start,dir; static float floor; static RenderTexture rt; static Texture2D image;
+ static Transform red;static Vector3 redStart;
+ static Vector3 portal=new Vector3(-497,-19.65f,28);
+ static float E(float x){x=Mathf.Clamp01(x);return x*x*(3-2*x);}
+ public static void Samples(){Run(true);}
+ public static void Movie(){Run(false);}
+ static void Run(bool samples){
+ Load();red=GameObject.Find("Red_Car")?.transform;if(red!=null)redStart=red.position;
+ int frame=-30;float[] times={0,2.5f,5.8f,6,8,10.8f,11,12,13.8f,14,16.5f,18.9f,19,20.5f,21,21.5f,22,23.9f};
+ Directory.CreateDirectory(Out+"/frames");
+ EditorApplication.update+=()=>{try{
+ if(frame++<0)return;
+ int n=frame-1;if(n>=(samples?times.Length:720)){EditorApplication.Exit(0);return;}
+ float t=samples?times[n]:n/30f;Pose(t);Capture(samples?"sample-"+n.ToString("D2"):"frames/frame-"+n.ToString("D4"));
+ if(n%30==0)File.WriteAllText(Out+"/progress.txt",n+" / "+(samples?times.Length:720));
+ }catch(Exception e){File.WriteAllText(Out+"/failure.txt",e.ToString());EditorApplication.Exit(1);}};
+ }
+ static void Pose(float t){
+ float distance=-24;
+ if(t>=11&&t<14){float s=t-11;distance=-24+45*s+6*s*s;}
+ else if(t>=14&&t<19)distance=165+67*(t-14);
+ else if(t>=19){float s=t-19;distance=500+60*Mathf.Min(s,1.6f)+6*Mathf.Clamp(s-1.6f,0,1)+60*Mathf.Max(0,s-2.6f);}
+ car.position=new Vector3(portal.x+distance,start.y+.1f,start.z);
+ if(red!=null)red.position=new Vector3(portal.x+distance-17,redStart.y+.3f,redStart.z);
+ Vector3 p,target;Vector3 up=Vector3.up;
+ if(t<6){float s=E(t/6);p=portal+new Vector3(600-35*s,85,-360+30*s);target=portal+Vector3.Lerp(new Vector3(-190,85,0),new Vector3(-350,170,520),s);cam.fieldOfView=58;}
+ else if(t<11){float s=E((t-6)/5);p=portal+new Vector3(460-35*s,210-75*s,0);target=p+Vector3.Slerp(new Vector3(.001f,-1,0).normalized,new Vector3(1,-.04f,.18f).normalized,s)*500;cam.fieldOfView=62;}
+ else if(t<14){float s=(t-11)/3;p=portal+new Vector3(48+35*s,235,0);target=p+Vector3.down*200;up=Vector3.forward;cam.fieldOfView=62;}
+ else if(t<19){float s=E((t-14)/5);Vector3 offset=Vector3.Lerp(new Vector3(-115,170,145),new Vector3(-32,10,15),s);p=car.position+offset;target=car.position+new Vector3(7,1,0);cam.fieldOfView=Mathf.Lerp(55,46,s);}
+ else{float s=t-19;float rotate=E((s-1.6f)/1f);p=new Vector3(portal.x+596,portal.y+.16f,start.z);cam.transform.position=p;
+ cam.transform.rotation=Quaternion.Euler(-2-72*Mathf.Sin(rotate*Mathf.PI),Mathf.Lerp(-90,90,rotate),0);cam.fieldOfView=76;return;}
+ cam.transform.position=p;cam.transform.rotation=Quaternion.LookRotation(target-p,up);
+ }
+ static Bounds BoundsOf(GameObject go){var rs=go.GetComponentsInChildren<Renderer>();var b=rs[0].bounds;foreach(var r in rs)b.Encapsulate(r.bounds);return b;}
+ public static void Inspect(){
+ Load();
+ var report="";
+ foreach(var go in UnityEngine.Object.FindObjectsByType<Transform>(FindObjectsSortMode.None).Where(t=>t.name=="Blue_Car"||t.name=="Red_Car"||t.name=="industrial_dome"||t.name=="Dome Exit Asphalt Road")){
+ report+=go.name+" pos="+go.position.ToString("F3")+" forward="+go.forward+" bounds="+BoundsOf(go.gameObject)+"\n";
+ }
+ File.WriteAllText(Out+"/scene-inspect.txt",report);
+ cam.transform.position=start-dir*30+Vector3.up*12;cam.transform.LookAt(start+Vector3.up*2);
+ int wait=0;EditorApplication.update+=()=>{if(++wait<30)return;Capture("inspect");EditorApplication.Exit(0);};
+ }
+ static void Load(){
+ EditorSceneManager.OpenScene("Assets/04HYUNWOOK/Scenes/HW_domeInTheMoon.unity");
+ var pipeline=AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Settings/PC_RPAsset.asset");
+ GraphicsSettings.defaultRenderPipeline=pipeline;QualitySettings.renderPipeline=pipeline;
+ var volume=new GameObject("Preview Grade").AddComponent<Volume>();volume.isGlobal=true;volume.priority=10000;volume.sharedProfile=ScriptableObject.CreateInstance<VolumeProfile>();
+ var vig=volume.sharedProfile.Add<Vignette>(true);vig.intensity.Override(.12f);vig.smoothness.Override(.55f);
+ var grade=volume.sharedProfile.Add<ColorAdjustments>(true);grade.postExposure.Override(-.2f);grade.contrast.Override(8);grade.saturation.Override(-8);
+ volume.sharedProfile.Add<LensDistortion>(true).intensity.Override(0);
+ volume.sharedProfile.Add<PaniniProjection>(true).distance.Override(0);
+ volume.sharedProfile.Add<MotionBlur>(true).intensity.Override(0);
+ volume.sharedProfile.Add<ChromaticAberration>(true).intensity.Override(0);
+ volume.sharedProfile.Add<Tonemapping>(true).mode.Override(TonemappingMode.ACES);
+ var noise=new Texture2D(256,256,TextureFormat.RGB24,true);var pixels=new Color[256*256];
+ for(int y=0;y<256;y++)for(int x=0;x<256;x++){float n=.48f+.16f*Mathf.PerlinNoise(x/28f,y/28f)+.035f*Mathf.PerlinNoise(x/2.3f,y/2.3f);pixels[y*256+x]=new Color(n*.96f,n*.98f,n);}
+ noise.SetPixels(pixels);noise.Apply();noise.wrapMode=TextureWrapMode.Repeat;
+ foreach(var terrain in Terrain.activeTerrains){terrain.terrainData=UnityEngine.Object.Instantiate(terrain.terrainData);var layer=new TerrainLayer{diffuseTexture=noise,tileSize=new Vector2(55,55),smoothness=0};terrain.terrainData.terrainLayers=new[]{layer};terrain.materialTemplate=new Material(Shader.Find("Universal Render Pipeline/Terrain/Lit"));}
+ Directory.CreateDirectory(Out);
+ foreach(var c in UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsSortMode.None))c.enabled=false;
+ car=GameObject.Find("Blue_Car").transform;start=car.position;dir=car.forward;floor=BoundsOf(car.gameObject).min.y;
+ cam=new GameObject("Preview Camera").AddComponent<Camera>();cam.nearClipPlane=.025f;cam.farClipPlane=15000;cam.fieldOfView=48;cam.clearFlags=CameraClearFlags.Skybox;
+ var data=cam.GetUniversalAdditionalCameraData();data.renderPostProcessing=true;data.antialiasing=AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+ rt=new RenderTexture(1280,720,24,RenderTextureFormat.ARGB32);rt.Create();cam.targetTexture=rt;
+ image=new Texture2D(1280,720,TextureFormat.RGB24,false);
+ }
+ static void Capture(string name){RenderPipeline.SubmitRenderRequest(cam,new UniversalRenderPipeline.SingleCameraRequest{destination=rt});RenderTexture.active=rt;image.ReadPixels(new Rect(0,0,1280,720),0,0);image.Apply();File.WriteAllBytes(Out+"/"+name+".jpg",image.EncodeToJPG(91));RenderTexture.active=null;}
+}

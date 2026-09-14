@@ -1,0 +1,10 @@
+Camera world position: (-277.160, -14.590, 5.400)
+Red at cut start: (-426.889, -18.140, 32.130)
+Constant vehicle speed: 400 km/h (111.111 m/s)
+Cut start: 3 s; duration: 2 s
+Initial camera-to-aim-point distance: 152.132 m
+Closest approach to aim-point path: 26.933 m
+Closest approach after cut start: 1.348 s
+Catchup complete after cut start: 1.145 s
+Geometric peak tracking angular speed: 236.4 deg/s
+Calculated from scene coordinates and the scripted path; no playback measurement or tests.

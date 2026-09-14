@@ -31,8 +31,12 @@ public sealed class RacingHudCurvature : MonoBehaviour
         // The authored perimeter still owns its outside mask independently of this projection.
         bool authoredLayout = document.rootVisualElement.Q("racing-hud")?.ClassListContains("production-hud") == true;
         bool firstPerson = document.rootVisualElement.Q("racing-hud")?.ClassListContains("fps-document") == true;
-        material.SetFloat("_Curvature", firstPerson ? curvature : 0f);
         bool activeHud = hudController != null && hudController.isActiveAndEnabled;
+        var camera = activeHud ? hudController.ViewCamera : null;
+        bool applyCurvature = Application.isPlaying && firstPerson && activeHud
+            && hudController.StartupShieldClosed && camera != null && camera.isActiveAndEnabled
+            && camera.IsFirstPerson && camera.enableHelmetHudCurvature;
+        material.SetFloat("_Curvature", applyCurvature ? curvature : 0f);
         material.SetFloat("_OutsideOpacity", !authoredLayout && activeHud && hudController.IsFirstPersonHud ? hudController.StartupOpacity : 0f);
         material.SetFloat("_ShieldCoverage", activeHud ? hudController.StartupShieldCoverage : 0f);
         material.SetFloat("_ShieldOpacity", activeHud ? hudController.StartupShieldOpacity : 0f);

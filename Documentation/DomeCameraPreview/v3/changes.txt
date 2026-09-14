@@ -1,0 +1,1 @@
+v3: Last shot only. Rotation 0.45s -> 1.25s; quintic easing; pitch uses sin-squared envelope with zero endpoint derivatives; peak pitch 74 -> 51 degrees; gentle exit camera rise; vehicle speed transitions integrated smoothstep. First 360 source frames unchanged. 450 frames / 30fps / 15s. Original scene not saved or modified.

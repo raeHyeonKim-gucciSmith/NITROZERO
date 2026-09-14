@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.VFX;
 
 public sealed class BoosterDeploymentController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
     [Header("Keyboard Control")]
     [SerializeField] private KeyCode toggleKey = KeyCode.B;
+    [SerializeField] private KeyCode alternateToggleKey = KeyCode.Space;
     [SerializeField] private bool allowKeyboardControl = true;
     [SerializeField, Min(0.01f)] private float transformationDuration = 3.2f;
     [SerializeField] private bool startDeployed;
@@ -140,6 +142,22 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     [SerializeField, Min(0.01f)] private float internalHeatLightRange = 0.24f;
     [Tooltip("turbine_wheel 중심을 기준으로 광원 위치를 미세 조정하는 값")]
     [SerializeField] private Vector3 internalHeatLightLocalOffset = Vector3.zero;
+
+    [Header("Booster VFX Integration (PF_BlueBooster)")]
+    [Tooltip("부스터 이펙트 최상위 그룹 오브젝트 (Booster_effect)")]
+    [SerializeField] private GameObject boosterEffectRoot;
+
+    [Tooltip("Working 보조 부스터 4종 (coverPivot 변형 완료 시 점등)")]
+    [SerializeField] private GameObject[] blueBoosterWorking = new GameObject[4];
+
+    [Tooltip("Backup 메인 부스터 2종 (boosterDeploymentRoot 변형 완료 시 점등)")]
+    [SerializeField] private GameObject[] blueBoosterBackup = new GameObject[2];
+
+    [Tooltip("Working 보조 부스터 4종 점등 시퀀스 진행도 (기본: 0.55f -> 3.2초 기준 약 1.76초, 블루카 보조 부스터 pf_redbooster_2 4종 점등 시점과 완벽 동기화)")]
+    [SerializeField, Range(0f, 1f)] private float workingBoosterThreshold = 0.55f;
+
+    [Tooltip("Backup 메인 부스터 2종 점등 시퀀스 진행도 (기본: 0.96f -> nozzle_petalgroup 폈다 접혔다 2회 애니메이션 완료 후 점화)")]
+    [SerializeField, Range(0f, 1f)] private float backupBoosterThreshold = 0.96f;
 
     private readonly Transform[] coverPivots = new Transform[6];
     private readonly Vector3[] coverClosedPositions = new Vector3[6];
@@ -288,6 +306,12 @@ public sealed class BoosterDeploymentController : MonoBehaviour
         rotatingFans = transform.GetComponentsInChildren<ContinuousLocalRotation>(true);
         petalPulses = transform.GetComponentsInChildren<BoosterPetalPulse>(true);
         SetupInternalHeat();
+        AutoBindBoosterFx();
+
+        if (Mathf.Approximately(workingBoosterThreshold, 0.635f) || Mathf.Approximately(workingBoosterThreshold, 0.24f) || workingBoosterThreshold < 0.35f || workingBoosterThreshold > 0.60f)
+            workingBoosterThreshold = 0.55f;
+        if (Mathf.Approximately(backupBoosterThreshold, 0.656f) || Mathf.Approximately(backupBoosterThreshold, 0.56f) || (backupBoosterThreshold > 0.50f && backupBoosterThreshold < 0.70f))
+            backupBoosterThreshold = 0.96f;
 
         initialized = true;
     }
@@ -320,6 +344,7 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
         ApplyEngineReveal(sequence);
         ApplyInternalHeat(sequence);
+        ApplyBoosterVfx(sequence);
     }
 
     private void SetupInternalHeat()
@@ -354,7 +379,8 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
     private static void DisableRendererEmission(Renderer renderer)
     {
-        foreach (Material material in renderer.materials)
+        if (renderer == null) return;
+        foreach (Material material in renderer.sharedMaterials)
         {
             if (material == null || !material.HasProperty("_EmissionColor"))
                 continue;
@@ -429,6 +455,227 @@ public sealed class BoosterDeploymentController : MonoBehaviour
 
         for (int i = 0; i < petalPulses.Length; i++)
             petalPulses[i].ApplyAmount(sequence);
+    }
+
+    private void ApplyBoosterVfx(float sequence)
+    {
+        if (boosterEffectRoot == null || blueBoosterWorking == null || blueBoosterWorking.Length < 4 || blueBoosterWorking[0] == null)
+            AutoBindBoosterFx();
+
+        bool workingActive = sequence >= workingBoosterThreshold;
+        bool backupActive = sequence >= backupBoosterThreshold;
+
+        if (blueBoosterWorking != null)
+        {
+            for (int i = 0; i < blueBoosterWorking.Length; i++)
+            {
+                GameObject obj = blueBoosterWorking[i];
+                if (obj == null) continue;
+                if (obj.activeSelf != workingActive)
+                    SetFxActive(obj, workingActive);
+            }
+        }
+
+        if (blueBoosterBackup != null)
+        {
+            for (int i = 0; i < blueBoosterBackup.Length; i++)
+            {
+                GameObject obj = blueBoosterBackup[i];
+                if (obj == null) continue;
+                if (obj.activeSelf != backupActive)
+                    SetFxActive(obj, backupActive);
+            }
+        }
+
+        SyncBoosterRootState();
+    }
+
+    public void AutoBindBoosterFx()
+    {
+        Transform searchRoot = transform.root;
+        if (searchRoot == null) searchRoot = transform;
+
+        // 1. Booster_effect 상위 오브젝트 탐색
+        if (boosterEffectRoot == null)
+        {
+            Transform bRoot = FindDescendant(searchRoot, "Booster_effect");
+            if (bRoot == null) bRoot = FindPartFlexible(searchRoot, "Booster_effect");
+            if (bRoot != null) boosterEffectRoot = bRoot.gameObject;
+        }
+
+        Transform vfxRoot = boosterEffectRoot != null ? boosterEffectRoot.transform : searchRoot;
+
+        // 2. Working 보조 부스터 4종 바인딩
+        if (blueBoosterWorking == null || blueBoosterWorking.Length != 4)
+            blueBoosterWorking = new GameObject[4];
+
+        string[] workingNames = {
+            "PF_BlueBooster_Working",
+            "PF_BlueBooster_Working (1)",
+            "PF_BlueBooster_Working (2)",
+            "PF_BlueBooster_Working (3)"
+        };
+
+        for (int i = 0; i < workingNames.Length; i++)
+        {
+            if (blueBoosterWorking[i] != null) continue;
+            Transform t = FindDescendant(vfxRoot, workingNames[i]);
+            if (t == null) t = FindPartFlexible(vfxRoot, workingNames[i]);
+            if (t == null) t = FindDescendant(searchRoot, workingNames[i]);
+            if (t != null) blueBoosterWorking[i] = t.gameObject;
+        }
+
+        if (boosterEffectRoot != null)
+        {
+            int fillIdx = 0;
+            for (int c = 0; c < boosterEffectRoot.transform.childCount && fillIdx < 4; c++)
+            {
+                Transform child = boosterEffectRoot.transform.GetChild(c);
+                string cName = child.name.ToLowerInvariant();
+                if (cName.Contains("working"))
+                {
+                    if (blueBoosterWorking[fillIdx] == null)
+                        blueBoosterWorking[fillIdx] = child.gameObject;
+                    fillIdx++;
+                }
+            }
+        }
+
+        // 3. Backup 메인 부스터 2종 바인딩
+        if (blueBoosterBackup == null || blueBoosterBackup.Length != 2)
+            blueBoosterBackup = new GameObject[2];
+
+        string[] backupNames = {
+            "PF_BlueBooster_Backup",
+            "PF_BlueBooster_Backup (1)"
+        };
+
+        for (int i = 0; i < backupNames.Length; i++)
+        {
+            if (blueBoosterBackup[i] != null) continue;
+            Transform t = FindDescendant(vfxRoot, backupNames[i]);
+            if (t == null) t = FindPartFlexible(vfxRoot, backupNames[i]);
+            if (t == null) t = FindDescendant(searchRoot, backupNames[i]);
+            if (t != null) blueBoosterBackup[i] = t.gameObject;
+        }
+
+        if (boosterEffectRoot != null)
+        {
+            int fillIdx = 0;
+            for (int c = 0; c < boosterEffectRoot.transform.childCount && fillIdx < 2; c++)
+            {
+                Transform child = boosterEffectRoot.transform.GetChild(c);
+                string cName = child.name.ToLowerInvariant();
+                if (cName.Contains("backup"))
+                {
+                    if (blueBoosterBackup[fillIdx] == null)
+                        blueBoosterBackup[fillIdx] = child.gameObject;
+                    fillIdx++;
+                }
+            }
+        }
+    }
+
+    private void SetFxActive(GameObject fxObj, bool active)
+    {
+        if (fxObj == null) return;
+
+        if (active)
+        {
+            if (boosterEffectRoot != null && !boosterEffectRoot.activeSelf)
+                boosterEffectRoot.SetActive(true);
+
+            Transform p = fxObj.transform.parent;
+            while (p != null && p != transform.root)
+            {
+                if (!p.gameObject.activeSelf) p.gameObject.SetActive(true);
+                p = p.parent;
+            }
+
+            if (!fxObj.activeSelf)
+                fxObj.SetActive(true);
+
+            foreach (var ps in fxObj.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                ps.Clear(true);
+                ps.Play(true);
+            }
+            foreach (var vfx in fxObj.GetComponentsInChildren<VisualEffect>(true))
+            {
+                vfx.Reinit();
+                vfx.Play();
+            }
+        }
+        else
+        {
+            if (fxObj.activeSelf)
+                fxObj.SetActive(false);
+
+            foreach (var ps in fxObj.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+            foreach (var vfx in fxObj.GetComponentsInChildren<VisualEffect>(true))
+            {
+                vfx.Stop();
+                vfx.Reinit();
+            }
+        }
+    }
+
+    private void SyncBoosterRootState()
+    {
+        if (boosterEffectRoot == null) return;
+
+        bool anyActive = false;
+        if (blueBoosterWorking != null)
+        {
+            for (int i = 0; i < blueBoosterWorking.Length; i++)
+            {
+                if (blueBoosterWorking[i] != null && blueBoosterWorking[i].activeSelf)
+                {
+                    anyActive = true;
+                    break;
+                }
+            }
+        }
+
+        if (!anyActive && blueBoosterBackup != null)
+        {
+            for (int i = 0; i < blueBoosterBackup.Length; i++)
+            {
+                if (blueBoosterBackup[i] != null && blueBoosterBackup[i].activeSelf)
+                {
+                    anyActive = true;
+                    break;
+                }
+            }
+        }
+
+        if (boosterEffectRoot.activeSelf != anyActive)
+            boosterEffectRoot.SetActive(anyActive);
+    }
+
+    public void SyncTimingWithBlueCar()
+    {
+        workingBoosterThreshold = 0.55f;
+        backupBoosterThreshold = 0.96f;
+    }
+
+    private void OnValidate()
+    {
+        if (!Application.isPlaying)
+        {
+            if (boosterEffectRoot == null || blueBoosterWorking == null || blueBoosterWorking.Length < 4 || blueBoosterWorking[0] == null)
+            {
+                AutoBindBoosterFx();
+            }
+
+            if (Mathf.Approximately(workingBoosterThreshold, 0.635f) || Mathf.Approximately(workingBoosterThreshold, 0.24f) || workingBoosterThreshold < 0.35f || workingBoosterThreshold > 0.60f)
+                workingBoosterThreshold = 0.55f;
+            if (Mathf.Approximately(backupBoosterThreshold, 0.656f) || Mathf.Approximately(backupBoosterThreshold, 0.56f) || (backupBoosterThreshold > 0.50f && backupBoosterThreshold < 0.70f))
+                backupBoosterThreshold = 0.96f;
+        }
     }
 
     private void ApplySequencedCover(int index, float angle, Vector3 offset, float sequence)
@@ -739,19 +986,48 @@ public sealed class BoosterDeploymentController : MonoBehaviour
     public void DeployBoosters() => targetSequenceAmount = 1f;
     public void RetractBoosters() => targetSequenceAmount = 0f;
 
+    /// <summary>
+    /// 레드카 부스터 변형 및 모든 부스터 VFX를 즉시 100% 완료 상태로 적용
+    /// </summary>
+    [ContextMenu("🚀 부스터 변형 및 이펙트 즉시 완료 (Snap)")]
+    public void SnapToFullDeployment()
+    {
+        InitializeOnce();
+        targetSequenceAmount = 1f;
+        masterSequenceAmount = 1f;
+        ApplySequence();
+    }
+
+    /// <summary>
+    /// 레드카 부스터를 즉시 0% 기본 수납 상태로 복귀
+    /// </summary>
+    [ContextMenu("🔄 부스터 수납 및 기본 원래 모습 복귀 (Snap)")]
+    public void SnapToFullRetraction()
+    {
+        InitializeOnce();
+        targetSequenceAmount = 0f;
+        masterSequenceAmount = 0f;
+        ApplySequence();
+    }
+
     private bool IsToggleKeyPressed()
     {
         try
         {
-            if (Input.GetKeyDown(toggleKey))
+            if (Input.GetKeyDown(toggleKey) || (alternateToggleKey != KeyCode.None && Input.GetKeyDown(alternateToggleKey)))
                 return true;
         }
         catch { }
 
 #if ENABLE_INPUT_SYSTEM
         var keyboard = UnityEngine.InputSystem.Keyboard.current;
-        if (keyboard != null && toggleKey == KeyCode.B)
-            return keyboard.bKey.wasPressedThisFrame;
+        if (keyboard != null)
+        {
+            if (toggleKey == KeyCode.B && keyboard.bKey.wasPressedThisFrame)
+                return true;
+            if (alternateToggleKey == KeyCode.Space && keyboard.spaceKey.wasPressedThisFrame)
+                return true;
+        }
 #endif
         return false;
     }
@@ -877,6 +1153,21 @@ public sealed class BoosterDeploymentController : MonoBehaviour
         foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
             if (child.name == objectName)
                 return child;
+
+        return null;
+    }
+
+    private static Transform FindPartFlexible(Transform root, string targetName)
+    {
+        if (root == null) return null;
+        string cleanTarget = targetName.Replace(" ", "").Replace("_", "").ToLowerInvariant();
+
+        foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+        {
+            string cleanChild = child.name.Replace(" ", "").Replace("_", "").ToLowerInvariant();
+            if (cleanChild == cleanTarget)
+                return child;
+        }
 
         return null;
     }
