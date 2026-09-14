@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEditor;
-using Damin.SceneOnly;
+using Damin.CinematicCopy;
 
 [CustomEditor(typeof(DMShotCameraRig))]
-public sealed class DMShotCameraRigEditor:Editor
+public sealed class DMCopyCameraEditor:Editor
 {
     static void Record(DMShotCameraRig rig)
     {

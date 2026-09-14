@@ -3,7 +3,7 @@ using UnityEngine;
 using Unity.Cinemachine;
 using Damin.Trailer.MissileCar;
 
-namespace Damin.SceneOnly
+namespace Damin.CinematicCopy
 {
     /// <summary>Scene-only shot selection. Fixed cameras remain fixed; no automatic story choreography.</summary>
     [DisallowMultipleComponent, DefaultExecutionOrder(2000)]
@@ -34,6 +34,14 @@ namespace Damin.SceneOnly
             public Vector3 boostAimOffset;
             [NonSerialized] public bool boostPoseActive;
             [NonSerialized] public Vector3 worldPositionOffset;
+            [NonSerialized] public Vector3 angularKick;
+            // Runtime-only standalone take. Serialized camera setups remain untouched.
+            [NonSerialized] public bool independentPose;
+            [NonSerialized] public Vector3 independentPosition;
+            [NonSerialized] public Quaternion independentRotation;
+            [NonSerialized] public float independentLens;
+            [NonSerialized] public bool fixedPoseCaptured;
+            [NonSerialized] public Quaternion fixedRotation;
             [Tooltip("두 차량을 함께 보여줄 때 보조 조준 대상. 카메라 위치는 기본 대상을 따릅니다.")]
             public Transform compositionTarget;
             [Range(0,1)] public float compositionWeight;
@@ -106,8 +114,15 @@ namespace Damin.SceneOnly
                     // Refresh the priority queue before this frame's manual Brain update.
                     if(Application.isPlaying && shot.camera.isActiveAndEnabled) shot.camera.Prioritize();
                 }
+                if(shot.independentPose){
+                    var lens=shot.camera.Lens;lens.FieldOfView=2*Mathf.Atan(20.25f/(2*shot.independentLens))*Mathf.Rad2Deg;shot.camera.Lens=lens;
+                    shot.camera.transform.SetPositionAndRotation(shot.independentPosition,shot.independentRotation);
+                    shot.camera.Follow=null;shot.camera.LookAt=null;continue;
+                }
                 if(shot.mode==ShotMode.FixedWorld)
                 {
+                    if(!shot.fixedPoseCaptured){shot.fixedRotation=shot.camera.transform.rotation;shot.fixedPoseCaptured=true;}
+                    shot.camera.transform.rotation=shot.fixedRotation*Quaternion.Euler(shot.angularKick);
                     // Deliberately do not aim at or follow the moving vehicle.
                     shot.camera.Follow=null;shot.camera.LookAt=null;continue;
                 }
@@ -140,7 +155,7 @@ namespace Damin.SceneOnly
                 if(Application.isPlaying&&shot.vibrationMetres>0)position+=frame*new Vector3(Mathf.Sin(motionTime*19.3f+i)*shot.vibrationMetres,Mathf.Sin(motionTime*27.1f+i*2)*shot.vibrationMetres*.6f,0);
                 var direction=aim-position;if(direction.sqrMagnitude<.000001f) continue;
                 var up=shot.overhead?(shot.overheadUp.sqrMagnitude>.1f?shot.overheadUp.normalized:forward):Vector3.up;
-                shot.camera.transform.SetPositionAndRotation(position,Quaternion.LookRotation(direction,up));
+                shot.camera.transform.SetPositionAndRotation(position,Quaternion.LookRotation(direction,up)*Quaternion.Euler(shot.angularKick));
                 shot.camera.Follow=target;shot.camera.LookAt=target;
             }
         }
@@ -155,5 +170,6 @@ namespace Damin.SceneOnly
                 outputCamera.fieldOfView=shot.camera.Lens.FieldOfView;
             }
         }
+        public void ResetFixedPoses(){foreach(var shot in shots)if(shot!=null){shot.fixedPoseCaptured=false;shot.angularKick=Vector3.zero;}}
     }
 }

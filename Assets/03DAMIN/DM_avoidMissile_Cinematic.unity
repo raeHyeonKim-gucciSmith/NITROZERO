@@ -1519,11 +1519,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 184688041}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5ef934d97524a1d84b1939c011fa512, type: 3}
+  m_Script: {fileID: 11500000, guid: 125bc7adf2b34e08b2fe5a8fa695a4d3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMCinematicDirector
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMCinematicDirector
+  independentDuel: 1
+  duelTake:
+    duration: 8
+    speedKph: 560
+    focalLength: 28
+    cameraHeight: 1.1
+    reactionDelay: 0.16
+    vibration: 0.35
   cameraPlaybackMode: 0
-  takeCameraNumber: 2
+  takeCameraNumber: 1
   takeStartTime: 0
   takeEndTime: 20
   loopTake: 0
@@ -1534,7 +1542,7 @@ MonoBehaviour:
   - label: "01 \uC9C0\uBA74 \uADFC\uC811 \xB7 22mm \uACE0\uC815 \uD1B5\uACFC"
     startTime: 0
     endTime: 1.9
-    redStartWorldX: 1780.2716
+    redStartWorldX: 1200
   - label: "02 \uD6C4\uCE21\uBA74 \xB7 28mm \uCD94\uC6D4\uACFC \uBC29\uC5B4"
     startTime: 0.5
     endTime: 5
@@ -1574,6 +1582,14 @@ MonoBehaviour:
     startTime: 13.600001
     endTime: 15.6
     redStartWorldX: 1200
+  independentGroundPass: 1
+  groundPassTake:
+    duration: 8
+    speedKph: 560
+    redPassTime: 3.2
+    cameraHeight: 0.45
+    focalLength: 24
+    kickDegrees: 0.65
   timing:
     groundPass: 1.5
     rearDeparture: 2
@@ -1598,12 +1614,16 @@ MonoBehaviour:
   dropBackMetres: 22
   blueLeadMetres: 30
   redDriftLagMetres: 8
-  driftSideMetres: 1.25
+  driftSideMetres: 2.4
   cinematicMotion: 1
   boostCameraDelay: 0.35
   shapeLaunchSmoke: 1
   launchSmokeRampSeconds: 0.12
   launchRelativeSpeed: 35
+  launchCameraKick: 0.8
+  passingCameraKick: 0.65
+  driftSmokePeak: 1
+  missileWispsDensity: 0.22
   slowMotionRate: 0.08
   boostExtraKph: 110
   passengerWindow: {fileID: 642240619}
@@ -1632,7 +1652,9 @@ MonoBehaviour:
     \uC2E4\uB0B4 \uCEF7\uC740 \uBCC4\uB3C4 \uC5F0\uACB0 \uC804 \uC678\uBD80/\uD0D1\uBDF0
     \uB300\uCCB4. \uCC3D\uBB38 \uACBD\uB85C\uB294 \uCD2C\uC601\uC6A9\uC774\uBA70
     \uCC28\uCCB4/\uC720\uB9AC \uCDA9\uB3CC \uBB3C\uB9AC\uB294 \uBCC0\uACBD\uD558\uC9C0
-    \uC54A\uC74C."
+    \uC54A\uC74C.\nCinematic copy: independent scripts; all six scene cars unpacked.
+    Map/color/source scene/prefabs unchanged. Preview existing sound only; interior
+    shot/driver acting still unfinished."
 --- !u!4 &184688043
 Transform:
   m_ObjectHideFlags: 0
@@ -1658,9 +1680,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 184688041}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dab24eaacf47dd44a025c7dee48bcfb, type: 3}
+  m_Script: {fileID: 11500000, guid: e7a2f1f1a4f841168703b06e85a7c383, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRacePerformance
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRacePerformance
   cars:
   - vehicle: {fileID: 5256831219912890109}
     cruise: {fileID: 6098492458027505458}
@@ -1678,26 +1700,35 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.19696969
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.36363637
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.53030306
+        time: 0.2
         value: 2
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.4
+        value: 6
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.62
+        value: 8
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.8
+        value: 7
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1706,7 +1737,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: 2
+        value: 7
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1729,8 +1760,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.28787878
-        value: 0
+        time: 0.22
+        value: -0.1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1738,7 +1769,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.38636363
+        time: 0.4
         value: -1
         inSlope: 0
         outSlope: 0
@@ -1747,8 +1778,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.44696972
-        value: -1
+        time: 0.58
+        value: -0.85
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1756,7 +1787,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.6212121
+        time: 0.8
         value: 0
         inSlope: 0
         outSlope: 0
@@ -1792,8 +1823,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.121212125
-        value: 0
+        time: 0.18
+        value: 8
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1801,8 +1832,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.3409091
-        value: 6
+        time: 0.35
+        value: 15
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1810,8 +1841,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.38636363
-        value: 6
+        time: 0.5
+        value: 13
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1819,8 +1850,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.53030306
-        value: -2
+        time: 0.64
+        value: 3
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1828,8 +1859,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.6363636
-        value: -2
+        time: 0.8
+        value: 2
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1838,7 +1869,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -2
+        value: 2
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1861,8 +1892,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.19696969
-        value: 0
+        time: 0.2
+        value: 0.2
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1870,8 +1901,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.33333334
-        value: -0.2
+        time: 0.45
+        value: 0.3
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1879,16 +1910,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.5
-        value: -0.2
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.6363636
+        time: 0.65
         value: 0
         inSlope: 0
         outSlope: 0
@@ -1924,8 +1946,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.3030303
-        value: 1
+        time: 0.24
+        value: 2
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1933,7 +1955,16 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.6818182
+        time: 0.48
+        value: -2
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.65
         value: 0
         inSlope: 0
         outSlope: 0
@@ -1966,8 +1997,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.3030303
-        value: 0.1
+        time: 0.35
+        value: -0.25
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1975,7 +2006,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.6818182
+        time: 0.65
         value: 0
         inSlope: 0
         outSlope: 0
@@ -2011,8 +2042,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.40909094
-        value: -1
+        time: 0.28
+        value: -3.8999999
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2020,8 +2051,17 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.72727275
-        value: -3
+        time: 0.55
+        value: -9
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.82
+        value: -6
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2030,7 +2070,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -4
+        value: -6
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2053,8 +2093,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.37878788
-        value: 0.25
+        time: 0.35
+        value: -0.35
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2062,8 +2102,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.6818182
-        value: -0.1
+        time: 0.7
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2098,8 +2138,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.3030303
-        value: -2
+        time: 0.28
+        value: -5.2
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2107,8 +2147,17 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.6363636
-        value: -1
+        time: 0.55
+        value: 2
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.82
+        value: -8
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2117,7 +2166,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -5
+        value: -8
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2140,8 +2189,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.3030303
-        value: -0.2
+        time: 0.35
+        value: 0.35
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2149,8 +2198,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.75757575
-        value: 0.2
+        time: 0.7
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2185,8 +2234,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.3030303
-        value: -3
+        time: 0.28
+        value: -6.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2194,8 +2243,17 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.72727275
-        value: -8
+        time: 0.55
+        value: -9
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.82
+        value: -10
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2204,7 +2262,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -13
+        value: -10
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2227,8 +2285,17 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.45454547
-        value: 0.3
+        time: 0.35
+        value: -0.35
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.7
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2237,7 +2304,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: 0.15
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2263,9 +2330,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 184688041}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b71dbb5047b0441bab592ad4a33e4289, type: 3}
+  m_Script: {fileID: 11500000, guid: ed0fd0bfa61b473a9b28ea0e1693d96a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMFilmAudio
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMFilmAudio
   director: {fileID: 184688042}
   enablePreviewAudio: 1
   masterVolume: 0.55
@@ -4442,7 +4509,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 5256831219912890109}
     CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 35.115395
+    FieldOfView: 39.760704
     OrthographicSize: 10
     NearClipPlane: 0.015
     FarClipPlane: 3500
@@ -4469,8 +4536,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493739227}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.046069372, y: 0.9093375, z: -0.104726546, w: -0.40001902}
-  m_LocalPosition: {x: 1792.2716, y: -24.146418, z: 12.018799}
+  m_LocalRotation: {x: -0.036042854, y: 0.9197727, z: -0.08701516, w: -0.38098228}
+  m_LocalPosition: {x: 1790.2716, y: -25.146418, z: 11.018797}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4578,14 +4645,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 498893854}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4675c9ed7fcd44b2a615aa368cdb821f, type: 3}
+  m_Script: {fileID: 11500000, guid: 874d378e17bc4245b5ae0a2f32c6268f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMShotCameraRig
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMShotCameraRig
   outputCamera: {fileID: 961739752}
   brain: {fileID: 961739754}
   opening: {fileID: 498893856}
   missileSequence: {fileID: 3816784084423458971}
-  activeShot: 1
+  activeShot: 2
   roadForward: {x: -1, y: 0, z: 0}
   shots:
   - label: "\uC9C0\uBA74 \uADFC\uC811 \xB7 22mm \uACE0\uC815 \uD1B5\uACFC"
@@ -4597,7 +4664,7 @@ MonoBehaviour:
     followFiredMissile: 0
     overhead: 0
     useFocalLength: 1
-    focalLengthMm: 22
+    focalLengthMm: 24
     overheadUp: {x: 0, y: 0, z: 0}
     vibrationMetres: 0
     hasBoostPose: 0
@@ -4619,14 +4686,14 @@ MonoBehaviour:
     camera: {fileID: 592166813}
     target: {fileID: 5256831219912890109}
     mode: 0
-    positionOffset: {x: 12, y: -0.6535816, z: -10}
+    positionOffset: {x: 9, y: -0.6535816, z: -11}
     aimOffset: {x: -0.5, y: 0.1, z: -1}
     followFiredMissile: 0
     overhead: 0
     useFocalLength: 1
     focalLengthMm: 28
     overheadUp: {x: 0, y: 0, z: 0}
-    vibrationMetres: 0.012
+    vibrationMetres: 0
     hasBoostPose: 0
     boostPositionOffset: {x: 0, y: 0, z: 0}
     boostAimOffset: {x: 0, y: 0, z: 0}
@@ -4634,7 +4701,7 @@ MonoBehaviour:
     compositionWeight: 0.4
     hasEndPose: 1
     moveProgress: 0
-    endPositionOffset: {x: 13, y: -0.6535816, z: -14}
+    endPositionOffset: {x: 10, y: -0.6535816, z: -25}
     endAimOffset: {x: -0.5, y: 0.1, z: 0}
     wideTarget: {fileID: 0}
     productionNote: "\uB9F5\xB7\uC0C9\uAC10\xB7\uB80C\uC988\xB7\uC8FC\uD589 \uC18D\uB3C4
@@ -4722,8 +4789,8 @@ MonoBehaviour:
     camera: {fileID: 2030033379}
     target: {fileID: 2547420386921028047}
     mode: 2
-    positionOffset: {x: 0, y: 7, z: 13}
-    aimOffset: {x: 0, y: 2.8, z: 3.8}
+    positionOffset: {x: 0, y: 5.9, z: 10.8}
+    aimOffset: {x: 0, y: 2.7, z: 4.6}
     followFiredMissile: 0
     overhead: 0
     useFocalLength: 1
@@ -4737,8 +4804,8 @@ MonoBehaviour:
     compositionWeight: 0
     hasEndPose: 1
     moveProgress: 0
-    endPositionOffset: {x: 0, y: 6.5, z: 12}
-    endAimOffset: {x: 0, y: 2.8, z: 3.8}
+    endPositionOffset: {x: 0, y: 5.3, z: 10}
+    endAimOffset: {x: 0, y: 2.7, z: 4.6}
     wideTarget: {fileID: 0}
     productionNote: "\uBCF4\uB137\uACFC \uB0B4\uBD80 \uBC1C\uC0AC\uB300\xB7\uCD95\uC801
       \uC5F0\uAE30\uB97C \uC815\uBA74 \uC704\uCABD\uC5D0\uC11C \uBD05\uB2C8\uB2E4.
@@ -4749,14 +4816,14 @@ MonoBehaviour:
     camera: {fileID: 1678259997}
     target: {fileID: 1783201597120162735}
     mode: 0
-    positionOffset: {x: 4, y: 1, z: -7}
-    aimOffset: {x: 0, y: 0, z: 1.5}
+    positionOffset: {x: 1.4, y: 0.45, z: -3.2}
+    aimOffset: {x: 0, y: 0, z: 0.6}
     followFiredMissile: 1
     overhead: 0
     useFocalLength: 1
-    focalLengthMm: 24
+    focalLengthMm: 35
     overheadUp: {x: 0, y: 0, z: 0}
-    vibrationMetres: 0.018
+    vibrationMetres: 0
     hasBoostPose: 0
     boostPositionOffset: {x: 0, y: 0, z: 0}
     boostAimOffset: {x: 0, y: 0, z: 0}
@@ -4776,14 +4843,14 @@ MonoBehaviour:
     camera: {fileID: 493739228}
     target: {fileID: 5256831219912890109}
     mode: 0
-    positionOffset: {x: 11, y: 4, z: -12}
-    aimOffset: {x: 0, y: 0.2, z: 0}
+    positionOffset: {x: 10, y: 3, z: -10}
+    aimOffset: {x: 0, y: 0.3, z: 0}
     followFiredMissile: 0
     overhead: 0
     useFocalLength: 1
-    focalLengthMm: 32
+    focalLengthMm: 28
     overheadUp: {x: 0, y: 0, z: 0}
-    vibrationMetres: 0.01
+    vibrationMetres: 0
     hasBoostPose: 1
     boostPositionOffset: {x: 4, y: 1, z: -15}
     boostAimOffset: {x: 0, y: 0.2, z: 1}
@@ -4791,8 +4858,8 @@ MonoBehaviour:
     compositionWeight: 0
     hasEndPose: 1
     moveProgress: 0
-    endPositionOffset: {x: 8, y: 3, z: -15}
-    endAimOffset: {x: 0, y: 0.3, z: 1}
+    endPositionOffset: {x: 7, y: 1.8, z: -17}
+    endAimOffset: {x: 0, y: 0.3, z: 0}
     wideTarget: {fileID: 0}
     productionNote: 
   - label: "\uCC3D\uBB38 \uD1B5\uACFC \xB7 42mm \uC548\uC815\uB41C \uD0D1\uBDF0"
@@ -4858,9 +4925,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 498893854}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a8ec11af02247c19dbb2814852db603, type: 3}
+  m_Script: {fileID: 11500000, guid: a56b2920548a4af9945c7f6884005300, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceOpening
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceOpening
   vehicles:
   - {fileID: 5256831219912890109}
   - {fileID: 3012942508440639135}
@@ -5570,7 +5637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 10
+    m_Value: 100
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -5607,8 +5674,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 592166812}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0066352715, y: 0.98459905, z: -0.03832949, w: -0.17044535}
-  m_LocalPosition: {x: 1790.2716, y: -26.746418, z: 13.018799}
+  m_LocalRotation: {x: 0.006599659, y: 0.9706932, z: 0.02683489, w: -0.23872814}
+  m_LocalPosition: {x: 1791.2716, y: -28.8, z: 10.018797}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8972,7 +9039,7 @@ Camera:
     height: 1
   near clip plane: 0.03
   far clip plane: 3500
-  field of view: 49.426353
+  field of view: 39.760704
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -8998,8 +9065,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.027835405, y: 0.36848086, z: 0.011038886, w: 0.92915297}
-  m_LocalPosition: {x: 1752, y: -29, z: -10.5}
+  m_LocalRotation: {x: 0.006599659, y: 0.9706932, z: 0.02683489, w: -0.23872814}
+  m_LocalPosition: {x: 1791.2716, y: -28.8, z: 10.018797}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12412,7 +12479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 100
+    m_Value: 10
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -12422,7 +12489,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 49.426353
+    FieldOfView: 45.74733
     OrthographicSize: 10
     NearClipPlane: 0.015
     FarClipPlane: 3500
@@ -12449,8 +12516,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1435382970}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0126677705, y: 0.57495797, z: 0.008903559, w: 0.81803644}
-  m_LocalPosition: {x: 1355.7616, y: -29, z: -10.5}
+  m_LocalRotation: {x: -0.004419688, y: 0.64698267, z: 0.0037501985, w: 0.7624827}
+  m_LocalPosition: {x: 1355.7616, y: -29.27, z: -9.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14609,7 +14676,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 1783201597120162735}
     CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 45.74733
+    FieldOfView: 32.2688
     OrthographicSize: 10
     NearClipPlane: 0.015
     FarClipPlane: 3500
@@ -14636,8 +14703,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1678259996}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.028398434, y: -0.84314656, z: 0.04474975, w: 0.5350654}
-  m_LocalPosition: {x: 1804.4867, y: -26.722675, z: 10.021511}
+  m_LocalRotation: {x: 0.031632874, y: -0.8190223, z: 0.04536594, w: 0.5710899}
+  m_LocalPosition: {x: 1800.6866, y: -27.272675, z: 7.4215097}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18206,8 +18273,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2030033378}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.044390153, y: 0.88684094, z: -0.087172054, w: 0.45160127}
-  m_LocalPosition: {x: 1787.1824, y: -24.156487, z: 13.503218}
+  m_LocalRotation: {x: 0.16686602, y: 0.6871359, z: -0.166866, w: 0.68713593}
+  m_LocalPosition: {x: 1790.3823, y: -23.756487, z: 5.5032177}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -109093,9 +109160,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3624710662886921628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.95943856, y: 0.37152275, z: 1.5705357}
@@ -113701,19 +113768,19 @@ MonoBehaviour:
     enabled: 1
     exhaustStartDelay: 0.02
     trailSpawnRate: 1600
-    trailDensity: 0.75
-    trailWidth: 0.1
-    trailExpansion: 0.35
-    trailTurbulence: 0.1
+    trailDensity: 0.78
+    trailWidth: 0.12
+    trailExpansion: 0.62
+    trailTurbulence: 0.23
     trailSpeed: 3
     trailLength: 32
     maxSmokeLifetime: 6
-    trailColor: {r: 0.98, g: 0.98, b: 0.98, a: 1}
+    trailColor: {r: 0.82, g: 0.82, b: 0.82, a: 1}
     extraParticlesPerMeter: 160
-    maxTrailSpawnRate: 7200
+    maxTrailSpawnRate: 9000
     tailCleanupPadding: 0.25
     tailFadeStart: 0.4
-    brightCoreIntensity: 0.2
+    brightCoreIntensity: 0.12
   launcher: {fileID: 2487858446945208684}
   deployment: {fileID: 1906220172219618485}
   hoodVFX: {fileID: 2666439601216549299}
@@ -123525,9 +123592,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4228910359499367249}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.5725892, y: -0.19651324, z: 0.762884}
@@ -128611,10 +128678,10 @@ MonoBehaviour:
   hideSourceWhenBound: 1
   smokePower: 0
   useSlipAmount: 0
-  buildUpTime: 0.2
-  fadeOutTime: 0.6
+  buildUpTime: 0.24
+  fadeOutTime: 0.65
   surgeThreshold: 0.6
-  surgeBoost: 0.65
+  surgeBoost: 0.8
   layers:
   - layerPrefix: 01_
     response:
@@ -128747,7 +128814,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    maxStrength: 1
+    maxStrength: 1.4
   - layerPrefix: 04_
     response:
       serializedVersion: 2
@@ -128835,12 +128902,12 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    maxStrength: 0.9
+    maxStrength: 1.26
   referenceWheelRadius: 0.65
   wrapAmount: 0.8
   previewAngularSpeed: 5.7
-  smokeLifetime: 1.2
-  smokeExpansion: 1.4
+  smokeLifetime: 1.7
+  smokeExpansion: 1.6
   vehicleSpeed: 0
   speedToWake:
     serializedVersion: 2
@@ -140391,9 +140458,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4889141133383742865}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.52697796, y: -0.23191057, z: 0.8450654}
@@ -141079,9 +141146,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4131134959322175029}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.6000509, y: 0.22116391, z: 0.8890407}
@@ -167903,9 +167970,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6006400678910776343}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.5918721, y: -0.083446234, z: 0.8398061}
@@ -169756,9 +169823,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4112279421186371281}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.57263625, y: -0.19651332, z: 0.76278484}
@@ -171461,9 +171528,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 335868305560698691}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.9594999, y: 0.37152264, z: 1.5706317}
@@ -172900,9 +172967,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2653356892595156489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.6000772, y: 0.22109014, z: 0.8869029}
@@ -177118,9 +177185,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4978220346259951290}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.5739861, y: 0.12067946, z: 1.2573485}
@@ -202127,9 +202194,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 443777590851427740}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.59186834, y: -0.0834463, z: 0.83981234}
@@ -213729,9 +213796,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 452583406062171028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.57410187, y: 0.12067939, z: 1.2573086}
@@ -238097,9 +238164,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3390312561718702313}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16aec7b011c896043a15ac0791f5db77, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a6574eeed746c78cbfb5f6493267e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMRaceWheelVisual
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMRaceWheelVisual
   wheels:
   - label: FL
     centre: {x: -0.52695864, y: -0.2319107, z: 0.84509295}

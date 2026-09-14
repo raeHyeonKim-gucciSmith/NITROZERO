@@ -5,11 +5,12 @@ using UnityEngine.VFX;
 using Damin.Trailer.MissileCar;
 using Damin.Trailer.FinalVFX;
 using Damin.VFX.TireSmoke.Progressive;
+using DMScene_MissilePreparationSlide = Damin.SceneOnly.DMScene_MissilePreparationSlide;
 
-namespace Damin.SceneOnly
+namespace Damin.CinematicCopy
 {
     [DisallowMultipleComponent, DefaultExecutionOrder(-500)]
-    public sealed class DMCinematicDirector : MonoBehaviour
+    public sealed partial class DMCinematicDirector : MonoBehaviour
     {
         [Serializable] public sealed class FilmTiming
         {
@@ -48,9 +49,23 @@ namespace Damin.SceneOnly
         [InspectorName("SHOT별 촬영 구간 사용")] public bool useShotTakeTimes;
         [InspectorName("SHOT별 출발 위치 적용")] public bool repositionForTake;
         public ShotTake[] shotTakes=Array.Empty<ShotTake>();
+        [Serializable] public sealed class GroundPassSettings
+        {
+            [Range(5,10), InspectorName("01 녹화 길이 (초)")] public float duration=8;
+            [Range(120,900), InspectorName("01 촬영용 속도 (km/h)")] public float speedKph=560;
+            [Range(1,5), InspectorName("빨강 통과 시각 (초)")] public float redPassTime=3.2f;
+            [Range(.1f,1), InspectorName("노면 위 카메라 높이 (m)")] public float cameraHeight=.45f;
+            [Range(18,40), InspectorName("01 렌즈 (mm)")] public float focalLength=24;
+            [Range(0,1.5f), InspectorName("근접 통과 진동 (도)")] public float kickDegrees=.65f;
+        }
+        [Header("01 독립 촬영 — 다른 SHOT에는 적용되지 않음")]
+        [InspectorName("01을 독립 테이크로 촬영")] public bool independentGroundPass;
+        public GroundPassSettings groundPassTake=new GroundPassSettings();
+        public bool GroundPassConfigured=>independentGroundPass&&cameraPlaybackMode==CameraPlaybackMode.SingleCamera&&takeCameraNumber==1;
+        public bool GroundPassTakeActive=>runGroundPass;
         public ShotTake SelectedShotTake=>shotTakes!=null&&takeCameraNumber>=1&&takeCameraNumber<=shotTakes.Length?shotTakes[takeCameraNumber-1]:null;
-        public float ConfiguredTakeStart=>useShotTakeTimes&&SelectedShotTake!=null?SelectedShotTake.startTime:takeStartTime;
-        public float ConfiguredTakeEnd=>useShotTakeTimes&&SelectedShotTake!=null?SelectedShotTake.endTime:takeEndTime;
+        public float ConfiguredTakeStart=>GroundPassConfigured||DuelConfigured?0:useShotTakeTimes&&SelectedShotTake!=null?SelectedShotTake.startTime:takeStartTime;
+        public float ConfiguredTakeEnd=>DuelConfigured?Safe(duelTake.duration,8,5,10):GroundPassConfigured?Safe(groundPassTake.duration,8,5,10):useShotTakeTimes&&SelectedShotTake!=null?SelectedShotTake.endTime:takeEndTime;
         [Header("구간 길이 (초) — 변경 후 다시 재생")]
         public FilmTiming timing=new FilmTiming();
         public bool playOnStart=true;
@@ -78,6 +93,11 @@ namespace Damin.SceneOnly
         [Min(.02f), InspectorName("발사 연기 차오름 시간 (초)")] public float launchSmokeRampSeconds=.12f;
         [Min(0), InspectorName("발사 순간 차량 대비 추가 속도 (m/s)")]
         public float launchRelativeSpeed=8;
+        [Header("복사본 전용 — 힘에 반응하는 촬영")]
+        [Range(0,2), InspectorName("발사 카메라 반응 (도)")] public float launchCameraKick=0.8f;
+        [Range(0,2), InspectorName("통과 카메라 반응 (도)")] public float passingCameraKick=0.65f;
+        [Range(0,1), InspectorName("드리프트 연기 최대 강도")] public float driftSmokePeak=1;
+        [Range(0,1), InspectorName("미사일 잔연기 강도")] public float missileWispsDensity=.22f;
         [Range(.02f,1)] public float slowMotionRate=.08f;
         [Min(0)] public float boostExtraKph=70;
         [Header("창문 통과 — 빨간 차 로컬 좌표")]
@@ -136,6 +156,9 @@ namespace Damin.SceneOnly
         Vector3 launchWorld,entryWorld,exitWorld,clearWorld;
         float runCameraDelay;
         bool runSingleTake,runLoopTake;
+        bool runGroundPass;
+        float groundSpeed,groundPassTime,groundKick,groundLens;
+        Vector3[] groundPositions;
         int runTakeCamera;
         float runTakeStart,runTakeEnd,runLoopDelay,loopWait;
         void Awake(){Acquire();}
@@ -184,6 +207,10 @@ namespace Damin.SceneOnly
             FilmDuration=starts[13];FilmTime=0;Phase=0;Completed=false;Playing=true;sequenceStarted=launched=false;activeProjectile=null;launchHook=null;previousSeqTime=0;
             runSingleTake=cameraPlaybackMode==CameraPlaybackMode.SingleCamera;
             runTakeCamera=Mathf.Clamp(takeCameraNumber,1,cameras.shots.Length);
+            runGroundPass=GroundPassConfigured;
+            runDuel=DuelConfigured;
+            if(runGroundPass)FilmDuration=Safe(groundPassTake.duration,8,5,10);
+            if(runDuel)FilmDuration=Safe(duelTake.duration,8,5,10);
             runTakeEnd=runSingleTake?Safe(ConfiguredTakeEnd,FilmDuration,.1f,FilmDuration):FilmDuration;
             runTakeStart=runSingleTake?Safe(ConfiguredTakeStart,0,0,Mathf.Max(0,runTakeEnd-.1f)):0;
             runLoopTake=runSingleTake&&loopTake;runLoopDelay=Safe(takeLoopDelay,1,.1f,30);loopWait=0;
@@ -196,12 +223,12 @@ namespace Damin.SceneOnly
             lag=Safe(redDriftLagMetres,5,0,10);side=Safe(driftSideMetres,.3f,0,3);slow=Safe(slowMotionRate,.08f,.02f,1);boostSpeed=Safe(boostExtraKph,70,0,150)*drivingMultiplier/3.6f;runCameraDelay=Safe(boostCameraDelay,.35f,0,1);
             // Tangents are degrees per film-second. Keep turning during the window pass.
             driftRotation=new AnimationCurve(new Keyframe(starts[7],0,0,0),new Keyframe(starts[8],76,10,10),new Keyframe(starts[9],86,6.6667f,6.6667f),new Keyframe(starts[10],94,6.6667f,6.6667f),new Keyframe(starts[11],112,60,60),new Keyframe(starts[12],360,0,0));
-            foreach(var s in cameras.shots){s.boostPoseActive=false;s.worldPositionOffset=Vector3.zero;}
+            foreach(var s in cameras.shots){s.boostPoseActive=false;s.worldPositionOffset=Vector3.zero;s.independentPose=false;}
             passLocal=redCar.InverseTransformPoint(passengerWindow.position);exitLocal=redCar.InverseTransformPoint(driverWindow.position);
             useInterior=interiorCameraReady;
             if(racePerformance)racePerformance.Begin();
             baseFireTime=missileSequence.motion.fireTime;
-            if(fitOpeningToTiming)
+            if(fitOpeningToTiming&&!runGroundPass&&!runDuel)
             {
                 var frame=Quaternion.LookRotation(forward,Vector3.up);
                 float convoy=initialPositions.Max(p=>Vector3.Dot(redCar.position-p,forward));
@@ -213,7 +240,8 @@ namespace Damin.SceneOnly
                 b.position=redCar.position+frame*(new Vector3(6.5f*framing,.5f*framing,Mathf.Max(0,speed*durations[0]-28))+rearCameraOffset);
                 b.LookAt(redCar.position+frame*new Vector3(0,.1f*framing,speed*durations[0]+8));
             }
-            PlaceTakeOnRoad();
+            if(runDuel)PrepareDuel();else if(runGroundPass)PrepareGroundPass();else PlaceTakeOnRoad();
+            cameras.ResetFixedPoses();
             // Wheel distance and lane-shift baselines must move with the take, not with the map.
             if(racePerformance)racePerformance.CapturePositions();
             if(driftSmoke){driftSmoke.StopPreview();driftSmoke.SetSmokePower(0);}
@@ -243,6 +271,53 @@ namespace Damin.SceneOnly
                 TakePlacementWarning="이 촬영 구간은 현재 도로 길이를 벗어날 수 있습니다. 해당 SHOT의 시작 X 또는 촬영 시작·종료 시간을 조절하세요. 속도·맵·촬영 시간은 자동으로 바꾸지 않습니다.";
         }
         void Update(){if(!ManualSimulation&&(Playing||(Completed&&runLoopTake)))Advance(Time.deltaTime);}
+        void PrepareGroundPass()
+        {
+            groundSpeed=Safe(groundPassTake.speedKph,560,120,900)/3.6f;
+            groundPassTime=Safe(groundPassTake.redPassTime,3.2f,1,Mathf.Min(5,FilmDuration-2.4f));
+            groundKick=Safe(groundPassTake.kickDegrees,.65f,0,1.5f);
+            groundLens=Safe(groundPassTake.focalLength,24,18,40);
+            float anchor=SelectedShotTake!=null?Safe(SelectedShotTake.redStartWorldX,1200,-10000,10000):1200;
+            int r=Array.IndexOf(opening.vehicles,redCar);runTakeOffset=Vector3.right*(anchor-initialPositions[r].x);
+            groundPositions=new Vector3[opening.vehicles.Length];int extra=0;
+            for(int i=0;i<groundPositions.Length;i++){
+                var car=opening.vehicles[i];float delay,lane;
+                if(car==redCar){delay=0;lane=-4;}
+                else if(car==blueCar){delay=Mathf.Max(.14f,18/groundSpeed);lane=-4;}
+                else if(car==khakiCar){delay=.5f;lane=4.5f;}
+                else{delay=new[]{1.05f,1.5f,1.95f}[Mathf.Min(2,extra)];lane=new[]{-4.5f,1,5.1f}[Mathf.Min(2,extra++)];}
+                groundPositions[i]=new Vector3(anchor+groundSpeed*delay,initialPositions[i].y,lane);
+                car.SetPositionAndRotation(groundPositions[i],initialRotations[i]);
+            }
+            var camera=cameras.shots[0].camera.transform;
+            camera.position=new Vector3(anchor-groundSpeed*groundPassTime,-29.65f+Safe(groundPassTake.cameraHeight,.45f,.1f,1),-9.4f);
+            camera.LookAt(new Vector3(camera.position.x+28,-28.7f,-2.2f));
+            cameras.shots[0].focalLengthMm=groundLens;
+            if(groundPositions.Max(p=>p.x)+12>1999||anchor-groundSpeed*FilmDuration-12< -1999){
+                TakePlacementWarning="01 전용 속도·녹화 길이·출발 X가 도로 범위를 벗어납니다. 시작 X 또는 01 속도/길이를 조정하고 다시 재생하세요.";
+                Error=TakePlacementWarning;Playing=false;
+            }
+        }
+        void ApplyGroundPass(float t)
+        {
+            Phase=0;cameras.activeShot=1;cameras.motionTime=t;
+            float revealStart=Mathf.Max(0,groundPassTime-2.3f),revealEnd=groundPassTime-.55f;
+            float emerge=Ease(Mathf.InverseLerp(revealStart,revealEnd,t));
+            float before=Ease(Mathf.InverseLerp(revealStart,revealEnd,t-.005f)),after=Ease(Mathf.InverseLerp(revealStart,revealEnd,t+.005f));
+            float lateralSpeed=(after-before)*6.2f/.01f;
+            float blueYaw=Mathf.Clamp(Mathf.Atan2(lateralSpeed,groundSpeed)*Mathf.Rad2Deg,-7,7);
+            for(int i=0;i<groundPositions.Length;i++){
+                var car=opening.vehicles[i];var p=groundPositions[i]+forward*(groundSpeed*t);
+                if(car==blueCar)p+=right*(6.2f*emerge);
+                car.SetPositionAndRotation(p,(car==blueCar?Quaternion.AngleAxis(blueYaw,Vector3.up):Quaternion.identity)*initialRotations[i]);
+            }
+            if(racePerformance)racePerformance.SampleGroundPass(t,groundSpeed*t,blueCar,blueYaw);
+            foreach(var shot in cameras.shots)shot.angularKick=Vector3.zero;
+            float envelope=0;
+            foreach(var car in opening.vehicles){float ahead=Vector3.Dot(car.position-cameras.shots[0].camera.transform.position,forward);envelope+=Mathf.Exp(-Mathf.Abs(ahead-6)/16);}
+            cameras.shots[0].angularKick=new Vector3(Mathf.Sin(t*83)*.3f,Mathf.Sin(t*61)*.18f,Mathf.Sin(t*73))*Mathf.Clamp01(envelope)*groundKick;
+            cameras.shots[0].focalLengthMm=groundLens;
+        }
         public void Advance(float dt)
         {
             if(!float.IsFinite(dt)||dt<=0)return;
@@ -264,13 +339,20 @@ namespace Damin.SceneOnly
         }
         float Rate(int p,float u)=>p==7?Mathf.Lerp(1,slow,Ease(u)):p>=8&&p<=10?slow:p==11?Mathf.Lerp(slow,1,Ease(u)):1;
         float DriftProgress(float t)=>Mathf.Clamp01((t-starts[7])/(starts[12]-starts[7]));
-        Vector3 DriftOffset(float t){float q=Ease(DriftProgress(t));return -forward*(lag*q)+right*(side*Mathf.Sin(Mathf.PI*q));}
+        Vector3 DriftOffset(float t){
+            if(t<starts[7])return Vector3.zero;
+            float lateral=t<starts[8]?.9f*Ease(U(7,t)):t<starts[9]?Mathf.Lerp(.9f,1,Ease(U(8,t))):t<starts[10]?Mathf.Lerp(1,.85f,Ease(U(9,t))):t<starts[11]?Mathf.Lerp(.85f,.5f,Ease(U(10,t))):.5f*(1-Ease(U(11,t)));
+            float loss=t<starts[8]?.45f*Ease(U(7,t)):.45f+.55f*Ease(Mathf.Clamp01((t-starts[8])/(starts[12]-starts[8])));
+            return -forward*(lag*loss)+right*(side*lateral);
+        }
         Vector3 RaceOffset(Transform car,float t)=>racePerformance?racePerformance.RoadOffset(car,t,starts[5],forward,right):Vector3.zero;
         void PredictRed(float t,out Vector3 p,out Quaternion r){int i=Array.IndexOf(opening.vehicles,redCar);p=initialPositions[i]+runTakeOffset+forward*(speed*WorldSeconds(t)+BoostDistance(t-starts[12]))+DriftOffset(t)+RaceOffset(redCar,t);r=Quaternion.AngleAxis(driftRotation.Evaluate(t),Vector3.up)*initialRotations[i];}
         Vector3 PredictKhakiAtFire(){int k=Array.IndexOf(opening.vehicles,khakiCar),r=Array.IndexOf(opening.vehicles,redCar);return initialPositions[k]+runTakeOffset+forward*(speed*WorldSeconds(starts[6])-retreat)-right*Vector3.Dot(initialPositions[k]-initialPositions[r],right)+RaceOffset(khakiCar,starts[6]);}
         float BoostDistance(float seconds)=>boostSpeed*durations[12]*EaseIntegral(Mathf.Clamp01(seconds/durations[12]));
         void ApplyFrame(float t)
         {
+            if(runDuel){ApplyDuel(t);return;}
+            if(runGroundPass){ApplyGroundPass(t);return;}
             Phase=12;for(int p=0;p<13;p++)if(t<starts[p+1]){Phase=p;break;}
             float u=U(Phase,t),world=WorldSeconds(t),rate=Rate(Phase,u);
             bodySeconds=world;
@@ -296,8 +378,10 @@ namespace Damin.SceneOnly
             DriveMissile(t);
             ShapeLaunchSmoke(t);
             if(driftSmoke){
-                float power=t<starts[7]?0:t<starts[11]?.8f:.8f*(1-Ease(U(11,t)));
-                if(cinematicMotion&&Phase==7)power*=Ease(Mathf.Clamp01(u*3));
+                float power=t<starts[7]?0:t<starts[8]?Ease(Mathf.Clamp01(U(7,t)*4)):t<starts[11]?.82f+.12f*Mathf.Sin((t-starts[8])*4.3f):.82f*(1-Ease(Mathf.Clamp01(U(11,t)*1.6f)));
+                power=Mathf.Clamp01(power)*driftSmokePeak;
+                driftSmoke.rearLeft.powerMultiplier=.98f+.16f*Mathf.Sin(t*6.7f);
+                driftSmoke.rearRight.powerMultiplier=.9f+.18f*Mathf.Sin(t*5.3f+1.7f);
                 driftSmoke.SetSmokePower(power);driftSmoke.SetVehicleSpeed(speed*rate);
             }
             if(redBoosterDeployment){redBoosterDeployment.SetDeployAmount(Mathf.Lerp(boosterRest,1,Ease(Mathf.Clamp01(boostU*4))));redBoosterDeployment.PreviewSequence();}
@@ -312,7 +396,7 @@ namespace Damin.SceneOnly
             cameras.activeShot=runSingleTake?runTakeCamera:shot;
             cameras.motionTime=world;
             cameras.shots[1].moveProgress=Phase==1?u:0;
-            cameras.shots[5].moveProgress=Phase==5?Mathf.SmoothStep(0,1,Mathf.InverseLerp(.65f,1,u)):0;
+            cameras.shots[5].moveProgress=Ease(Mathf.Clamp01(U(5,t)/.65f));
             cameras.shots[6].moveProgress=Phase==6?Mathf.SmoothStep(0,1,Mathf.InverseLerp(.5f,1,u)):0;
             cameras.shots[7].moveProgress=Phase==12?Ease(u):Phase==11?Ease(u)*.4f:0;
             cameras.shots[7].boostPoseActive=cinematicMotion&&Phase==12;
@@ -320,11 +404,19 @@ namespace Damin.SceneOnly
             // A held camera must not snap back to its start pose when its usual cut ends.
             if(runSingleTake){
                 if(runTakeCamera==2)cameras.shots[1].moveProgress=U(1,t);
-                if(runTakeCamera==6)cameras.shots[5].moveProgress=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.65f,1,U(5,t)));
+                if(runTakeCamera==6)cameras.shots[5].moveProgress=Ease(Mathf.Clamp01(U(5,t)/.65f));
                 if(runTakeCamera==7)cameras.shots[6].moveProgress=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.5f,1,U(6,t)));
                 // Shot08 is one continuous base angle in a take; keep the boost lag but omit its automatic angle change.
-                if(runTakeCamera==8){cameras.shots[7].moveProgress=0;cameras.shots[7].boostPoseActive=false;}
+                if(runTakeCamera==8){cameras.shots[7].moveProgress=Ease(U(12,t));cameras.shots[7].boostPoseActive=false;}
             }
+            foreach(var s in cameras.shots)s.angularKick=Vector3.zero;
+            float passImpulse=0;
+            foreach(var car in opening.vehicles){float ahead=Vector3.Dot(car.position-cameras.shots[0].camera.transform.position,forward);float k=Mathf.Exp(-Mathf.Abs(ahead-7)/20);passImpulse+=k;}
+            cameras.shots[0].angularKick=new Vector3(Mathf.Sin(t*83)*.35f,Mathf.Sin(t*61)*.22f,Mathf.Sin(t*73))*Mathf.Clamp01(passImpulse)*passingCameraKick;
+            float age=t-starts[6];
+            if(age>=0&&age<.45f){float envelope=Mathf.Exp(-age*10)*Mathf.Sin(Mathf.PI*Mathf.Clamp01(age/.035f)*.5f);var kick=new Vector3(-1,Mathf.Sin(age*37)*.22f,Mathf.Sin(age*53)*.32f)*launchCameraKick*envelope;cameras.shots[5].angularKick=kick;cameras.shots[6].angularKick=kick*.6f;}
+            if(Phase>=7&&Phase<=11)cameras.shots[7].worldPositionOffset=-right*(.65f*Mathf.Sin(Mathf.PI*DriftProgress(t)));
+            cameras.shots[6].focalLengthMm=Mathf.Lerp(35,24,Ease(U(6,t)));
         }
         void DriveSequence(float t)
         {
@@ -368,6 +460,7 @@ namespace Damin.SceneOnly
         void CaptureLaunch(TrailerMissileFlight shot){
             activeProjectile=shot.gameObject;launched=true;launchWorld=PredictKhakiAtFire()+shot.transform.position-khakiCar.position;
             launchTrail=shot.GetComponentInChildren<MissileExhaustVFXController>(true);
+            if(launchTrail&&launchTrail.smokeTrail){var wake=shot.gameObject.AddComponent<DMCinematicWake>();wake.source=launchTrail;wake.director=this;wake.density=missileWispsDensity;}
             PredictRed(starts[9],out var a,out var qa);PredictRed(starts[10],out var b,out var qb);PredictRed(starts[11],out var c,out var qc);
             entryWorld=a+qa*Vector3.Scale(passLocal,redCar.lossyScale);exitWorld=b+qb*Vector3.Scale(exitLocal,redCar.lossyScale);clearWorld=c+qc*Vector3.Scale(exitLocal,redCar.lossyScale)+forward*6;
         }
