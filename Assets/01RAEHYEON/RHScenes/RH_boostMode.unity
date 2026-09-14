@@ -2229,7 +2229,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 127
   m_IsActive: 1
 --- !u!64 &328210213
 MeshCollider:
@@ -2264,7 +2264,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
+  m_StaticShadowCaster: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2286,7 +2286,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
+  m_ReceiveGI: 2
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -5534,7 +5534,7 @@ Transform:
   m_GameObject: {fileID: 826920905}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3000, y: -80, z: -1250}
+  m_LocalPosition: {x: -3000, y: -120, z: -1250}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5734,7 +5734,7 @@ GameObject:
   - component: {fileID: 892682213}
   - component: {fileID: 892682212}
   m_Layer: 0
-  m_Name: Boost Road Guide (20m Flat Corridor)
+  m_Name: Boost Road Guide (35m Flat Corridor)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5753,7 +5753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoonRoadPlacementGuide
   mapLength: 6000
-  flatWidth: 20
+  flatWidth: 35
   blendedWidth: 330
   roadSurfaceY: -24
 --- !u!4 &892682213
@@ -5766,7 +5766,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -24, z: 0}
-  m_LocalScale: {x: 6000, y: 1, z: 20}
+  m_LocalScale: {x: 6000, y: 1, z: 35}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -6279,7 +6279,7 @@ Transform:
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0000000039793693, y: -0.6789643, z: 0.0000000036801373, w: 0.7341713}
-  m_LocalPosition: {x: 3005.3, y: -16.76, z: 3.099999}
+  m_LocalPosition: {x: 3005.3, y: -17, z: 3.099999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -19,7 +19,7 @@ public static class DomeInTheMoonTerrainGenerator
     private const float DefaultDomeZ = 28f;
     private const float DomeFlatRadius = 195f;
     private const float RoadStartX = -925f;
-    private const float RoadFlatHalfWidth = 10.5f;
+    private const float RoadFlatHalfWidth = 21f;
     private const float RoadBlendHalfWidth = 240f;
     private const int Version = 11;
 
@@ -244,19 +244,21 @@ public static class DomeInTheMoonTerrainGenerator
         domeGuide.transform.position = new Vector3(domeX, RoadY, domeZ);
         domeGuide.transform.localScale = new Vector3(DomeFlatRadius * 2f, 1f, DomeFlatRadius * 2f);
 
-        GameObject roadGuide = FindRoot(scene, "Dome Exit Road Guide (20m)");
+        GameObject roadGuide = FindRoot(scene, "Dome Exit Road Guide (35m)") ??
+            FindRoot(scene, "Dome Exit Road Guide (20m)");
         if (roadGuide == null)
         {
-            roadGuide = new GameObject("Dome Exit Road Guide (20m)");
+            roadGuide = new GameObject("Dome Exit Road Guide (35m)");
             SceneManager.MoveGameObjectToScene(roadGuide, scene);
             roadGuide.AddComponent<MoonRoadPlacementGuide>();
         }
         float roadLength = Length * 0.5f - RoadStartX;
         roadGuide.transform.position = new Vector3(RoadStartX + roadLength * 0.5f, RoadY, 28f);
-        roadGuide.transform.localScale = new Vector3(roadLength, 1f, 20f);
+        roadGuide.name = "Dome Exit Road Guide (35m)";
+        roadGuide.transform.localScale = new Vector3(roadLength, 1f, 35f);
         MoonRoadPlacementGuide info = roadGuide.GetComponent<MoonRoadPlacementGuide>();
         info.mapLength = roadLength;
-        info.flatWidth = 20f;
+        info.flatWidth = 35f;
         info.blendedWidth = RoadBlendHalfWidth * 2f;
         info.roadSurfaceY = RoadY;
     }
