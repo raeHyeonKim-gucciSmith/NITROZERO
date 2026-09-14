@@ -50,6 +50,7 @@ public class RacingHudController : MonoBehaviour
     public float StartupShieldCoverage { get; private set; }
     public float StartupShieldOpacity => StartupComplete ? 0f : 1f - StartupOpacity;
     public bool IsFirstPersonHud => hud != null && hud.ClassListContains("fps-document");
+    public CarCinemachineSetup ViewCamera => viewCamera;
     VisualElement startupShield;
     AudioSource startupAudio;
     float startupClock;

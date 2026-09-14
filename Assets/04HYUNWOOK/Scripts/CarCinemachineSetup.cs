@@ -27,6 +27,15 @@ public class CarCinemachineSetup : MonoBehaviour
     [Tooltip("전환 중 추가 확대 효과입니다. 0이면 시야각 출렁임 없이 전환합니다.")]
     [Range(0f, 10f)] public float transitionFovKick = 0f;
     public bool startInFirstPerson = true;
+    [Header("1인칭 헬멧 UI 효과")]
+    [Tooltip("플레이 중 1인칭에서 헬멧 착용 후에만 UI 곡률을 적용합니다. 미리보기에서는 적용하지 않습니다.")]
+    public bool enableHelmetHudCurvature = true;
+    public bool enableHelmetVignette = true;
+    public bool enableHelmetLensDistortion = true;
+    [Range(-1f,1f)] public float helmetLensDistortionIntensity = .7f;
+    [Range(.01f,5f)] public float helmetLensDistortionScale = .95f;
+    [Range(0f,1f)] public float helmetVignetteIntensity = .5f;
+    [Range(.01f,1f)] public float helmetVignetteSmoothness = .5f;
     public bool ViewInputLocked { get; set; }
     public bool IsFirstPerson { get; private set; }
     public float ViewBlend { get; private set; }
