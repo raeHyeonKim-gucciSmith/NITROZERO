@@ -1,0 +1,161 @@
+
+/* Reference-image layout: artwork under editable live elements. */
+.photo-hud .photo-art { position:absolute; left:0; top:0; width:100%; height:100%; -unity-background-scale-mode:stretch-to-fill; }
+.photo-hud .photo-third { background-image:url("Textures/Reference/Chase_Overlay.png"); }
+.photo-hud .photo-first { background-image:url("Textures/Reference/Helmet_Overlay.png"); display:none; }
+.photo-hud.first-person .photo-first { display:flex; }
+.photo-hud.first-person .photo-third { display:none; }
+.photo-hud .panel { padding:0; background-color:rgba(0,0,0,0); }
+.photo-hud .timer { left:36%; top:2%; width:28%; height:9%; translate:0 0; }
+.photo-hud .timer .caption { position:absolute; top:3%; height:22%; left:0; right:0; font-size:16px; -unity-text-align:middle-center; color:white; }
+.photo-hud .time { position:absolute; left:15%; top:30%; width:70%; height:57%; font-size:48px; }
+.photo-hud.first-person .timer { left:42%; top:4%; width:16%; height:5%; }
+.photo-hud.first-person .timer .caption { display:none; }
+.photo-hud.first-person .time { top:0; left:5%; width:90%; height:95%; font-size:34px; }
+.photo-hud .ranking { left:2.9%; top:27.4%; width:20.5%; height:18%; }
+.photo-hud .ranking .caption { height:18%; font-size:18px; color:white; }
+.photo-hud .ranking-row { height:26%; border-width:0; background-color:rgba(0,0,0,0); }
+.photo-hud .ranking-cell { font-size:24px; padding:0; }
+.photo-hud .rank-pos { width:15%; font-size:27px; }
+.photo-hud .rank-driver { width:50%; flex-grow:1; }
+.photo-hud .rank-time { width:30%; font-size:22px; -unity-text-align:middle-right; }
+.photo-hud.first-person .ranking { left:5.5%; top:8%; width:15.8%; height:14%; }
+.photo-hud.first-person .ranking .caption { font-size:17px; }
+.photo-hud.first-person .ranking-cell { font-size:21px; }
+.photo-hud .ranking-progress-caption { position:absolute; right:0; top:0; height:18%; font-size:12px; color:rgb(210,220,230); -unity-text-align:middle-right; }
+.photo-hud .minimap { left:2%; top:58%; bottom:auto; width:12%; height:36%; }
+.photo-hud .minimap .caption { height:10%; font-size:16px; color:white; }
+.photo-hud .map-viewport { position:absolute; top:12%; left:3%; width:94%; height:76%; margin:0; background-color:rgba(0,0,0,0); }
+.photo-hud .route-distance { position:absolute; bottom:0; width:100%; font-size:14px; }
+.photo-hud.first-person .minimap { left:79.3%; right:auto; top:7.5%; width:14.5%; height:18.5%; }
+.photo-hud.first-person .minimap .caption,.photo-hud.first-person .route-distance { display:none; }
+.photo-hud.first-person .map-viewport { top:0; height:100%; }
+.photo-hud .map-road { top:12%; bottom:4%; }
+.photo-hud .finish { top:0; font-size:22px; color:white; }
+.photo-hud .player-marker { font-size:25px; }
+.photo-hud .instrument { left:68%; right:auto; top:73%; bottom:auto; width:29%; height:22%; }
+.photo-hud .speed { position:absolute; left:28%; top:11%; width:47%; height:38%; font-size:91px; margin:0; }
+.photo-hud .unit { position:absolute; left:76%; top:39%; width:15%; height:10%; font-size:15px; }
+.photo-hud .gear-pod { position:absolute; top:-8%; left:79%; width:18%; height:23%; padding:0; border-width:0; }
+.photo-hud .gear-caption { height:22%; font-size:12px; }
+.photo-hud .gear-number { height:78%; width:80%; font-size:41px; }
+.photo-hud .fuel-pod { position:absolute; left:60%; top:85%; width:30%; height:12%; flex-direction:row; align-items:center; }
+.photo-hud .fuel-caption { width:43%; height:100%; font-size:12px; margin:0; }
+.photo-hud .fuel-percent { height:100%; width:43%; font-size:23px; }
+.photo-hud .fuel-percent-unit { width:14%; font-size:15px; }
+.photo-hud .rpm-title { position:absolute; left:3%; top:58%; height:8%; font-size:11px; margin:0; }
+.photo-hud .rpm-bars { position:absolute; left:17%; top:55%; width:78%; height:14%; }
+.photo-hud .rpm-segment { margin-right:2px; }
+.photo-hud .rpm-ticks { position:absolute; top:70%; left:5%; width:91%; height:8%; margin:0; }
+.photo-hud .rpm-tick { font-size:14px; }
+.photo-hud .drive-status { position:absolute; top:87%; left:12%; width:35%; height:9%; -unity-text-align:middle-left; font-size:13px; margin:0; }
+.photo-hud .gear-limit { display:none; }
+.photo-hud.first-person .instrument { left:27%; right:auto; top:75%; bottom:auto; width:46%; height:21%; translate:0 0; }
+.photo-hud.first-person .speed { left:29%; top:12%; width:42%; height:46%; font-size:108px; }
+.photo-hud.first-person .unit { left:70%; top:42%; font-size:22px; }
+.photo-hud.first-person .gear-pod { left:12%; top:24%; width:10%; height:38%; }
+.photo-hud.first-person .gear-number { font-size:62px; }
+.photo-hud.first-person .fuel-pod { left:80%; top:25%; width:15%; height:36%; flex-direction:row; flex-wrap:wrap; }
+.photo-hud.first-person .fuel-caption { width:100%; height:28%; font-size:17px; }
+.photo-hud.first-person .fuel-percent { width:76%; height:72%; font-size:44px; }
+.photo-hud.first-person .fuel-percent-unit { width:24%; font-size:18px; }
+.photo-hud.first-person .rpm-title { left:16%; top:64%; font-size:12px; }
+.photo-hud.first-person .rpm-bars { left:16%; top:75%; width:69%; height:12%; }
+.photo-hud.first-person .rpm-ticks { left:16%; top:88%; width:69%; }
+.photo-hud.first-person .drive-status { display:none; }
+.photo-hud .theme-title { left:2%; top:3%; font-size:18px; }
+.photo-hud.first-person .theme-title { top:auto; bottom:2%; }
+.photo-hud .engine-telemetry { display:none; position:absolute; left:6.5%; top:71%; width:6%; height:11%; font-size:14px; -unity-text-align:middle-center; color:white; }
+.photo-hud.first-person .engine-telemetry { display:flex; }
+.warning-symbol { display:none; position:absolute; top:37%; width:9%; height:31%; margin:0; padding:0; font-size:250px; color:rgb(255,25,32); -unity-font-style:bold; -unity-text-align:middle-center; transform-origin:50% 50%; text-shadow:0 0 12px rgba(255,0,0,0.5); }
+.warning-left { left:5%; } .warning-right { right:5%; }
+.enemy-distance { display:none; position:absolute; top:68%; left:35%; width:30%; height:5%; font-size:20px; color:rgb(255,60,60); -unity-text-align:middle-center; }
+.warning-overlay { display:flex; position:absolute; left:0; top:0; right:0; bottom:0; }
+
+.missile-warning { display:none; position:absolute; left:33%; top:37%; width:34%; height:15%; background-color:rgba(14,0,3,0.82); border-top-width:3px; border-bottom-width:3px; border-color:rgb(255,25,32); justify-content:center; align-items:center; }
+.missile-title { font-size:32px; color:rgb(255,48,48); -unity-font-style:bold; letter-spacing:2px; }
+.missile-subtitle { font-size:18px; color:white; letter-spacing:1px; }
+.view-hint { display:none; }
+
+.warning-stem { position:absolute; left:33%; width:34%; top:0; height:73%; background-color:rgb(255,20,32); }
+.warning-dot { position:absolute; left:33%; width:34%; bottom:0; height:20%; background-color:rgb(255,20,32); }
+
+.photo-hud .map-grid { position:absolute; left:0; top:0; right:0; bottom:0; }
+.photo-hud .map-grid-line { position:absolute; background-color:rgba(220,30,35,0.16); }
+.photo-hud .map-grid-v { top:0; bottom:0; width:1px; }
+.photo-hud .map-grid-h { left:0; right:0; height:1px; }
+.photo-hud .map-road { left:38.5%; width:23%; background-color:rgba(200,210,220,0.035); }
+.photo-hud .finish-flag { position:absolute; top:4px; left:44%; width:30px; height:18px; flex-direction:row; flex-wrap:wrap; }
+.flag-light { width:6px; height:6px; background-color:rgb(245,245,245); }
+.flag-dark { width:6px; height:6px; background-color:rgb(22,25,29); }
+
+/* DS-Digital numerals and slightly tighter ranking / larger instrument assembly. */
+.digital, .digital-glyphs, .rank-pos, .rank-time, .rpm-tick {
+    -unity-font: url("../../Resources/RacingHud/DS-DIGI.TTF");
+    -unity-font-definition: url("../../Resources/RacingHud/DS-DIGI.TTF");
+}
+.photo-hud .ranking { width:17.8%; }
+.photo-hud.first-person .ranking { width:14%; }
+.photo-hud .rank-driver { width:46%; }
+.photo-hud .rank-time { width:31%; }
+.photo-hud .instrument { scale:1.08 1.08; transform-origin:100% 100%; }
+.photo-hud.first-person .instrument { scale:1.08 1.08; transform-origin:50% 100%; }
+
+.photo-hud .group-art { position:absolute; -unity-background-scale-mode:stretch-to-fill; }
+.photo-hud .ranking-art { left:-10.6%; top:-8.2%; width:119.3%; height:116.5%; background-image:url("Textures/Reference/Ranking_Third.png"); }
+.photo-hud.first-person .ranking-art { left:-4.5%; top:14.4%; width:109.8%; height:87.9%; background-image:url("Textures/Reference/Ranking_First.png"); }
+.photo-hud .instrument-art { left:-1.5%; top:-13.4%; width:104.1%; height:116.8%; background-image:url("Textures/Reference/Instrument_Third.png"); }
+.photo-hud.first-person .instrument-art { left:-3.3%; top:-12.9%; width:107.7%; height:119.3%; background-image:url("Textures/Reference/Instrument_First.png"); }
+
+/* Right-hand ranking; the helmet layout stacks it below its minimap. */
+.hud .ranking { left:auto; right:4%; top:18%; }
+.hud.first-person .ranking { left:auto; right:6.7%; top:28%; }
+.photo-hud.first-person .ranking { width:17.8%; height:12%; }
+.photo-hud.first-person .ranking-cell { font-size:20px; }
+.photo-hud.first-person .ranking .caption { font-size:15px; }
+
+/* Compact missile direction marks and live rear views at the outer edges. */
+.hud .warning-symbol { top:43%; width:2.8%; height:13%; }
+.hud .warning-left { left:1.1%; }
+.hud .warning-right { right:1.1%; }
+.hud .warning-stem,.hud .warning-dot { left:20%; width:60%; }
+.hud .missile-subtitle { font-size:15px; letter-spacing:0; }
+.hud.first-person .warning-left { left:5%; }
+.hud.first-person .warning-right { right:5%; }
+.legacy-hud .ranking { width:17.8%; height:18%; }
+.legacy-hud .ranking-row { height:12.5%; }
+.legacy-hud .rank-pos { width:15%; }
+.legacy-hud .rank-time { width:28%; }
+.legacy-hud.first-person .ranking { height:12%; }
+.legacy-hud.first-person .ranking-cell { font-size:13px; }
+.legacy-hud.first-person .ranking .caption { height:15%; font-size:13px; }
+.legacy-hud.first-person .minimap { top:7.5%; height:18.5%; }
+.legacy-hud.first-person .map-viewport { height:76%; }
+
+/* Shared navigation layout for TPS and FPS. */
+.photo-hud .navigation-road {
+    position:absolute; left:0; top:0; width:100%; height:100%;
+}
+.photo-hud.tps-document .map-viewport {
+    overflow:hidden; border-radius:8px; background-color:rgba(0,0,0,0.96);
+}
+
+/* Keep standard font generation in asset previews as well as the live HUD. */
+.hud, .hud * { -unity-text-generator: standard; }
+.photo-hud Label {
+    min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.photo-hud .digital { min-width:0; min-height:0; overflow:hidden; }
+.photo-hud .rpm-tick { flex-shrink:1; min-width:0; }
+.photo-hud.tps-document .ranking-content {
+    position:absolute; left:6%; top:8%; width:88%; height:83%; overflow:hidden;
+}
+.photo-hud.tps-document .ranking-row { min-width:0; overflow:hidden; }
+.photo-hud.tps-document .ranking-cell { padding-left:2px; padding-right:2px; min-width:0; }
+.photo-hud.tps-document .rank-pos { width:16%; flex-shrink:0; font-size:22px; }
+.photo-hud.tps-document .rank-driver { width:51%; flex-grow:0; flex-shrink:1; font-size:19px; }
+.photo-hud.tps-document .rank-time { width:33%; flex-grow:0; flex-shrink:0; font-size:20px; }
+.photo-hud.tps-document .ranking .caption { font-size:15px; }
+.photo-hud.tps-document .ranking-progress-caption { font-size:10px; }
+.photo-hud.tps-document .timer .time { left:12%; width:76%; top:29%; height:57%; }
+.photo-hud.tps-document .rpm-title { width:15%; font-size:10px; }

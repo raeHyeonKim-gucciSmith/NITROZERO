@@ -1,0 +1,18 @@
+.hud { --hud-accent:#ff3434; --hud-secondary:#ff3434; }
+.caption,.digital,.player-marker,.ranking-player,.theme-title,.drive-status { color:#ff3434; }
+.rpm-segment { background-color:#ff3434; }
+
+/* BACKPLATES BEGIN */
+.hud-backplate { background-color:rgba(20,8,12,0.70); border-color:#ff3434; border-right-color:#fa7777; border-bottom-color:#fa7777; }
+.backplate-accent { background-color:#ff3434; }
+.accent-bottom { background-color:#fa7777; }
+.backplate-corner { border-color:#ff3434; }
+.corner-right { border-color:#fa7777; }
+/* BACKPLATES END */
+
+.fuel-fill,.tech-chip { background-color:#ff3434; }
+.gear-caption,.fuel-value,.gear-limit { color:#ff3434; }
+
+/* FUEL THEME */
+.fuel-pod .digital, .fuel-pod .fuel-caption, .fuel-pod .fuel-percent-unit, .fuel-pod .fuel-litre-unit { color:#ff3434; }
+/* END FUEL THEME */
