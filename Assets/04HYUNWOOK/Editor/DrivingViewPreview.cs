@@ -112,6 +112,16 @@ public sealed class CarCinemachineSetupEditor : Editor
             if (GUILayout.Button("3인칭 미리보기")) DrivingViewPreview.Apply((CarCinemachineSetup)target, false);
             EditorGUILayout.EndHorizontal();
         }
-        DrawDefaultInspector();
+        serializedObject.Update();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("enableHelmetHudCurvature"),
+            new GUIContent("헬멧 착용 후 UI 곡률 효과", "플레이 중 1인칭에서 헬멧을 쓴 뒤에만 적용됩니다. 미리보기와 3인칭에서는 꺼집니다."));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("enableHelmetVignette"), new GUIContent("헬멧 착용 후 주변 어둡게"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("enableHelmetLensDistortion"), new GUIContent("헬멧 착용 후 렌즈 왜곡"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("helmetLensDistortionIntensity"), new GUIContent("렌즈 왜곡 강도"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("helmetLensDistortionScale"), new GUIContent("렌즈 왜곡 배율"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("helmetVignetteIntensity"), new GUIContent("주변 어두움 강도"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("helmetVignetteSmoothness"), new GUIContent("어두운 경계 부드러움"));
+        DrawPropertiesExcluding(serializedObject, "enableHelmetHudCurvature", "enableHelmetVignette", "helmetVignetteIntensity", "helmetVignetteSmoothness", "enableHelmetLensDistortion", "helmetLensDistortionIntensity", "helmetLensDistortionScale");
+        serializedObject.ApplyModifiedProperties();
     }
 }
