@@ -2,13 +2,13 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Keeps the shared moon TerrainData assets below the 35 m road meshes without
+/// Keeps the shared moon TerrainData assets below the 30 m road meshes without
 /// rebuilding or replacing the artists' existing terrain, craters, or hills.
 /// This is idempotent so a Unity reimport cannot keep lowering the ground.
 /// </summary>
 public static class MoonRoadWidth35TerrainClearance
 {
-    private const float SafeHalfWidth = 20f;
+    private const float SafeHalfWidth = 15.5f;
     private const float FadeHalfWidth = 45f;
     private const float RoadClearance = 0.55f;
 
@@ -40,7 +40,7 @@ public static class MoonRoadWidth35TerrainClearance
         EditorApplication.delayCall += Apply;
     }
 
-    [MenuItem("NITRO ZERO/Moon Terrain/Ensure 35m Road Clearance")]
+    [MenuItem("NITRO ZERO/Moon Terrain/Ensure 30m Road Clearance")]
     public static void Apply()
     {
         bool anyChanged = false;

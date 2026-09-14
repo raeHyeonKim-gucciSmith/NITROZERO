@@ -31,7 +31,6 @@ public static class RacingCarPlacer
         "Assets/Prefabs/Final_Cars/Blue_Car_Final.prefab",
         "Assets/Prefabs/Final_Cars/Green_Car_Final.prefab",
         "Assets/Prefabs/Final_Cars/Red_Car_Final.prefab",
-        "Assets/Prefabs/Final_Cars/extraCar1_Final.prefab",
         "Assets/Prefabs/Final_Cars/extraCar2_Final.prefab",
         "Assets/Prefabs/Final_Cars/extraCar3_Final.prefab",
     };
