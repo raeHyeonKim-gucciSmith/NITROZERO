@@ -44,7 +44,7 @@ namespace YUJEONG
         public KeyCode triggerKey5 = KeyCode.Alpha5;
         public KeyCode triggerKeypad5 = KeyCode.Keypad5;
 
-        [Header("[ 풀 변형 시퀀스 설정 (1->2->3->4+5) ]")]
+        [Header("[ 전체 풀 변형 시퀀스 설정 (1->2->3->4+5) ]")]
         [Tooltip("전체 순차 변형 단축키 (스페이스바 또는 숫자 0)")]
         public KeyCode triggerKeyFullSequence = KeyCode.Space;
         public KeyCode triggerKeyFullSequenceAlt = KeyCode.Alpha0;
@@ -56,6 +56,21 @@ namespace YUJEONG
         [Header("[ UI 표시 설정 ]")]
         [Tooltip("화면에 변형 제어 UI 패널을 표시할지 여부 (체크 해제 시 화면에서 숨김, 단축키는 정상 작동)")]
         public bool showOnGUI = false;
+
+        [Header("[ 🛠️ 에디터 미리보기 (게임 실행 안해도 확인) ]")]
+        [Tooltip("체크 시 게임을 실행하지 않아도 최종 변신 상태를 씬 뷰에서 바로 확인할 수 있습니다.")]
+        [SerializeField] private bool previewFinalTransformation = false;
+
+        [Tooltip("변신 진행도를 0%(기본 원래 상태) ~ 100%(최종 변신 상태)로 조절합니다.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float previewProgress = 0f;
+
+        // 우측 파츠 기본 포즈 상수 (안전 백업용)
+        public static readonly Vector3 DefaultVentRightPos = new Vector3(0.41788054f, 0.16597676f, -1.1267076f);
+        public static readonly Quaternion DefaultVentRightRot = Quaternion.Euler(-93.437f, 90f, 0f);
+
+        public static readonly Vector3 DefaultCouplerRightPos = new Vector3(0.441f, -0.048f, -1.481f);
+        public static readonly Quaternion DefaultCouplerRightRot = Quaternion.Euler(-90f, 0f, 0f);
 
         [Header("[ 대상 차량 루트 (기본: SportCar_4change_2) ]")]
         public Transform targetCarRoot;
@@ -141,6 +156,20 @@ namespace YUJEONG
 
         [Header("[ 5단계 대상: 부품 메인상판덮개 ]")]
         public Transform mainCover;     // 부품_메인상판덮개
+
+        [Header("[ 🚀 부스터 VFX 이펙트 연동 (pf_redbooster) ]")]
+        [Tooltip("부스터 이펙트 최상위 그룹 오브젝트 (Booster_effect)")]
+        public GameObject boosterEffectRoot;
+
+        [Tooltip("메인 대형 제트 부스터 이펙트 (대형 단발 제트 부스터 노즐에 마지막 주황색 네온이 들어올 때 점등)")]
+        public GameObject boosterFxMain; // pf_redbooster_1
+
+        [Tooltip("보조 부스터 이펙트 4종 (부스터 변형 시작과 동시에 4개 모두 점등)")]
+        public GameObject[] boosterFxSub = new GameObject[4]; // pf_redbooster_2, (1), (2), (3)
+
+        [Header("[ 🚀 시작 시 풀 변형 & 부스터 점등 설정 ]")]
+        [Tooltip("게임 시작 시 처음부터 변형 및 모든 부스터 이펙트가 100% 완료된 상태로 시작")]
+        public bool startWithFullTransformation = true;
 
         [Header("[ 바퀴 회전 컨트롤러 연동 옵션 ]")]
         [Tooltip("바퀴 회전 제어 스크립트")]
@@ -266,6 +295,245 @@ namespace YUJEONG
         private bool isVentHidden = false; // 현재 수납되었는지 여부 (토글용)
         private Coroutine ventCoroutine = null;
 
+        public bool PreviewFinalTransformation
+        {
+            get => previewFinalTransformation;
+            set
+            {
+                previewFinalTransformation = value;
+                previewProgress = value ? 1f : 0f;
+                lastPreviewFinalState = previewFinalTransformation;
+                lastPreviewProgress = previewProgress;
+                ApplyTransformationProgress(previewProgress);
+            }
+        }
+
+        public float PreviewProgress
+        {
+            get => previewProgress;
+            set
+            {
+                previewProgress = Mathf.Clamp01(value);
+                previewFinalTransformation = previewProgress >= 0.999f;
+                lastPreviewFinalState = previewFinalTransformation;
+                lastPreviewProgress = previewProgress;
+                ApplyTransformationProgress(previewProgress);
+            }
+        }
+
+        [ContextMenu("🚀 최종 변신 모습 보기 (100%)")]
+        public void ApplyFinalTransformationPreview()
+        {
+            PreviewFinalTransformation = true;
+        }
+
+        [ContextMenu("🔄 기본 원래 모습 복귀 (0%)")]
+        public void ResetTransformationPreview()
+        {
+            PreviewFinalTransformation = false;
+            SetSubBoosterFxActive(false);
+            SetMainBoosterFxActive(false);
+        }
+
+        private bool lastPreviewFinalState = false;
+        private float lastPreviewProgress = 0f;
+
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+            {
+                if (boosterEffectRoot == null || boosterFxMain == null || boosterFxSub == null || boosterFxSub[0] == null)
+                {
+                    AutoBindBoosterFx();
+                }
+
+                if (previewFinalTransformation != lastPreviewFinalState)
+                {
+                    lastPreviewFinalState = previewFinalTransformation;
+                    previewProgress = previewFinalTransformation ? 1f : 0f;
+                    lastPreviewProgress = previewProgress;
+                }
+                else if (!Mathf.Approximately(previewProgress, lastPreviewProgress))
+                {
+                    lastPreviewProgress = previewProgress;
+                    previewFinalTransformation = previewProgress >= 0.999f;
+                    lastPreviewFinalState = previewFinalTransformation;
+                }
+
+                ApplyTransformationProgress(previewProgress);
+            }
+        }
+
+        /// <summary>
+        /// 에디터 또는 인스펙터 슬라이더/토글에서 변신 진행도(0% ~ 100%)를 실시간으로 파츠에 반영
+        /// </summary>
+        public void ApplyTransformationProgress(float t)
+        {
+            t = Mathf.Clamp01(t);
+
+            if (ventLeft == null || scanner3D == null || couplerLeft == null || armoredCowl == null || boosterNozzle == null || mainCover == null)
+            {
+                AutoBindParts();
+            }
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                List<UnityEngine.Object> targetsToRecord = new List<UnityEngine.Object>();
+                if (ventLeft != null) targetsToRecord.Add(ventLeft);
+                if (ventRight != null) targetsToRecord.Add(ventRight);
+                if (scanner3D != null) targetsToRecord.Add(scanner3D);
+                if (couplerLeft != null) targetsToRecord.Add(couplerLeft);
+                if (couplerRight != null) targetsToRecord.Add(couplerRight);
+                if (armoredCowl != null) targetsToRecord.Add(armoredCowl);
+                if (boosterNozzle != null) targetsToRecord.Add(boosterNozzle);
+                if (mainCover != null) targetsToRecord.Add(mainCover);
+                if (targetsToRecord.Count > 0)
+                {
+                    UnityEditor.Undo.RecordObjects(targetsToRecord.ToArray(), "Vehicle Transformation Preview");
+                }
+            }
+#endif
+
+            // 1. 3D 스캐너
+            if (scanner3D != null)
+            {
+                Vector3 defPos = scannerStep1.position;
+                Quaternion defRot = Quaternion.Euler(scannerStep1.rotationEuler);
+                Vector3 transPos = scannerStep3.position;
+                Quaternion transRot = Quaternion.Euler(scannerStep3.rotationEuler);
+
+                scanner3D.localPosition = Vector3.Lerp(defPos, transPos, t);
+                scanner3D.localRotation = Quaternion.Slerp(defRot, transRot, t);
+            }
+
+            // 2. 기계식 상부 아머드 카울
+            if (armoredCowl != null)
+            {
+                Vector3 defPos = cowlStep1.position;
+                Quaternion defRot = Quaternion.Euler(cowlStep1.rotationEuler);
+                Vector3 transPos = cowlStep3.position;
+                Quaternion transRot = Quaternion.Euler(cowlStep3.rotationEuler);
+
+                armoredCowl.localPosition = Vector3.Lerp(defPos, transPos, t);
+                armoredCowl.localRotation = Quaternion.Slerp(defRot, transRot, t);
+            }
+
+            // 3. 카울 연결부 1, 2
+            Vector3 couplerLDefPos = couplerLeftStep1.position;
+            Quaternion couplerLDefRot = Quaternion.Euler(couplerLeftStep1.rotationEuler);
+
+            Vector3 cowlFinalDeltaPos = cowlStep3.position - cowlStep1.position;
+            Quaternion cowlFinalDeltaRot = Quaternion.Euler(cowlStep3.rotationEuler) * Quaternion.Inverse(Quaternion.Euler(cowlStep1.rotationEuler));
+            Vector3 couplerLTransPos = couplerLeftStep3.position + cowlFinalDeltaPos;
+            Quaternion couplerLTransRot = cowlFinalDeltaRot * Quaternion.Euler(couplerLeftStep3.rotationEuler);
+
+            if (couplerLeft != null)
+            {
+                couplerLeft.localPosition = Vector3.Lerp(couplerLDefPos, couplerLTransPos, t);
+                couplerLeft.localRotation = Quaternion.Slerp(couplerLDefRot, couplerLTransRot, t);
+            }
+            if (couplerRight != null)
+            {
+                if (couplerLeft != null)
+                {
+                    couplerRight.localPosition = new Vector3(-couplerLeft.localPosition.x, couplerLeft.localPosition.y, couplerLeft.localPosition.z);
+                    Vector3 leftEuler = couplerLeft.localEulerAngles;
+                    couplerRight.localEulerAngles = new Vector3(leftEuler.x, -leftEuler.y, -leftEuler.z);
+                }
+                else
+                {
+                    Vector3 couplerRDefPos = (initialCouplerRightPos != Vector3.zero) ? initialCouplerRightPos : DefaultCouplerRightPos;
+                    Quaternion couplerRDefRot = (initialCouplerRightRot != Quaternion.identity) ? initialCouplerRightRot : DefaultCouplerRightRot;
+                    Vector3 deltaPosL = couplerLTransPos - couplerLDefPos;
+                    Vector3 couplerRTransPos = couplerRDefPos + new Vector3(-deltaPosL.x, deltaPosL.y, deltaPosL.z);
+                    Vector3 transEulerL = couplerLTransRot.eulerAngles;
+                    Quaternion couplerRTransRot = Quaternion.Euler(transEulerL.x, -transEulerL.y, -transEulerL.z);
+
+                    couplerRight.localPosition = Vector3.Lerp(couplerRDefPos, couplerRTransPos, t);
+                    couplerRight.localRotation = Quaternion.Slerp(couplerRDefRot, couplerRTransRot, t);
+                }
+            }
+
+            // 4. 대형 단발 제트 부스터 노즐
+            if (boosterNozzle != null)
+            {
+                Vector3 defPos = boosterStep1.position;
+                Quaternion defRot = Quaternion.Euler(boosterStep1.rotationEuler);
+                Vector3 transPos = boosterStep2.position;
+                Quaternion transRot = Quaternion.Euler(boosterStep2.rotationEuler);
+
+                boosterNozzle.localPosition = Vector3.Lerp(defPos, transPos, t);
+                boosterNozzle.localRotation = Quaternion.Slerp(defRot, transRot, t);
+            }
+
+            // 5. 부품 메인상판덮개
+            if (mainCover != null)
+            {
+                Vector3 defPos = coverStep1.position;
+                Quaternion defRot = Quaternion.Euler(coverStep1.rotationEuler);
+                Vector3 transPos = coverStep3.position;
+                Quaternion transRot = Quaternion.Euler(coverStep3.rotationEuler);
+
+                mainCover.localPosition = Vector3.Lerp(defPos, transPos, t);
+                mainCover.localRotation = Quaternion.Slerp(defRot, transRot, t);
+            }
+
+            // 6. 보조 벤트 판 1, 2
+            Vector3 ventLDefPos = leftStep1.position;
+            Quaternion ventLDefRot = Quaternion.Euler(leftStep1.rotationEuler);
+            Vector3 ventRDefPos = (initialRightPos != Vector3.zero) ? initialRightPos : DefaultVentRightPos;
+            Quaternion ventRDefRot = (initialRightRot != Quaternion.identity) ? initialRightRot : DefaultVentRightRot;
+
+            Vector3 coverPivot = coverStep1.position;
+            Quaternion finalDeltaRotCover = Quaternion.Euler(coverStep3.rotationEuler) * Quaternion.Inverse(Quaternion.Euler(coverStep1.rotationEuler));
+
+            Vector3 ventLTransPos = coverStep3.position + finalDeltaRotCover * (leftStep4.position - coverPivot);
+            Quaternion ventLTransRot = finalDeltaRotCover * Quaternion.Euler(leftStep4.rotationEuler);
+
+            Vector3 deltaPosLV4 = leftStep4.position - ventLDefPos;
+            Vector3 ventRStep4Pos = ventRDefPos + new Vector3(-deltaPosLV4.x, deltaPosLV4.y, deltaPosLV4.z);
+            Quaternion deltaRotLV4 = Quaternion.Euler(leftStep4.rotationEuler) * Quaternion.Inverse(ventLDefRot);
+            deltaRotLV4.ToAngleAxis(out float angleV, out Vector3 axisV);
+            if (angleV > 180f) angleV -= 360f;
+            Quaternion ventRStep4Rot = Quaternion.AngleAxis(-angleV, new Vector3(-axisV.x, axisV.y, axisV.z)) * ventRDefRot;
+
+            Vector3 ventRTransPos = coverStep3.position + finalDeltaRotCover * (ventRStep4Pos - coverPivot);
+            Quaternion ventRTransRot = finalDeltaRotCover * ventRStep4Rot;
+
+            if (ventLeft != null)
+            {
+                ventLeft.localPosition = Vector3.Lerp(ventLDefPos, ventLTransPos, t);
+                ventLeft.localRotation = Quaternion.Slerp(ventLDefRot, ventLTransRot, t);
+            }
+            if (ventRight != null)
+            {
+                ventRight.localPosition = Vector3.Lerp(ventRDefPos, ventRTransPos, t);
+                ventRight.localRotation = Quaternion.Slerp(ventRDefRot, ventRTransRot, t);
+            }
+
+            // 7. 부스터 네온 및 스플라인
+            bool neonActive = t > 0.5f;
+            if (splineRed != null && splineRed.activeSelf != neonActive) splineRed.SetActive(neonActive);
+            if (splineBlue != null && splineBlue.activeSelf != neonActive) splineBlue.SetActive(neonActive);
+            if (splineYellow != null && splineYellow.activeSelf != neonActive) splineYellow.SetActive(neonActive);
+            if (splineOrange != null && splineOrange.activeSelf != neonActive) splineOrange.SetActive(neonActive);
+            if (boosterNeon != null && boosterNeon.activeSelf != neonActive) boosterNeon.SetActive(neonActive);
+
+            // 8. 부스터 VFX 이펙트 연동 (보조 4개: 변형 시작 시점, 메인 1개: 주황 네온 켜지는 최종 시점)
+            bool subFxActive = t > 0.35f;
+            bool mainFxActive = t >= 0.85f;
+            SetSubBoosterFxActive(subFxActive);
+            SetMainBoosterFxActive(mainFxActive);
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                UnityEditor.EditorUtility.SetDirty(gameObject);
+            }
+#endif
+        }
+
         private void Reset()
         {
             AutoBindParts();
@@ -289,112 +557,108 @@ namespace YUJEONG
 
             // 바퀴 회전 컨트롤러 자동 탐색 연동
             AutoFindWheelController();
+
+            // 부스터 VFX 자동 연결 및 초기 소등
+            AutoBindBoosterFx();
+            SetSubBoosterFxActive(false);
+            SetMainBoosterFxActive(false);
         }
 
-        [ContextMenu("SportCar_4change_2 부품 자동 연결")]
+        [ContextMenu("차량 부품 자동 연결 (SportCar / BlueCar 지원)")]
         public void AutoBindParts()
         {
             // 1. targetCarRoot 찾기
             if (targetCarRoot == null)
             {
-                // 컴포넌트 자신이 SportCar_4change_2에 붙어있는 경우
-                if (gameObject.name == "SportCar_4change_2")
+                if (transform.Find("Blue_Car_Final_Model") != null)
+                {
+                    targetCarRoot = transform.Find("Blue_Car_Final_Model");
+                }
+                else if (gameObject.name == "SportCar_4change_2" || gameObject.name == "Blue_Car_Final_Model")
                 {
                     targetCarRoot = transform;
                 }
+                else if (transform.Find("부품_보조벤트판1") != null || transform.Find("3d스캐너") != null)
+                {
+                    targetCarRoot = transform;
+                }
+                else if (transform.parent != null && (transform.parent.Find("부품_보조벤트판1") != null || transform.parent.Find("3d스캐너") != null))
+                {
+                    targetCarRoot = transform.parent;
+                }
                 else
                 {
-                    GameObject carObj = GameObject.Find("SportCar_4change_2");
-                    if (carObj != null) targetCarRoot = carObj.transform;
+                    GameObject carObj = GameObject.Find("Blue_Car_Final");
+                    if (carObj != null)
+                    {
+                        Transform model = carObj.transform.Find("Blue_Car_Final_Model");
+                        targetCarRoot = model != null ? model : carObj.transform;
+                    }
+                    if (targetCarRoot == null)
+                    {
+                        carObj = GameObject.Find("SportCar_4change_2");
+                        if (carObj != null) targetCarRoot = carObj.transform;
+                    }
+                }
+
+                if (targetCarRoot == null)
+                {
+                    targetCarRoot = transform;
                 }
             }
 
-            // 2. targetCarRoot 하위에서 부품 찾기
+            // 2. targetCarRoot 하위에서 부품 찾기 (재귀 탐색 지원)
             if (targetCarRoot != null)
             {
-                Transform foundLeft = targetCarRoot.Find("부품_보조벤트판1");
+                Transform foundLeft = FindPartRecursive(targetCarRoot, "부품_보조벤트판1");
                 if (foundLeft != null) ventLeft = foundLeft;
 
-                Transform foundRight = targetCarRoot.Find("부품_보조벤트판2");
+                Transform foundRight = FindPartRecursive(targetCarRoot, "부품_보조벤트판2");
                 if (foundRight != null) ventRight = foundRight;
 
-                Transform foundScanner = targetCarRoot.Find("3d스캐너");
+                Transform foundScanner = FindPartRecursive(targetCarRoot, "3d스캐너");
                 if (foundScanner != null) scanner3D = foundScanner;
 
-                Transform foundCouplerL = targetCarRoot.Find("부품_연결부1");
+                Transform foundCouplerL = FindPartRecursive(targetCarRoot, "부품_연결부1");
                 if (foundCouplerL != null) couplerLeft = foundCouplerL;
 
-                Transform foundCouplerR = targetCarRoot.Find("부품_연결부2");
+                Transform foundCouplerR = FindPartRecursive(targetCarRoot, "부품_연결부2");
                 if (foundCouplerR != null) couplerRight = foundCouplerR;
 
-                Transform foundCowl = targetCarRoot.Find("부품_기계식상부아머드카울");
+                Transform foundCowl = FindPartRecursive(targetCarRoot, "부품_기계식상부아머드카울");
                 if (foundCowl != null) armoredCowl = foundCowl;
 
                 // 대형_단발_제트_부스터_노즐 찾기
-                Transform foundBooster = targetCarRoot.Find("대형_단발_제트_부스터_노즐");
-                if (foundBooster == null)
-                {
-                    Transform parentBooster = targetCarRoot.Find("대형_단발_제트_부스터");
-                    if (parentBooster != null)
-                    {
-                        foundBooster = parentBooster.Find("대형_단발_제트_부스터_노즐");
-                        if (foundBooster == null) foundBooster = parentBooster;
-                    }
-                }
+                Transform foundBooster = FindPartRecursive(targetCarRoot, "대형_단발_제트_부스터_노즐");
+                if (foundBooster == null) foundBooster = FindPartRecursive(targetCarRoot, "대형_단발_제트_부스터");
                 if (foundBooster != null) boosterNozzle = foundBooster;
 
                 // 네온 찾기
-                Transform foundNeon = targetCarRoot.Find("네온");
-                if (foundNeon == null)
-                {
-                    Transform parentBooster = targetCarRoot.Find("대형_단발_제트_부스터");
-                    if (parentBooster != null) foundNeon = parentBooster.Find("네온");
-                }
+                Transform foundNeon = FindPartRecursive(targetCarRoot, "네온");
                 if (foundNeon != null) boosterNeon = foundNeon.gameObject;
 
                 // 제트부스터_터빈 찾기
-                Transform foundTurbine = targetCarRoot.Find("제트부스터_터빈");
-                if (foundTurbine == null) foundTurbine = targetCarRoot.Find("부스터터빈");
-                if (foundTurbine == null && boosterNozzle != null)
-                {
-                    foundTurbine = boosterNozzle.Find("제트부스터_터빈");
-                    if (foundTurbine == null) foundTurbine = boosterNozzle.Find("부스터터빈");
-                }
-                if (foundTurbine == null)
-                {
-                    Transform parentBooster = targetCarRoot.Find("대형_단발_제트_부스터");
-                    if (parentBooster != null)
-                    {
-                        foundTurbine = parentBooster.Find("제트부스터_터빈");
-                        if (foundTurbine == null) foundTurbine = parentBooster.Find("부스터터빈");
-                    }
-                }
-                if (foundTurbine == null)
-                {
-                    foreach (Transform child in targetCarRoot.GetComponentsInChildren<Transform>(true))
-                    {
-                        if (child.name.Contains("터빈") || child.name.ToLower().Contains("turbine"))
-                        {
-                            foundTurbine = child;
-                            break;
-                        }
-                    }
-                }
+                Transform foundTurbine = FindPartRecursive(targetCarRoot, "제트부스터_터빈_회전축");
+                if (foundTurbine == null) foundTurbine = FindPartRecursive(targetCarRoot, "제트부스터_터빈");
+                if (foundTurbine == null) foundTurbine = FindPartRecursive(targetCarRoot, "부스터터빈");
                 if (foundTurbine != null) boosterTurbine = foundTurbine;
 
                 // 빨강, 파랑, 노랑, 주황 스플라인 자동 연결
                 Transform searchRoot = (boosterNozzle != null) ? boosterNozzle : targetCarRoot;
                 if (searchRoot != null)
                 {
-                    if (splineRed == null) { Transform t = searchRoot.Find("빨강"); if (t != null) splineRed = t.gameObject; }
-                    if (splineBlue == null) { Transform t = searchRoot.Find("파랑"); if (t != null) splineBlue = t.gameObject; }
-                    if (splineYellow == null) { Transform t = searchRoot.Find("노랑"); if (t != null) splineYellow = t.gameObject; }
-                    if (splineOrange == null) { Transform t = searchRoot.Find("주황"); if (t != null) splineOrange = t.gameObject; }
+                    Transform r = FindPartRecursive(searchRoot, "빨강"); if (r != null) splineRed = r.gameObject;
+                    Transform b = FindPartRecursive(searchRoot, "파랑"); if (b != null) splineBlue = b.gameObject;
+                    Transform y = FindPartRecursive(searchRoot, "노랑"); if (y != null) splineYellow = y.gameObject;
+                    Transform o = FindPartRecursive(searchRoot, "주황"); if (o != null) splineOrange = o.gameObject;
                 }
 
                 // 부품_메인상판덮개 찾기
-                Transform foundCover = targetCarRoot.Find("부품_메인상판덮개");
+                Transform foundCover = FindPartRecursive(targetCarRoot, "부품_메인상판덮개");
                 if (foundCover != null) mainCover = foundCover;
+
+                // 부스터 VFX 자동 연결
+                AutoBindBoosterFx();
 
                 Debug.Log($"[VehicleTransformationController] '{targetCarRoot.name}' 하위에서 부품들을 자동으로 연결했습니다.");
             }
@@ -442,6 +706,19 @@ namespace YUJEONG
             AutoFindWheelController();
         }
 
+        private Transform FindPartRecursive(Transform root, string partName)
+        {
+            if (root == null) return null;
+            Transform direct = root.Find(partName);
+            if (direct != null) return direct;
+
+            foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name == partName) return child;
+            }
+            return null;
+        }
+
         [Header("[ 거울(Mirror) 대칭 모드 ]")]
         [Tooltip("체크 시 좌측 벤트판의 움직임을 실시간 거울 대칭하여 우측에 자동 적용합니다 (뒤집힘 0% 보장)")]
         public bool mirrorRightFromLeft = true;
@@ -474,6 +751,19 @@ namespace YUJEONG
 
         private void Start()
         {
+            // 부스터 VFX 자동 연결 및 탐색
+            AutoBindBoosterFx();
+
+            // 평소에는 꺼두는 설정(사용자가 꺼놓은 상태)을 존중하여 시작 시 부스터 이펙트 전체 소등
+            SetSubBoosterFxActive(false);
+            SetMainBoosterFxActive(false);
+
+            // 게임 시작 시 미리보기 상태를 깨끗이 원복하여 기본 주행 모드로 초기화
+            if (previewProgress > 0.001f || previewFinalTransformation)
+            {
+                ResetTransformationPreview();
+            }
+
             if (ventLeft == null || ventRight == null || scanner3D == null || couplerLeft == null || couplerRight == null || armoredCowl == null || boosterNozzle == null || mainCover == null)
             {
                 AutoBindParts();
@@ -486,8 +776,8 @@ namespace YUJEONG
                 initialLeftPos = leftStep1.position;
                 initialLeftRot = Quaternion.Euler(leftStep1.rotationEuler);
 
-                initialRightPos = ventRight.localPosition;
-                initialRightRot = ventRight.localRotation;
+                initialRightPos = (ventRight.localPosition != Vector3.zero) ? ventRight.localPosition : DefaultVentRightPos;
+                initialRightRot = (ventRight.localRotation != Quaternion.identity) ? ventRight.localRotation : DefaultVentRightRot;
 
                 ventLeftBeforeCoverPos = ventLeft.localPosition;
                 ventLeftBeforeCoverRot = ventLeft.localRotation;
@@ -500,8 +790,8 @@ namespace YUJEONG
                 initialCouplerLeftPos = couplerLeftStep1.position;
                 initialCouplerLeftRot = Quaternion.Euler(couplerLeftStep1.rotationEuler);
 
-                initialCouplerRightPos = couplerRight.localPosition;
-                initialCouplerRightRot = couplerRight.localRotation;
+                initialCouplerRightPos = new Vector3(-initialCouplerLeftPos.x, initialCouplerLeftPos.y, initialCouplerLeftPos.z);
+                initialCouplerRightRot = DefaultCouplerRightRot;
             }
 
             if (armoredCowl != null)
@@ -511,15 +801,111 @@ namespace YUJEONG
             }
 
             Debug.Log($"[VehicleTransformationController] ✅ 준비 완료! Vent: {(ventLeft != null)}, Scanner: {(scanner3D != null)}, Coupler: {(couplerLeft != null)}, Cowl: {(armoredCowl != null)}, Booster: {(boosterNozzle != null)}, Cover: {(mainCover != null)}");
+
+            if (startWithFullTransformation)
+            {
+                SnapToFullTransformation();
+            }
+        }
+
+        /// <summary>
+        /// 전체 변형 및 모든 부스터 이펙트를 100% 완료 상태로 즉시 적용
+        /// </summary>
+        [ContextMenu("🚀 전체 변형 및 부스터 이펙트 즉시 완료 (Snap)")]
+        public void SnapToFullTransformation()
+        {
+            if (fullSequenceCoroutine != null)
+            {
+                StopCoroutine(fullSequenceCoroutine);
+                fullSequenceCoroutine = null;
+            }
+
+            isFullyTransformed = true;
+            isVentHidden = true;
+            isScannerDeployed = true;
+            isCouplerFolded = true;
+            isCowlLifted = true;
+            isBoosterDeployed = true;
+            isCoverOpened = true;
+            isFullSequenceRunning = false;
+
+            ApplyTransformationProgress(1.0f);
+
+            currentTurbineSpeed = maxTurbineSpeed;
+
+            if (splineRed != null) splineRed.SetActive(true);
+            if (splineBlue != null) splineBlue.SetActive(true);
+            if (splineYellow != null) splineYellow.SetActive(true);
+            if (splineOrange != null) splineOrange.SetActive(true);
+            if (boosterNeon != null) boosterNeon.SetActive(true);
+
+            SetSubBoosterFxActive(true);
+            SetMainBoosterFxActive(true);
+
+            Debug.Log("[VehicleTransformationController] 🚀 블루카 풀 변형 & 모든 부스터 이펙트 즉시 점등 완료!");
+        }
+
+        /// <summary>
+        /// 블루카를 즉시 원래 기본 미변형 상태(0%)로 안전하게 복귀 (스플라인 주행 시작 전 초기화용)
+        /// </summary>
+        [ContextMenu("🔄 기본 미변형 상태 즉시 복귀 (0%)")]
+        public void SnapToNormalState()
+        {
+            if (fullSequenceCoroutine != null)
+            {
+                StopCoroutine(fullSequenceCoroutine);
+                fullSequenceCoroutine = null;
+            }
+
+            isFullyTransformed = false;
+            isVentHidden = false;
+            isScannerDeployed = false;
+            isCouplerFolded = false;
+            isCowlLifted = false;
+            isBoosterDeployed = false;
+            isCoverOpened = false;
+            isFullSequenceRunning = false;
+
+            ApplyTransformationProgress(0.0f);
+
+            currentTurbineSpeed = 0f;
+
+            if (splineRed != null) splineRed.SetActive(false);
+            if (splineBlue != null) splineBlue.SetActive(false);
+            if (splineYellow != null) splineYellow.SetActive(false);
+            if (splineOrange != null) splineOrange.SetActive(false);
+            if (boosterNeon != null) boosterNeon.SetActive(false);
+
+            SetSubBoosterFxActive(false);
+            SetMainBoosterFxActive(false);
+
+            Debug.Log("[VehicleTransformationController] 🔄 블루카 기본 원래 상태(0%) 복귀 완료!");
+        }
+
+        /// <summary>
+        /// 블루카 전체 순차 변형 시퀀스를 확실하게 시작 (토글 상태와 무관하게 100% 전개 방향으로 시작)
+        /// </summary>
+        [ContextMenu("🚀 전체 풀 변형 시퀀스 전개 시작")]
+        public void DeployFullTransformation()
+        {
+            if (fullSequenceCoroutine != null)
+            {
+                StopCoroutine(fullSequenceCoroutine);
+                fullSequenceCoroutine = null;
+            }
+
+            isFullyTransformed = true;
+            isFullSequenceRunning = false;
+            fullSequenceCoroutine = StartCoroutine(AnimateFullSequence(true));
         }
 
         private void Update()
         {
-            // 0. 전체 변형 시퀀스 키 입력 체크 (스페이스바 / 0번)
+            // 0. 전체 변형 시퀀스 키 입력 체크 (스페이스바 / 숫자 0번 / 키패드 0번)
             bool keyFullPressed = false;
             try
             {
-                if (Input.GetKeyDown(triggerKeyFullSequence) || Input.GetKeyDown(triggerKeyFullSequenceAlt))
+                if (Input.GetKeyDown(triggerKeyFullSequence) || Input.GetKeyDown(triggerKeyFullSequenceAlt) || Input.GetKeyDown(KeyCode.Space))
                     keyFullPressed = true;
             }
             catch { }
@@ -534,7 +920,7 @@ namespace YUJEONG
 #endif
             if (keyFullPressed)
             {
-                Debug.Log("[VehicleTransformationController] 🔥 전체 변형 시퀀스 키 입력 감지!");
+                Debug.Log("[VehicleTransformationController] 🔥 전체 풀 변형 시퀀스 실행 (스페이스바 / 0번)!");
                 ToggleFullTransformation();
             }
 
@@ -664,7 +1050,7 @@ namespace YUJEONG
             // 화면 좌상단에 테스트용 UI 패널 표시
             GUI.Box(new Rect(10, 10, 260, 280), "🚗 변형 제어 패널");
 
-            // 전체 변형 시퀀스 버튼 (1->2->3->4+5)
+            // 전체 풀 변형 시퀀스 버튼 (1->2->3->4+5)
             GUI.color = isFullyTransformed ? new Color(1f, 0.75f, 0.75f) : new Color(0.75f, 1f, 0.75f);
             if (GUI.Button(new Rect(20, 35, 240, 30), isFullyTransformed ? "🔥 전체 원복 (Space / 0)" : "🔥 풀 변형 시퀀스 (Space / 0)"))
             {
@@ -1022,22 +1408,10 @@ namespace YUJEONG
         {
             if (couplerLeft == null || couplerRight == null) return;
 
-            // 1. 위치 미러링: X축 이동량만 반대 부호, Y/Z는 동일
-            Vector3 deltaPosLeft = couplerLeft.localPosition - initialCouplerLeftPos;
-            Vector3 deltaPosRight = new Vector3(-deltaPosLeft.x, deltaPosLeft.y, deltaPosLeft.z);
-            couplerRight.localPosition = initialCouplerRightPos + deltaPosRight;
-
-            // 2. 회전 미러링: 시작 각도에서 벗어난 회전량(Delta)을 거울 반사
-            Quaternion deltaRotLeft = couplerLeft.localRotation * Quaternion.Inverse(initialCouplerLeftRot);
-            deltaRotLeft.ToAngleAxis(out float angle, out Vector3 axis);
-
-            if (angle > 180f) angle -= 360f;
-
-            Vector3 mirrorAxis = new Vector3(-axis.x, axis.y, axis.z);
-            float mirrorAngle = -angle;
-
-            Quaternion deltaRotRight = Quaternion.AngleAxis(mirrorAngle, mirrorAxis);
-            couplerRight.localRotation = deltaRotRight * initialCouplerRightRot;
+            // X축 대칭 위치 및 Euler 회전 대칭 적용 (음수 스케일 X에 최적화)
+            couplerRight.localPosition = new Vector3(-couplerLeft.localPosition.x, couplerLeft.localPosition.y, couplerLeft.localPosition.z);
+            Vector3 leftEuler = couplerLeft.localEulerAngles;
+            couplerRight.localEulerAngles = new Vector3(leftEuler.x, -leftEuler.y, -leftEuler.z);
         }
 
         /// <summary>
@@ -1212,6 +1586,9 @@ namespace YUJEONG
         {
             if (deploy)
             {
+                // ★ 1. 부스터 변형 시작과 동시에 보조 부스터 4종(pf_redbooster_2 4개) 즉시 점등!
+                SetSubBoosterFxActive(true);
+
                 // 1 -> 2단계: 후방으로 노즐 슬라이드 돌출
                 yield return AnimateBoosterBetweenPoses(boosterStep1, boosterStep2, stepDuration);
                 
@@ -1220,6 +1597,10 @@ namespace YUJEONG
             }
             else
             {
+                // 수납 시: 메인 및 보조 부스터 전체 소등
+                SetMainBoosterFxActive(false);
+                SetSubBoosterFxActive(false);
+
                 // 수납 시작 시: 터빈 서서히 감속 정지
                 StartTurbineSpoolDown();
 
@@ -1396,7 +1777,8 @@ namespace YUJEONG
             MeshRenderer mr = obj.GetComponentInChildren<MeshRenderer>(true);
             if (mr == null) return null;
 
-            Material mat = mr.material;
+            Material mat = Application.isPlaying ? mr.material : mr.sharedMaterial;
+            if (mat == null) return null;
             mat.EnableKeyword("_EMISSION");
 
             Color em = mat.HasProperty("_EmissionColor") ? mat.GetColor("_EmissionColor") : defaultEmission;
@@ -1469,6 +1851,12 @@ namespace YUJEONG
                     StartCoroutine(AnimateSplineGlow(data, true, splineGlowDuration));
                 }
 
+                // ★ 2. 대형단발제트부스터 노즐에 마지막 주황색 네온(sequence[3])이 들어올 때 pf_redbooster_1 점등!
+                if (i == 3)
+                {
+                    SetMainBoosterFxActive(true);
+                }
+
                 if (i < sequence.Length - 1 && splineInterval > 0f)
                 {
                     yield return new WaitForSeconds(splineInterval);
@@ -1480,6 +1868,7 @@ namespace YUJEONG
 
         private IEnumerator AnimateSplineFadeOut()
         {
+            SetMainBoosterFxActive(false);
             EnsureSplineGlowData();
 
             SplineGlowData[] sequence = new SplineGlowData[] { redGlowData, blueGlowData, yellowGlowData, orangeGlowData };
@@ -1548,6 +1937,209 @@ namespace YUJEONG
             {
                 data.obj.SetActive(false);
             }
+        }
+
+        #endregion
+
+        #region [ 🚀 부스터 VFX 이펙트 제어 (pf_redbooster_1 & pf_redbooster_2) ]
+
+        /// <summary>
+        /// 보조 부스터 4종 (pf_redbooster_2, (1), (2), (3)) 점등 / 소등 제어
+        /// </summary>
+        public void SetSubBoosterFxActive(bool active)
+        {
+            if (boosterFxSub == null || boosterFxSub.Length == 0 || boosterFxSub[0] == null || boosterEffectRoot == null)
+            {
+                AutoBindBoosterFx();
+            }
+
+            if (boosterFxSub != null)
+            {
+                for (int i = 0; i < boosterFxSub.Length; i++)
+                {
+                    SetFxActive(boosterFxSub[i], active);
+                }
+            }
+
+            CheckAndSyncBoosterRootState();
+        }
+
+        /// <summary>
+        /// 메인 대형 제트 부스터 (pf_redbooster_1) 점등 / 소등 제어
+        /// </summary>
+        public void SetMainBoosterFxActive(bool active)
+        {
+            if (boosterFxMain == null || boosterEffectRoot == null)
+            {
+                AutoBindBoosterFx();
+            }
+
+            SetFxActive(boosterFxMain, active);
+            CheckAndSyncBoosterRootState();
+        }
+
+        private void SetFxActive(GameObject fxObj, bool active)
+        {
+            if (fxObj == null) return;
+
+            if (active)
+            {
+                // 최상위 Booster_effect 부모 오브젝트가 꺼져 있다면 반드시 먼저 켜줌
+                if (boosterEffectRoot != null && !boosterEffectRoot.activeSelf)
+                {
+                    boosterEffectRoot.SetActive(true);
+                }
+
+                // 중간 부모 계층이 비활성화되어 있다면 모두 활성화
+                Transform p = fxObj.transform.parent;
+                while (p != null && p != transform.root)
+                {
+                    if (!p.gameObject.activeSelf) p.gameObject.SetActive(true);
+                    p = p.parent;
+                }
+
+                if (!fxObj.activeSelf)
+                {
+                    fxObj.SetActive(true);
+                }
+
+                // 파티클 시스템 및 VFX Graph 즉시 재생 트리거
+                foreach (var ps in fxObj.GetComponentsInChildren<ParticleSystem>(true))
+                {
+                    ps.Clear(true);
+                    ps.Play(true);
+                }
+                foreach (var vfx in fxObj.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(true))
+                {
+                    vfx.Reinit();
+                    vfx.Play();
+                }
+            }
+            else
+            {
+                if (fxObj.activeSelf)
+                {
+                    fxObj.SetActive(false);
+                }
+
+                foreach (var ps in fxObj.GetComponentsInChildren<ParticleSystem>(true))
+                {
+                    ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                }
+                foreach (var vfx in fxObj.GetComponentsInChildren<UnityEngine.VFX.VisualEffect>(true))
+                {
+                    vfx.Stop();
+                    vfx.Reinit();
+                }
+            }
+        }
+
+        private void CheckAndSyncBoosterRootState()
+        {
+            if (boosterEffectRoot == null) return;
+
+            bool anyChildActive = false;
+            if (boosterFxMain != null && boosterFxMain.activeSelf) anyChildActive = true;
+            if (boosterFxSub != null)
+            {
+                foreach (var s in boosterFxSub)
+                {
+                    if (s != null && s.activeSelf) { anyChildActive = true; break; }
+                }
+            }
+
+            if (boosterEffectRoot.activeSelf != anyChildActive)
+            {
+                boosterEffectRoot.SetActive(anyChildActive);
+            }
+        }
+
+        /// <summary>
+        /// 차량 하위(비활성화 상태 포함)에서 Booster_effect, pf_redbooster_1 및 pf_redbooster_2 (1~3)를 완벽하게 탐색하여 연결
+        /// </summary>
+        public void AutoBindBoosterFx()
+        {
+            // 최상위 차량 루트 (Blue_Car_Final) 기준으로 전체 탐색 (비활성화 오브젝트 포함)
+            Transform searchRoot = transform.root;
+            if (searchRoot == null) searchRoot = transform;
+
+            // 0. Booster_effect 부모 오브젝트 탐색
+            if (boosterEffectRoot == null)
+            {
+                Transform bRoot = FindPartFlexible(searchRoot, "Booster_effect");
+                if (bRoot == null && targetCarRoot != null) bRoot = FindPartFlexible(targetCarRoot, "Booster_effect");
+                if (bRoot == null) bRoot = FindPartFlexible(transform, "Booster_effect");
+                if (bRoot != null) boosterEffectRoot = bRoot.gameObject;
+            }
+
+            Transform subSearchTarget = (boosterEffectRoot != null) ? boosterEffectRoot.transform : searchRoot;
+
+            // 1. 메인 부스터 (pf_redbooster_1) 탐색
+            if (boosterFxMain == null)
+            {
+                Transform m = FindPartFlexible(subSearchTarget, "PF_RedBooster_1");
+                if (m == null) m = FindPartFlexible(searchRoot, "PF_RedBooster_1");
+                if (m != null) boosterFxMain = m.gameObject;
+            }
+
+            // 2. 보조 부스터 4종 (pf_redbooster_2, pf_redbooster_2 (1), pf_redbooster_2 (2), pf_redbooster_2 (3))
+            if (boosterFxSub == null || boosterFxSub.Length != 4)
+            {
+                boosterFxSub = new GameObject[4];
+            }
+
+            string[] subNames = new string[] { "PF_RedBooster_2", "PF_RedBooster_2 (1)", "PF_RedBooster_2 (2)", "PF_RedBooster_2 (3)" };
+
+            for (int i = 0; i < subNames.Length; i++)
+            {
+                if (boosterFxSub[i] != null) continue;
+                Transform s = FindPartFlexible(subSearchTarget, subNames[i]);
+                if (s == null) s = FindPartFlexible(searchRoot, subNames[i]);
+                if (s != null) boosterFxSub[i] = s.gameObject;
+            }
+
+            // 만약 괄호 번호가 조금 다른 경우 대비: Booster_effect 직속 자식 중 PF_RedBooster_2 포함하는 오브젝트 자동 수집
+            if (boosterEffectRoot != null)
+            {
+                int fillIdx = 0;
+                for (int c = 0; c < boosterEffectRoot.transform.childCount && fillIdx < 4; c++)
+                {
+                    Transform child = boosterEffectRoot.transform.GetChild(c);
+                    string cName = child.name.ToLowerInvariant();
+                    if (cName.Contains("booster_2") || cName.Contains("booster2"))
+                    {
+                        if (boosterFxSub[fillIdx] == null)
+                        {
+                            boosterFxSub[fillIdx] = child.gameObject;
+                        }
+                        fillIdx++;
+                    }
+                }
+            }
+
+            int boundSubCount = 0;
+            if (boosterFxSub != null)
+            {
+                foreach (var s in boosterFxSub) { if (s != null) boundSubCount++; }
+            }
+
+            Debug.Log($"[VehicleTransformationController] 🎯 부스터 VFX 연결 완료! Parent: {(boosterEffectRoot != null ? boosterEffectRoot.name : "null")}, Main: {(boosterFxMain != null ? boosterFxMain.name : "null")}, Sub개수: {boundSubCount}/4");
+        }
+
+        private Transform FindPartFlexible(Transform root, string targetName)
+        {
+            if (root == null) return null;
+            string cleanTarget = targetName.Replace(" ", "").Replace("_", "").ToLowerInvariant();
+
+            foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+            {
+                string cleanChild = child.name.Replace(" ", "").Replace("_", "").ToLowerInvariant();
+                if (cleanChild == cleanTarget)
+                {
+                    return child;
+                }
+            }
+            return null;
         }
 
         #endregion
