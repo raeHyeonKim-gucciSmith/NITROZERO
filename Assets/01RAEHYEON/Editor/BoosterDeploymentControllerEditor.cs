@@ -20,6 +20,24 @@ public sealed class BoosterDeploymentControllerEditor : Editor
         if (GUILayout.Button("후방 날개 기본상태 및 피봇 준비"))
             controller.PrepareRearWingPivotSetupInEditor();
 
+        if (GUILayout.Button("부스터 VFX (PF_BlueBooster) 자동 탐색 및 연결"))
+        {
+            Undo.RegisterFullObjectHierarchyUndo(
+                controller.transform.root.gameObject,
+                "Auto Bind Booster VFX");
+            controller.AutoBindBoosterFx();
+            EditorUtility.SetDirty(controller);
+        }
+
+        if (GUILayout.Button("블루카와 부스터 타이밍 동기화 (Working 0.55, Backup 0.96)"))
+        {
+            Undo.RegisterFullObjectHierarchyUndo(
+                controller.transform.root.gameObject,
+                "Sync Timing With Blue Car");
+            controller.SyncTimingWithBlueCar();
+            EditorUtility.SetDirty(controller);
+        }
+
         if (GUILayout.Button("전개 전 상태로 저장"))
         {
             Undo.RegisterFullObjectHierarchyUndo(
