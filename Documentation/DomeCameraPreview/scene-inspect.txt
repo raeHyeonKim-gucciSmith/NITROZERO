@@ -1,0 +1,4 @@
+Dome Exit Asphalt Road pos=(0.000, 0.000, 0.000) forward=(0.00, 0.00, 1.00) bounds=Center: (1035.00, -19.65, 28.00), Extents: (1965.00, 0.00, 10.00)
+Red_Car pos=(-518.690, -18.440, 32.130) forward=(1.00, 0.00, 0.00) bounds=Center: (-518.47, -18.34, 32.15), Extents: (4.59, 1.63, 2.61)
+Blue_Car pos=(-518.560, -18.270, 23.330) forward=(1.00, 0.00, 0.00) bounds=Center: (-518.56, -18.31, 23.33), Extents: (5.04, 1.41, 2.00)
+industrial_dome pos=(-722.100, -20.600, 26.000) forward=(-1.00, 0.00, 0.00) bounds=Center: (-722.10, 70.87, 26.03), Extents: (225.26, 91.57, 225.29)

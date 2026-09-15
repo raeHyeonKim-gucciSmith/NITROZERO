@@ -14,7 +14,7 @@ public static class BlendMoonRoadShoulders
         Apply("Assets/Terrain/DomeInTheMoon_Basin.asset", -100f, -20.45f, 470f, 79f, Route.Dome);
         Apply("Assets/Terrain/Racing_JCurveMoonTerrain.asset", -80f, -20.5f, 410f, 113f, Route.Racing);
         AssetDatabase.SaveAssets();
-        Debug.Log("[NITRO ZERO] All four 20m road shoulders blended into uneven lunar ground.");
+        Debug.Log("[NITRO ZERO] All four 30m road shoulders blended into uneven lunar ground.");
     }
 
     private static void Apply(string path, float originY, float roadGroundY, float nominalReach,
@@ -42,7 +42,7 @@ public static class BlendMoonRoadShoulders
                 float originalY = originY + source[z, x] * data.size.y;
                 float h = originalY;
 
-                // Only the asphalt's actual 20m footprint remains flat. Its outer ground
+                // Only the asphalt's actual 30m footprint remains flat. Its outer ground
                 // follows existing elevations, with a locally varied blend distance.
                 float routeStart = route == Route.Straight ? -data.size.x * 0.5f : -2500f;
                 if (distance < nominalReach + 115f && closest.x >= routeStart && closest.x <= data.size.x * 0.5f)
@@ -52,20 +52,20 @@ public static class BlendMoonRoadShoulders
                     float reach = nominalReach + (broad - 0.5f) * 145f;
                     Vector2 reference = closest + normal * (reach + 55f);
                     float referenceY = Mathf.Max(roadGroundY - 2f, SampleHeight(source, data, originY, reference));
-                    float rise = Smooth(10.5f, reach, distance);
+                    float rise = Smooth(15.5f, reach, distance);
                     float connectingY = Mathf.Lerp(roadGroundY, referenceY, rise);
 
                     float fine = Fbm(worldX, worldZ, 0.026f, seed + 73f) - 0.5f;
                     float mid = Fbm(worldX, worldZ, 0.009f, seed + 31f) - 0.5f;
                     float roughness = (mid * 5.2f + fine * 2.3f) *
-                        Smooth(11f, 75f, distance) * (1f - Smooth(reach - 105f, reach + 30f, distance));
+                        Smooth(16f, 75f, distance) * (1f - Smooth(reach - 105f, reach + 30f, distance));
                     connectingY += roughness;
 
                     float influence = 1f - Smooth(reach - 115f, reach + 65f, distance);
                     if (route == Route.Dome)
                         influence *= Smooth(185f, 350f, Vector2.Distance(point, dome));
                     h = Mathf.Lerp(originalY, connectingY, influence);
-                    if (distance <= 10.5f) h = roadGroundY;
+                    if (distance <= 15.5f) h = roadGroundY;
                 }
 
                 if (route == Route.Dome)
@@ -73,7 +73,7 @@ public static class BlendMoonRoadShoulders
                     float fromDome = Vector2.Distance(point, dome);
                     float craterFloor = Smooth(190f, 390f, fromDome) *
                         (1f - Smooth(1380f, 1740f, fromDome));
-                    float offRoad = Smooth(15f, 105f, distance);
+                    float offRoad = Smooth(20f, 105f, distance);
                     float large = Fbm(worldX, worldZ, 0.0075f, seed + 171f) - 0.5f;
                     float small = Fbm(worldX, worldZ, 0.028f, seed + 251f) - 0.5f;
                     h += (large * 7.0f + small * 2.5f) * craterFloor * offRoad;

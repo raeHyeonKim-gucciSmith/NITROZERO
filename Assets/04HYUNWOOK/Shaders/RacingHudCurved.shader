@@ -3,7 +3,7 @@ Shader "UI/Racing HUD Curved"
     Properties
     {
         [PerRendererData] _MainTex ("HUD", 2D) = "white" {}
-        _Curvature ("Curvature", Range(0, 0.12)) = 0.035
+        _Curvature ("Curvature", Range(0, 0.12)) = 0
         _OutsideOpacity ("Helmet exterior black", Range(0, 1)) = 0
         _ShieldCoverage ("Shield screen coverage", Range(0, 1)) = 0
         _ShieldOpacity ("Shield opacity", Range(0, 1)) = 0

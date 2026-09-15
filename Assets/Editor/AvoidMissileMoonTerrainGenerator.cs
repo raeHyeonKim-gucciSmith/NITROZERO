@@ -150,8 +150,8 @@ public static class AvoidMissileMoonTerrainGenerator
         if (moonLayer != null)
         {
             moonLayer.tileSize = new Vector2(28f, 28f);
-            moonLayer.normalScale = 1.15f;
-            moonLayer.smoothness = 0.04f;
+            moonLayer.normalScale = 0.5f;
+            moonLayer.smoothness = 0f;
             terrainData.terrainLayers = new[] { moonLayer };
             float[,,] splat = new float[terrainData.alphamapResolution, terrainData.alphamapResolution, 1];
             for (int z = 0; z < terrainData.alphamapResolution; z++)
@@ -208,7 +208,9 @@ public static class AvoidMissileMoonTerrainGenerator
         GameObject existing = null;
         foreach (GameObject root in scene.GetRootGameObjects())
         {
-            if (root.name == "Road Placement Guide (20m Flat Corridor)")
+            if (root.name == "Road Placement Guide (20m Flat Corridor)" ||
+                root.name == "Road Placement Guide (35m Flat Corridor)" ||
+                root.name == "Road Placement Guide (30m Flat Corridor)")
             {
                 existing = root;
                 break;
@@ -217,15 +219,15 @@ public static class AvoidMissileMoonTerrainGenerator
         if (existing != null)
             UnityEngine.Object.DestroyImmediate(existing);
 
-        GameObject guide = new GameObject("Road Placement Guide (20m Flat Corridor)");
+        GameObject guide = new GameObject("Road Placement Guide (30m Flat Corridor)");
         guide.transform.position = new Vector3(0f, RoadWorldHeight, 0f);
         guide.transform.rotation = Quaternion.identity;
-        guide.transform.localScale = new Vector3(MapLength, 1f, 20f);
+        guide.transform.localScale = new Vector3(MapLength, 1f, 30f);
         guide.isStatic = true;
 
         MoonRoadPlacementGuide component = guide.AddComponent<MoonRoadPlacementGuide>();
         component.mapLength = MapLength;
-        component.flatWidth = 20f;
+        component.flatWidth = 30f;
         component.blendedWidth = RoadBlendHalfWidth * 2f;
         component.roadSurfaceY = RoadWorldHeight;
 

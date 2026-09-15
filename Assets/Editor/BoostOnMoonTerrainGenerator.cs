@@ -157,18 +157,21 @@ public static class BoostOnMoonTerrainGenerator
     {
         GameObject guide = null;
         foreach (GameObject root in scene.GetRootGameObjects())
-            if (root.name == "Boost Road Guide (20m Flat Corridor)") guide = root;
+            if (root.name == "Boost Road Guide (20m Flat Corridor)" ||
+                root.name == "Boost Road Guide (35m Flat Corridor)" ||
+                root.name == "Boost Road Guide (30m Flat Corridor)") guide = root;
         if (guide == null)
         {
-            guide = new GameObject("Boost Road Guide (20m Flat Corridor)");
+            guide = new GameObject("Boost Road Guide (30m Flat Corridor)");
             SceneManager.MoveGameObjectToScene(guide, scene);
             guide.AddComponent<MoonRoadPlacementGuide>();
         }
         guide.transform.position = new Vector3(0f, RoadY, 0f);
-        guide.transform.localScale = new Vector3(Length, 1f, 20f);
+        guide.name = "Boost Road Guide (30m Flat Corridor)";
+        guide.transform.localScale = new Vector3(Length, 1f, 30f);
         MoonRoadPlacementGuide info = guide.GetComponent<MoonRoadPlacementGuide>();
         info.mapLength = Length;
-        info.flatWidth = 20f;
+        info.flatWidth = 30f;
         info.blendedWidth = BlendHalfWidth * 2f;
         info.roadSurfaceY = RoadY;
     }

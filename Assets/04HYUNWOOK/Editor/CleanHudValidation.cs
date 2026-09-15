@@ -274,7 +274,8 @@ public static class CleanHudValidation
             if (shader == null) throw new Exception("HUD curvature shader is missing.");
             var curved = RenderTexture.GetTemporary(1920, 1080, 0, RenderTextureFormat.ARGB32);
             var material = new Material(shader);
-            material.SetFloat("_Curvature", IsTps ? 0f : .095f);
+            // Editor previews stay flat. Helmet curvature is a play-mode-only effect.
+            material.SetFloat("_Curvature", 0f);
             material.SetFloat("_OutsideOpacity", IsTps ? 0 : 1);
             try
             {

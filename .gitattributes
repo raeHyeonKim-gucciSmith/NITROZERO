@@ -1,3 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 Assets/04HYUNWOOK/fbx/**/*.fbx filter=lfs diff=lfs merge=lfs -text
+Assets/02YUJEONG/SportCar_YUJEONG/Textures/Floor.tga filter=lfs diff=lfs merge=lfs -text
+Assets/SportCar/Textures/Floor.tga filter=lfs diff=lfs merge=lfs -text

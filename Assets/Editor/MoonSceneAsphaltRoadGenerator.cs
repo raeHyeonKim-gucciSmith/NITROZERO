@@ -28,9 +28,9 @@ public static class MoonSceneAsphaltRoadGenerator
         Material roadLine = CreateOverlayMaterial(false);
         Material roadDust = CreateOverlayMaterial(true);
         BuildStraightRoad("Assets/Scenes/avoidMissile.unity", "Avoid Missile Asphalt Road",
-            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 20f, 100f, asphalt, roadLine, roadDust);
+            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 30f, 100f, asphalt, roadLine, roadDust);
         BuildStraightRoad("Assets/Scenes/boostOn.unity", "Boost On Asphalt Road",
-            "Assets/Terrain/BoostOn_AsphaltRoad.asset", -3000f, 3000f, 0f, -23.65f, 20f, 140f, asphalt, roadLine, roadDust);
+            "Assets/Terrain/BoostOn_AsphaltRoad.asset", -3000f, 3000f, 0f, -23.65f, 30f, 140f, asphalt, roadLine, roadDust);
         BuildDomeRoad(asphalt, roadLine, roadDust);
         ApplyRacingRoad(asphalt, roadLine, roadDust);
 
@@ -43,7 +43,7 @@ public static class MoonSceneAsphaltRoadGenerator
     {
         Material asphalt = CreateHighQualityAsphalt();
         BuildStraightRoad("Assets/Scenes/avoidMissile.unity", "Avoid Missile Asphalt Road",
-            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 20f, 100f, asphalt,
+            "Assets/Terrain/AvoidMissile_AsphaltRoad.asset", -2000f, 2000f, 0f, -29.65f, 30f, 100f, asphalt,
             CreateOverlayMaterial(false), CreateOverlayMaterial(true));
         AssetDatabase.SaveAssets();
         Debug.Log("[NITRO ZERO] avoidMissile asphalt road restored without changing other scenes.");
@@ -173,7 +173,9 @@ public static class MoonSceneAsphaltRoadGenerator
         const string scenePath = "Assets/Scenes/domeInTheMoon.unity";
         Scene scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
         GameObject dome = GameObject.Find("industrial_dome");
-        GameObject guide = GameObject.Find("Dome Exit Road Guide (20m)");
+        GameObject guide = GameObject.Find("Dome Exit Road Guide (30m)") ??
+            GameObject.Find("Dome Exit Road Guide (35m)") ??
+            GameObject.Find("Dome Exit Road Guide (20m)");
 
         float roadZ = dome != null ? dome.transform.position.z : PlacedDomeZ;
         float startX = -930f;
@@ -182,7 +184,7 @@ public static class MoonSceneAsphaltRoadGenerator
         startX = Mathf.Max(startX, domeX + 190f);
 
         CreateOrUpdateRoad(scene, "Dome Exit Asphalt Road", "Assets/Terrain/DomeExit_AsphaltRoad.asset",
-            new Vector3(startX, -19.65f, roadZ), new Vector3(3000f, -19.65f, roadZ), 20f, 150f, asphalt, roadLine, roadDust);
+            new Vector3(startX, -19.65f, roadZ), new Vector3(3000f, -19.65f, roadZ), 30f, 150f, asphalt, roadLine, roadDust);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
     }

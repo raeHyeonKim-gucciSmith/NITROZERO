@@ -1,0 +1,1 @@
+PASS: 601 camera and vehicle samples match approved V12. Timeline evaluation verified at 8 timestamps. Original vehicle poses and camera state restored. Runtime/editor scripts compiled in Unity 6000.3.18f1.
