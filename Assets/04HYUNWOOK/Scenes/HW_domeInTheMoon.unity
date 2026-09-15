@@ -236,12 +236,12 @@ Transform:
   m_GameObject: {fileID: 175293349}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5847665, y: -0.007652082, z: 0.004653296, w: 0.8111523}
-  m_LocalPosition: {x: -13.1, y: 140, z: -33.1}
+  m_LocalPosition: {x: 7.27, y: 136.42, z: -39.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 324372653}
-  m_LocalEulerAnglesHint: {x: -0.0001882684, y: 0.09523348, z: 359.7141}
+  m_LocalEulerAnglesHint: {x: 359.6245, y: -0.001670658, z: -0.0001348822}
 --- !u!114 &175293352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,7 +256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 20
+    m_Value: 10
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -310,13 +310,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 191862666}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3, z: -3}
+  m_LocalRotation: {x: 0.10570348, y: -0, z: -0, w: 0.99439776}
+  m_LocalPosition: {x: 0.00000019073484, y: 0.868, z: -3.0000017}
   m_LocalScale: {x: 0.19999999, y: 0.2, z: 0.19999996}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8689192762903344291}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 12.135, y: 0, z: 0}
 --- !u!114 &191862668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,14 +330,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
-    Enabled: 0
-    m_Value: 0
+    Enabled: 1
+    m_Value: 20
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 0}
+    TrackingTarget: {fileID: 8689192762903344291}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -831,6 +831,62 @@ PlayableDirector:
     value: {fileID: 1940621925}
   m_ExposedReferences:
     m_References: []
+--- !u!1 &619957016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 619957017}
+  - component: {fileID: 619957018}
+  - component: {fileID: 9100000000000000006}
+  m_Layer: 0
+  m_Name: UIDocument
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &619957017
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619957016}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8689192762903344291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &619957018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619957016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: 7b512b3e8daced1479402d8c280ca129, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 9dc2c7c0fe7a49d8bbb77d9a479f788d, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
 --- !u!1 &632025401
 GameObject:
   m_ObjectHideFlags: 0
@@ -1067,7 +1123,7 @@ PlayableDirector:
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
-  - key: {fileID: -7007482392177058781, guid: 95740dc86fb15f645920539b6afee0ff, type: 2}
+  - key: {fileID: -619841821709995547, guid: 95740dc86fb15f645920539b6afee0ff, type: 2}
     value: {fileID: 175293350}
   m_ExposedReferences:
     m_References: []
@@ -1162,7 +1218,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1250,8 +1306,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5847665, y: -0.007652082, z: 0.004653296, w: 0.8111523}
-  m_LocalPosition: {x: -465.24084, y: 120.350006, z: -12.871698}
+  m_LocalRotation: {x: 0.07474364, y: 0.7031454, z: -0.07474364, w: 0.7031454}
+  m_LocalPosition: {x: -124.80002, y: -13.29, z: 35.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1323,7 +1379,10 @@ MonoBehaviour:
   camera3: {fileID: 1236579373}
   camera4: {fileID: 632025403}
   camera5: {fileID: 175293352}
-  activeCamera: 4
+  camera6: {fileID: 191862668}
+  camera7: {fileID: 0}
+  camera8: {fileID: 0}
+  activeCamera: 5
   autoStopOnFinish: 1
   playableDirector: {fileID: 0}
   fallbackDuration: 4
@@ -2661,14 +2720,14 @@ Transform:
   m_GameObject: {fileID: 2138746156}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -494.2, y: -19.65, z: 28.4}
+  m_LocalPosition: {x: -131.1, y: -19.65, z: 28.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6509209195951453495}
   - {fileID: 8689192762903344291}
-  - {fileID: 142832245206152037}
   - {fileID: 2219637194884018812}
+  - {fileID: 142832245206152037}
   - {fileID: 672981408294534671}
   - {fileID: 4605977887540461635}
   m_Father: {fileID: 0}
@@ -5766,7 +5825,7 @@ Transform:
   m_GameObject: {fileID: 8095359210567612523}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -23.02, y: 1.72, z: 8.58}
+  m_LocalPosition: {x: -10.9, y: 1.72, z: 8}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6876,6 +6935,8 @@ GameObject:
   - component: {fileID: 7195872443804023499}
   - component: {fileID: 2125507359803971376}
   - component: {fileID: 7195872443804023500}
+  - component: {fileID: 9100000000000000005}
+  - component: {fileID: 9100000000000000015}
   m_Layer: 0
   m_Name: extraCar3
   m_TagString: Untagged
@@ -17508,7 +17569,7 @@ Transform:
   m_GameObject: {fileID: 1160921559000835952}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -18.72, y: -0.040000916, z: -9}
+  m_LocalPosition: {x: -43.8, y: -0.040000916, z: -7.14}
   m_LocalScale: {x: 4.8, y: 4.8, z: 4.8}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -17596,6 +17657,8 @@ GameObject:
   - component: {fileID: 7266773118446685336}
   - component: {fileID: 7014067490000463030}
   - component: {fileID: 7404312774222703234}
+  - component: {fileID: 9100000000000000001}
+  - component: {fileID: 9100000000000000011}
   m_Layer: 0
   m_Name: Blue_Car
   m_TagString: Untagged
@@ -24308,6 +24371,8 @@ GameObject:
   m_Component:
   - component: {fileID: 672981408294534671}
   - component: {fileID: 1160921559000835953}
+  - component: {fileID: 9100000000000000004}
+  - component: {fileID: 9100000000000000014}
   m_Layer: 0
   m_Name: extraCar2
   m_TagString: Untagged
@@ -24327,9 +24392,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff796dcef9fc114aa3b6eea7bc6b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarSpeedController
-  targetSpeedKmh: 560
-  accelerationKmh: 380
-  startDelay: 0.4
+  thirdPersonTrailerOnly: 1
+  cutsceneManager: {fileID: 1146800913}
+  firstPersonCamera: 5
+  initialSpeedKmh: 0
+  targetSpeedKmh: 565
+  accelerationKmh: 285
+  startDelay: 0.36
   useBoost: 0
   boostDelaySeconds: 1.5
   boostMultiplier: 1.3
@@ -47946,7 +48015,7 @@ Transform:
   m_GameObject: {fileID: 4413474952741506022}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -10.69, y: -0.020000458, z: 0.33584976}
+  m_LocalPosition: {x: 7.6, y: -0.020000458, z: -5.6}
   m_LocalScale: {x: 3.4, y: 3.4, z: 3.4}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -84011,6 +84080,8 @@ GameObject:
   - component: {fileID: 7381254343577503286}
   - component: {fileID: 448557062205813236}
   - component: {fileID: 7381254343577503287}
+  - component: {fileID: 9100000000000000002}
+  - component: {fileID: 9100000000000000012}
   m_Layer: 0
   m_Name: Green_Car_SmokeWork_CinematicFinal
   m_TagString: Untagged
@@ -85773,7 +85844,7 @@ Transform:
   m_GameObject: {fileID: 261932109196565827}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -30.35, y: 0.6, z: 0.34585}
+  m_LocalPosition: {x: -19.38, y: 0.6, z: -1.5}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -118010,7 +118081,7 @@ Transform:
   m_GameObject: {fileID: 679658722327955236}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.49, y: 2.21, z: -7.85}
+  m_LocalPosition: {x: 38.1, y: 2.21, z: -2.8}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -132499,9 +132570,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff796dcef9fc114aa3b6eea7bc6b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarSpeedController
-  targetSpeedKmh: 600
-  accelerationKmh: 360
-  startDelay: 0.4
+  thirdPersonTrailerOnly: 1
+  cutsceneManager: {fileID: 1146800913}
+  firstPersonCamera: 5
+  initialSpeedKmh: 0
+  targetSpeedKmh: 545
+  accelerationKmh: 255
+  startDelay: 0.46
   useBoost: 0
   boostDelaySeconds: 1.5
   boostMultiplier: 1.3
@@ -136174,9 +136249,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff796dcef9fc114aa3b6eea7bc6b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarSpeedController
-  targetSpeedKmh: 590
-  accelerationKmh: 360
-  startDelay: 0.2
+  thirdPersonTrailerOnly: 1
+  cutsceneManager: {fileID: 1146800913}
+  firstPersonCamera: 5
+  initialSpeedKmh: 0
+  targetSpeedKmh: 585
+  accelerationKmh: 340
+  startDelay: 0.18
   useBoost: 0
   boostDelaySeconds: 1.2
   boostMultiplier: 1.4
@@ -136353,9 +136432,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff796dcef9fc114aa3b6eea7bc6b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarSpeedController
+  thirdPersonTrailerOnly: 1
+  cutsceneManager: {fileID: 1146800913}
+  firstPersonCamera: 5
+  initialSpeedKmh: 0
   targetSpeedKmh: 600
-  accelerationKmh: 380
-  startDelay: 0
+  accelerationKmh: 305
+  startDelay: 0.05
   useBoost: 0
   boostDelaySeconds: 1.5
   boostMultiplier: 1.3
@@ -150051,6 +150134,8 @@ GameObject:
   m_Component:
   - component: {fileID: 142832245206152037}
   - component: {fileID: 8095359210567612524}
+  - component: {fileID: 9100000000000000003}
+  - component: {fileID: 9100000000000000013}
   m_Layer: 0
   m_Name: extraCar1
   m_TagString: Untagged
@@ -150070,9 +150155,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff796dcef9fc114aa3b6eea7bc6b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarSpeedController
-  targetSpeedKmh: 570
-  accelerationKmh: 380
-  startDelay: 0.3
+  thirdPersonTrailerOnly: 1
+  cutsceneManager: {fileID: 1146800913}
+  firstPersonCamera: 5
+  initialSpeedKmh: 0
+  targetSpeedKmh: 560
+  accelerationKmh: 270
+  startDelay: 0.28
   useBoost: 0
   boostDelaySeconds: 1.5
   boostMultiplier: 1.3
@@ -160587,12 +160676,13 @@ Transform:
   m_GameObject: {fileID: 8930988966330532661}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 7.04, y: 2.02, z: 7.43}
+  m_LocalPosition: {x: 21.3, y: 2.02, z: 7.3}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 808287629939522844}
   - {fileID: 191862667}
+  - {fileID: 619957017}
   m_Father: {fileID: 2138746157}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!23 &8689963692820147323
@@ -163785,6 +163875,8 @@ GameObject:
   - component: {fileID: 7243561067766099917}
   - component: {fileID: 808287629939522845}
   - component: {fileID: 8930988966330532662}
+  - component: {fileID: 8930988966330532663}
+  - component: {fileID: 9100000000000000010}
   m_Layer: 0
   m_Name: Red_Car
   m_TagString: Untagged
@@ -163804,9 +163896,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff796dcef9fc114aa3b6eea7bc6b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarSpeedController
+  thirdPersonTrailerOnly: 1
+  cutsceneManager: {fileID: 1146800913}
+  firstPersonCamera: 5
+  initialSpeedKmh: 0
   targetSpeedKmh: 610
-  accelerationKmh: 420
-  startDelay: 0.2
+  accelerationKmh: 320
+  startDelay: 0.12
   useBoost: 0
   boostDelaySeconds: 1.5
   boostMultiplier: 1.3
@@ -163816,6 +163912,27 @@ MonoBehaviour:
   moveAxis: 1
   space: 1
   customDirection: {x: 1, y: 0, z: 0}
+--- !u!65 &8930988966330532663
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8930988966330532661}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.4879123, y: 1, z: 2.991216}
+  m_Center: {x: -0.0013367654, y: 0, z: 0.042469885}
 --- !u!4 &8933334859569412873
 Transform:
   m_ObjectHideFlags: 0
@@ -167202,6 +167319,267 @@ MonoBehaviour:
       m_Data: []
   m_Knots:
     m_KnotsLink: []
+--- !u!65 &9100000000000000001
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679658722327955236}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.4879123, y: 1, z: 2.991216}
+  m_Center: {x: -0.0013367654, y: 0, z: 0.042469885}
+--- !u!65 &9100000000000000002
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413474952741506022}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.1881063, y: 1.4705882, z: 4.398847}
+  m_Center: {x: -0.0019658315, y: 0, z: 0.062455714}
+--- !u!65 &9100000000000000003
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8095359210567612523}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.4879123, y: 1, z: 2.991216}
+  m_Center: {x: -0.0013367654, y: 0, z: 0.042469885}
+--- !u!65 &9100000000000000004
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160921559000835952}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5499086, y: 1.0416666, z: 3.11585}
+  m_Center: {x: -0.001392464, y: 0, z: 0.04423946}
+--- !u!65 &9100000000000000005
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261932109196565827}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.4798539, y: 1.6666666, z: 4.98536}
+  m_Center: {x: -0.0022279422, y: 0, z: 0.07078314}
+--- !u!114 &9100000000000000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619957016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cb97509d25145f42a5723e45aa39ce4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RacingHudController
+  uiDocument: {fileID: 619957018}
+  tpsDocument: {fileID: 9197481963319205126, guid: 9dc2c7c0fe7a49d8bbb77d9a479f788d, type: 3}
+  fpsDocument: {fileID: 9197481963319205126, guid: 826e18e428304dd281799dce2a199048, type: 3}
+  cutsceneManager: {fileID: 1146800913}
+  tpsCamera6: 5
+  tpsCamera7: 6
+  fpsCamera8: 7
+  showHudWithoutCutsceneManager: 0
+  startX: 0
+  finishX: 1000
+  tachometerMaximum: 300
+  speedDisplayScale: 1
+  speedRiseRate: 45
+  speedFallRate: 70
+  arrowForwardOffset: 0.075
+  currentCoolant: 86
+  currentFuel: 93
+  currentBoost: 26
+--- !u!114 &9100000000000000010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8930988966330532661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96da639f83c4d41b8e0dfb9817e4815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MidRaceSpeedController
+  cutsceneManager: {fileID: 1146800913}
+  firstSequenceCamera: 5
+  lastSequenceCamera: 7
+  initialSpeedKmh: 180
+  targetSpeedKmh: 300
+  accelerationKmh: 40
+  moveAxis: 1
+  space: 1
+  customDirection: {x: 1, y: 0, z: 0}
+--- !u!114 &9100000000000000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679658722327955236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96da639f83c4d41b8e0dfb9817e4815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MidRaceSpeedController
+  cutsceneManager: {fileID: 1146800913}
+  firstSequenceCamera: 5
+  lastSequenceCamera: 7
+  initialSpeedKmh: 190
+  targetSpeedKmh: 295
+  accelerationKmh: 36
+  moveAxis: 1
+  space: 1
+  customDirection: {x: 1, y: 0, z: 0}
+--- !u!114 &9100000000000000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4413474952741506022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96da639f83c4d41b8e0dfb9817e4815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MidRaceSpeedController
+  cutsceneManager: {fileID: 1146800913}
+  firstSequenceCamera: 5
+  lastSequenceCamera: 7
+  initialSpeedKmh: 170
+  targetSpeedKmh: 300
+  accelerationKmh: 44
+  moveAxis: 1
+  space: 1
+  customDirection: {x: 1, y: 0, z: 0}
+--- !u!114 &9100000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8095359210567612523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96da639f83c4d41b8e0dfb9817e4815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MidRaceSpeedController
+  cutsceneManager: {fileID: 1146800913}
+  firstSequenceCamera: 5
+  lastSequenceCamera: 7
+  initialSpeedKmh: 160
+  targetSpeedKmh: 275
+  accelerationKmh: 32
+  moveAxis: 1
+  space: 1
+  customDirection: {x: 1, y: 0, z: 0}
+--- !u!114 &9100000000000000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160921559000835952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96da639f83c4d41b8e0dfb9817e4815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MidRaceSpeedController
+  cutsceneManager: {fileID: 1146800913}
+  firstSequenceCamera: 5
+  lastSequenceCamera: 7
+  initialSpeedKmh: 175
+  targetSpeedKmh: 285
+  accelerationKmh: 34
+  moveAxis: 1
+  space: 1
+  customDirection: {x: 1, y: 0, z: 0}
+--- !u!114 &9100000000000000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261932109196565827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96da639f83c4d41b8e0dfb9817e4815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MidRaceSpeedController
+  cutsceneManager: {fileID: 1146800913}
+  firstSequenceCamera: 5
+  lastSequenceCamera: 7
+  initialSpeedKmh: 155
+  targetSpeedKmh: 270
+  accelerationKmh: 30
+  moveAxis: 1
+  space: 1
+  customDirection: {x: 1, y: 0, z: 0}
 --- !u!4 &9100756890512104453
 Transform:
   m_ObjectHideFlags: 0
