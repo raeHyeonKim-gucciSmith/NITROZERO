@@ -7,15 +7,15 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: TurbineWheel
-    second: {fileID: 2100000, guid: 4f70cfef67384eada24e6e511ab23d76, type: 2}
+      name: Metal_Blade
+    second: {fileID: 2100000, guid: 20ccb9a9470744bfa5f62ae2daf1b769, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 4f70cfef67384eada24e6e511ab23d76, type: 2}
+      name: Metal_Hub
+    second: {fileID: 2100000, guid: 4e412fe71cf64535985872dba0b31491, type: 2}
   materials:
-    materialImportMode: 1
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
