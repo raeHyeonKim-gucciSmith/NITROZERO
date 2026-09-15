@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6829536}
   - component: {fileID: 6829535}
+  - component: {fileID: 6829537}
   m_Layer: 0
   m_Name: CM_Shot04_KhakiResponse
   m_TagString: Untagged
@@ -160,7 +161,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 2547420386921028047}
     CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 13.585862
+    FieldOfView: 49.42635
     OrthographicSize: 10
     NearClipPlane: 0.015
     FarClipPlane: 3500
@@ -187,13 +188,35 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6829534}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.033455253, y: 0.11309236, z: -0.0038101526, w: 0.9930138}
-  m_LocalPosition: {x: 1797.1824, y: -26.056486, z: -8.496782}
+  m_LocalRotation: {x: 0.033455253, y: 0.11309236, z: -0.003810152, w: 0.9930138}
+  m_LocalPosition: {x: 1196, y: -26.056486, z: -10.200002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 498893857}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &6829537
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6829534}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8065765
 GameObject:
   m_ObjectHideFlags: 0
@@ -1485,7 +1508,7 @@ Transform:
   m_GameObject: {fileID: 156255880}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1780.2716, y: -0.14641762, z: 1.0187955}
+  m_LocalPosition: {x: 1145, y: -0.14641762, z: -3.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1522,7 +1545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 125bc7adf2b34e08b2fe5a8fa695a4d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damin.CinematicCopy.DMCinematicDirector
-  independentDuel: 1
+  independentDuel: 0
   duelTake:
     duration: 8
     speedKph: 560
@@ -1533,73 +1556,74 @@ MonoBehaviour:
     vibration: 0.35
     pursuit: 1
   cameraPlaybackMode: 0
-  takeCameraNumber: 3
-  takeStartTime: 0
-  takeEndTime: 20
+  takeCameraNumber: 5
+  takeStartTime: 13.5
+  takeEndTime: 20.4
   loopTake: 0
   takeLoopDelay: 1
   useShotTakeTimes: 1
   repositionForTake: 1
   shotTakes:
-  - label: "01 \uC9C0\uBA74 \uADFC\uC811 \xB7 22mm \uACE0\uC815 \uD1B5\uACFC"
+  - label: "01 \uB3C5\uB9BD 8\uCD08 | \uC800\uAC01 \uC811\uADFC\xB7\uADFC\uC811 \uD1B5\uACFC"
     startTime: 0
-    endTime: 1.9
+    endTime: 8
     redStartWorldX: 1200
-  - label: "02 \uD6C4\uCE21\uBA74 \xB7 28mm \uCD94\uC6D4\uACFC \uBC29\uC5B4"
+  - label: "02 \uD6C4\uBC29 \uCD94\uACA9 | \uCD94\uC6D4\xB7\uACAC\uC81C"
     startTime: 0.5
     endTime: 5
     redStartWorldX: 1200
-  - label: "03 \uD30C\uB791 \uC2E0\uD638 \xB7 85mm \uC678\uBD80 \uC784\uC2DC \uCEF7"
-    startTime: 3
-    endTime: 4.7000003
-    redStartWorldX: 1200
-  - label: "04 \uCE74\uD0A4 \uC751\uB2F5 \xB7 85mm \uC678\uBD80 \uC784\uC2DC \uCEF7"
-    startTime: 3.8000002
-    endTime: 5.5000005
-    redStartWorldX: 1200
-  - label: "05 \uCE74\uD0A4 \uD6C4\uD1F4 \xB7 40mm \uC55E \uADF8\uB8F9\uC5D0\uC11C
-      \uB4A4\uB97C \uBCF4\uAE30"
-    startTime: 4.6000004
-    endTime: 7.1000004
-    redStartWorldX: 1200
-  - label: 06 Hood launch - 40mm side-to-front orbit
-    startTime: 6.1000004
-    endTime: 10.700001
-    redStartWorldX: 1200
-  - label: "07 \uBBF8\uC0AC\uC77C \xB7 24mm \uADFC\uC811\uC5D0\uC11C \uB192\uC740
-      \uC0AC\uC120"
-    startTime: 9.800001
-    endTime: 13.200001
-    redStartWorldX: 1200
-  - label: "08 \uBE68\uAC15 \uD68C\uD53C\xB7\uD0C8\uCD9C \xB7 32mm \uD6C4\uCE21\uBA74"
-    startTime: 11.500001
-    endTime: 20
-    redStartWorldX: 1200
-  - label: "09 \uCC3D\uBB38 \uD1B5\uACFC \xB7 42mm \uC548\uC815\uB41C \uD0D1\uBDF0"
-    startTime: 12.800001
-    endTime: 16.2
-    redStartWorldX: 1200
-  - label: "10 \uC2E4\uB0B4 \uCEF7 \uC790\uB9AC \xB7 \uBAA8\uB378 \uC5F0\uACB0 \uC804
-      \uBE44\uD65C\uC131"
-    startTime: 13.600001
-    endTime: 15.6
-    redStartWorldX: 1200
+  - label: "03+04 \uC5F0\uC18D \uC678\uBD80 | \uD30C\uB791 \uB300\uAE30\xB7\uCE74\uD0A4
+      \uC815\uB82C"
+    startTime: 3.5
+    endTime: 13.5
+    redStartWorldX: 600
+  - label: "04 \uC790\uB3D9 \uC5F0\uACB0 | 03\uACFC \uB3D9\uC77C\uD55C \uC678\uBD80
+      \uACBD\uB85C"
+    startTime: 3.5
+    endTime: 13.5
+    redStartWorldX: 600
+  - label: "05 \uCE74\uD0A4 \uD6C4\uD1F4\xB7\uBCF4\uB137\xB7\uC7A5\uC804\xB7\uC5F0\uAE30\xB7\uBC1C\uC0AC"
+    startTime: 13.5
+    endTime: 23.1
+    redStartWorldX: 1000
+  - label: "06 \uBBF8\uC0AC\uC77C \uBE44\uD589 | 05 \uBC1C\uC0AC\uC640 \uACB9\uCCD0
+      \uC2DC\uC791\xB7\uD0D1\uB2E4\uC6B4"
+    startTime: 13.5
+    endTime: 23.1
+    redStartWorldX: 1000
+  - label: "07 \uAE30\uC874 \uBCF4\uC870 \uAD6C\uB3C4 | 06\uACFC \uAC19\uC740 \uBE44\uD589
+      \uAD6C\uAC04"
+    startTime: 18.45
+    endTime: 23.1
+    redStartWorldX: 230
+  - label: "08 \uB4DC\uB9AC\uD504\uD2B8\xB7\uD68C\uBCF5\xB7\uBD80\uC2A4\uD2B8"
+    startTime: 23.1
+    endTime: 31.1
+    redStartWorldX: -493
+  - label: "09 \uD0D1\uBDF0 \uCC3D\uBB38\xB7\uAD00\uD1B5"
+    startTime: 24.3
+    endTime: 26.9
+    redStartWorldX: -591
+  - label: "10 \uB0B4\uBD80 \uCE74\uBA54\uB77C | \uC2E4\uB0B4 \uBBF8\uC644\uC131"
+    startTime: 25.1
+    endTime: 26.3
+    redStartWorldX: -600
   independentGroundPass: 1
   groundPassTake:
     duration: 8
     speedKph: 560
-    redPassTime: 3.2
+    redPassTime: 2.2
     cameraHeight: 0.45
     focalLength: 24
     kickDegrees: 0.65
   timing:
     groundPass: 1.5
     rearDeparture: 2
-    blueSignal: 0.8
-    khakiResponse: 0.8
+    blueSignal: 6
+    khakiResponse: 4
     dropBack: 1.5
     preparation: 3.6
-    missileChase: 1.8
+    missileChase: 4.5
     driftEntry: 1.2
     windowApproach: 0.8
     cabinPass: 1.2
@@ -1611,10 +1635,10 @@ MonoBehaviour:
   groundCameraOffset: {x: 0, y: 0, z: 0}
   rearCameraOffset: {x: 0, y: 0, z: 0}
   vehicleFramingScale: 3.3149998
-  raceSpeedKph: 150
+  raceSpeedKph: 70
   drivingSpeedMultiplier: 8
-  dropBackMetres: 22
-  blueLeadMetres: 30
+  dropBackMetres: 14
+  blueLeadMetres: 8
   redDriftLagMetres: 8
   driftSideMetres: 2.4
   cinematicMotion: 1
@@ -1627,7 +1651,7 @@ MonoBehaviour:
   driftSmokePeak: 1
   missileWispsDensity: 0.22
   slowMotionRate: 0.08
-  boostExtraKph: 2
+  boostExtraKph: 110
   passengerWindow: {fileID: 642240619}
   driverWindow: {fileID: 353980531}
   interiorCameraReady: 0
@@ -1648,15 +1672,10 @@ MonoBehaviour:
   boostNozzles:
   - {fileID: 4422771978516440260}
   - {fileID: 2561079782725131939}
-  productionNotes: "\uCD5C\uC2E0 \uCC28\uB7C9 \uD06C\uAE30 \uC720\uC9C0. \uC11C\uBE0C
-    3\uB300\uB294 \uD6C4\uD1F4\uD55C \uCE74\uD0A4\uBCF4\uB2E4 \uB4A4. 20\uCD08 \uC2DC\uAC04\uD45C/3.6\uCD08
-    \uBCF4\uB137 \uC900\uBE44 \uC720\uC9C0. \uC6B4\uC804\uC790 \uB208\uCE58\uC640
-    \uC2E4\uB0B4 \uCEF7\uC740 \uBCC4\uB3C4 \uC5F0\uACB0 \uC804 \uC678\uBD80/\uD0D1\uBDF0
-    \uB300\uCCB4. \uCC3D\uBB38 \uACBD\uB85C\uB294 \uCD2C\uC601\uC6A9\uC774\uBA70
-    \uCC28\uCCB4/\uC720\uB9AC \uCDA9\uB3CC \uBB3C\uB9AC\uB294 \uBCC0\uACBD\uD558\uC9C0
-    \uC54A\uC74C.\nCinematic copy: independent scripts; all six scene cars unpacked.
-    Map/color/source scene/prefabs unchanged. Preview existing sound only; interior
-    shot/driver acting still unfinished."
+  productionNotes: 03+04 ONE CONTINUOUS EXTERIOR TAKE. 03 Blue waits and aligns;
+    04 aligned hold and Blue exit. Camera 03/04 share one anchor and matched lenses,
+    so there is no visible cut. 05 remains Khaki dropback. Private scene only; map,
+    sky, lighting, grading, terrain, car prefab scale and Recorder untouched.
 --- !u!4 &184688043
 Transform:
   m_ObjectHideFlags: 0
@@ -1702,8 +1721,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.2
-        value: 2
+        time: 0.36666667
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1711,16 +1730,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.4
-        value: 6
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.62
+        time: 0.6333333
         value: 8
         inSlope: 0
         outSlope: 0
@@ -1729,8 +1739,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.8
-        value: 7
+        time: 0.8999333
+        value: 16
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1738,8 +1748,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.9999
-        value: 7
+        time: 0.9
+        value: -1955
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1748,7 +1758,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -2163
+        value: -1955
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1763,42 +1773,6 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.22
-        value: -0.1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.4
-        value: -1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.58
-        value: -0.85
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.8
         value: 0
         inSlope: 0
         outSlope: 0
@@ -1834,8 +1808,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.18
-        value: 8
+        time: 0.36666667
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1843,26 +1817,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.35
-        value: 15
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.5
-        value: 13
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.64
-        value: 3
+        time: 0.53333336
+        value: -22
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1871,7 +1827,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 0.8
-        value: 2
+        value: -22
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1879,8 +1835,17 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.9999
-        value: 2
+        time: 0.8999333
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.9
+        value: -1970
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1889,7 +1854,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -2168
+        value: -1970
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1912,8 +1877,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.2
-        value: 0.2
+        time: 0.36666667
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1921,8 +1886,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.45
-        value: 0.3
+        time: 0.4
+        value: 0.85
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1930,7 +1895,88 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.65
+        time: 0.445
+        value: 1.15
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5
+        value: 0.8
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.56666666
+        value: 0.45
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.63
+        value: 0.45
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.655
+        value: -0.15
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.68
+        value: -0.75
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.72
+        value: -1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.76
+        value: -0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.8
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.9
         value: 0
         inSlope: 0
         outSlope: 0
@@ -1966,25 +2012,7 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.24
-        value: 2
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.48
-        value: -2
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.65
+        time: 0.8
         value: 0
         inSlope: 0
         outSlope: 0
@@ -1993,8 +2021,17 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.9999
-        value: 0
+        time: 0.8999333
+        value: -8
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.9
+        value: -1979
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2003,7 +2040,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -2170
+        value: -1979
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2026,8 +2063,44 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.35
-        value: -0.25
+        time: 0.39
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.425
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.47
+        value: 0.85
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.55
+        value: 0.75
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.62
+        value: 0.3
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2036,6 +2109,51 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 0.65
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.675
+        value: -0.8
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.71
+        value: -1.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.76
+        value: -0.15
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.8
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.9
         value: 0
         inSlope: 0
         outSlope: 0
@@ -2071,8 +2189,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.28
-        value: -3.8999999
+        time: 0.8999333
+        value: 5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2080,26 +2198,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.55
-        value: -9
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.82
-        value: -6
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.9999
-        value: -6
+        time: 0.9
+        value: -1966
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2108,7 +2208,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -2176
+        value: -1966
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2123,24 +2223,6 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.35
-        value: -0.35
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.7
         value: 0
         inSlope: 0
         outSlope: 0
@@ -2176,8 +2258,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.28
-        value: -5.2
+        time: 0.8999333
+        value: 5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2185,26 +2267,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.55
-        value: 2
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.82
-        value: -8
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.9999
-        value: -8
+        time: 0.9
+        value: -1966
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2213,7 +2277,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -2178
+        value: -1966
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2228,24 +2292,6 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.35
-        value: 0.35
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.7
         value: 0
         inSlope: 0
         outSlope: 0
@@ -2281,8 +2327,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.28
-        value: -6.5
+        time: 0.8999333
+        value: 5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2290,26 +2336,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.55
-        value: -9
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.82
-        value: -10
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.9999
-        value: -10
+        time: 0.9
+        value: -1966
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2318,7 +2346,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: -2180
+        value: -1966
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2333,24 +2361,6 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.35
-        value: -0.35
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.7
         value: 0
         inSlope: 0
         outSlope: 0
@@ -4593,7 +4603,7 @@ Transform:
   m_GameObject: {fileID: 493739227}
   serializedVersion: 2
   m_LocalRotation: {x: -0.036042854, y: 0.9197727, z: -0.08701516, w: -0.38098228}
-  m_LocalPosition: {x: 1790.2716, y: -25.146418, z: 11.018797}
+  m_LocalPosition: {x: 1155, y: -25.146418, z: 6.2000017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4668,7 +4678,7 @@ Transform:
   m_GameObject: {fileID: 497035622}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.29143885, z: -0, w: 0.95658946}
-  m_LocalPosition: {x: 1781.4319, y: -27.483418, z: 0.2894956}
+  m_LocalPosition: {x: 1146.1603, y: -27.483418, z: -4.5292997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4708,10 +4718,11 @@ MonoBehaviour:
   brain: {fileID: 961739754}
   opening: {fileID: 498893856}
   missileSequence: {fileID: 3816784084423458971}
-  activeShot: 2
+  activeShot: 1
   roadForward: {x: -1, y: 0, z: 0}
   shots:
-  - label: "\uC9C0\uBA74 \uADFC\uC811 \xB7 22mm \uACE0\uC815 \uD1B5\uACFC"
+  - label: "\uC9C0\uBA74 \uC811\uADFC\xB7\uACE0\uC815 \uD1B5\uACFC | 01 \uB3C5\uB9BD
+      8\uCD08"
     camera: {fileID: 1435382971}
     target: {fileID: 5256831219912890109}
     mode: 1
@@ -4766,106 +4777,111 @@ MonoBehaviour:
       \uAC00\uAE4C\uC6B4 \uD750\uB984\uC744 \uBCF4\uC5EC\uC90D\uB2C8\uB2E4. \uB3C4\uB85C
       \uB192\uC774\uB098 \uCC28\uB7C9 \uAE30\uC900\uC810\uC774 \uB2EC\uB77C\uC9C0\uBA74
       Y\uB97C \uB2E4\uC2DC \uC870\uC808\uD558\uC138\uC694."
-  - label: "\uD30C\uB791 \uC2E0\uD638 \xB7 85mm \uC678\uBD80 \uC784\uC2DC \uCEF7"
+  - label: "\uD30C\uB791 \uB300\uAE30\xB7\uCE74\uD0A4 \uC815\uB82C | 03+04 \uC5F0\uC18D
+      1/2"
     camera: {fileID: 628965913}
-    target: {fileID: 3012942508440639135}
-    mode: 2
-    positionOffset: {x: 14, y: 1.6, z: 3}
-    aimOffset: {x: 1, y: 0.6, z: 0.8}
-    followFiredMissile: 0
-    overhead: 0
-    useFocalLength: 1
-    focalLengthMm: 85
-    overheadUp: {x: 0, y: 0, z: 0}
-    vibrationMetres: 0
-    hasBoostPose: 0
-    boostPositionOffset: {x: 0, y: 0, z: 0}
-    boostAimOffset: {x: 0, y: 0, z: 0}
-    compositionTarget: {fileID: 0}
-    compositionWeight: 0
-    hasEndPose: 0
-    moveProgress: 0
-    endPositionOffset: {x: 0, y: 0, z: 0}
-    endAimOffset: {x: 0, y: 0, z: 0}
-    wideTarget: {fileID: 0}
-    productionNote: "\uC6B4\uC804\uC790 \uC2E4\uB0B4 \uC5F0\uAE30\uB294 \uC544\uC9C1
-      \uC5F0\uACB0\uD558\uC9C0 \uC54A\uC740 \uC678\uBD80 \uC2E0\uD638 \uC704\uCE58
-      \uCEF7\uC785\uB2C8\uB2E4. \uACF5\uC6A9 \uC6B4\uC804\uC790 \uD504\uB9AC\uD339\uC744
-      \uC218\uC815\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
-  - label: "\uCE74\uD0A4 \uC751\uB2F5 \xB7 85mm \uC678\uBD80 \uC784\uC2DC \uCEF7"
-    camera: {fileID: 6829535}
-    target: {fileID: 2547420386921028047}
-    mode: 2
-    positionOffset: {x: -14, y: 3.6, z: 4}
-    aimOffset: {x: -1, y: 2.7, z: 1}
-    followFiredMissile: 0
-    overhead: 0
-    useFocalLength: 1
-    focalLengthMm: 85
-    overheadUp: {x: 0, y: 0, z: 0}
-    vibrationMetres: 0
-    hasBoostPose: 0
-    boostPositionOffset: {x: 0, y: 0, z: 0}
-    boostAimOffset: {x: 0, y: 0, z: 0}
-    compositionTarget: {fileID: 0}
-    compositionWeight: 0
-    hasEndPose: 0
-    moveProgress: 0
-    endPositionOffset: {x: 0, y: 0, z: 0}
-    endAimOffset: {x: 0, y: 0, z: 0}
-    wideTarget: {fileID: 0}
-    productionNote: "\uCC28\uB7C9 \uCC3D\uBB38 \uADFC\uC811 \uC704\uCE58\uB9CC \uC900\uBE44\uD588\uC2B5\uB2C8\uB2E4.
-      \uB208\uBE5B \uC5F0\uAE30\uB294 \uC6B4\uC804\uC790 \uBAA8\uB378/\uC560\uB2C8\uBA54\uC774\uC158\uC744
-      \uC5F0\uACB0\uD55C \uB4A4 \uCD2C\uC601\uD569\uB2C8\uB2E4."
-  - label: "\uCE74\uD0A4 \uD6C4\uD1F4 \xB7 40mm \uC55E \uADF8\uB8F9\uC5D0\uC11C \uB4A4\uB97C
-      \uBCF4\uAE30"
-    camera: {fileID: 1938859124}
-    target: {fileID: 5256831219912890109}
+    target: {fileID: 1150774604}
     mode: 0
-    positionOffset: {x: 10, y: 2, z: -8}
-    aimOffset: {x: 0, y: 1, z: 0}
+    positionOffset: {x: 10, y: 0.55, z: -12}
+    aimOffset: {x: 0, y: 0.25, z: 2}
     followFiredMissile: 0
     overhead: 0
-    useFocalLength: 1
+    useFocalLength: 0
+    focalLengthMm: 28
+    overheadUp: {x: 0, y: 0, z: 0}
+    vibrationMetres: 0
+    hasBoostPose: 0
+    boostPositionOffset: {x: 0, y: 0, z: 0}
+    boostAimOffset: {x: 0, y: 0, z: 0}
+    compositionTarget: {fileID: 0}
+    compositionWeight: 0
+    hasEndPose: 0
+    moveProgress: 0
+    endPositionOffset: {x: 0, y: 0, z: 0}
+    endAimOffset: {x: 0, y: 0, z: 0}
+    wideTarget: {fileID: 0}
+    productionNote: 'One continuous camera path through 03 and 04: road rush, Blue
+      eases back, windows align. No cut at the phase boundary.'
+  - label: "\uB098\uB780\uD55C \uC2E0\uD638\xB7\uD30C\uB791 \uC774\uD0C8 | 03+04
+      \uC5F0\uC18D 2/2"
+    camera: {fileID: 6829535}
+    target: {fileID: 1150774604}
+    mode: 0
+    positionOffset: {x: 10, y: 0.55, z: -12}
+    aimOffset: {x: 0, y: 0.25, z: 2}
+    followFiredMissile: 0
+    overhead: 0
+    useFocalLength: 0
+    focalLengthMm: 28
+    overheadUp: {x: 0, y: 0, z: 0}
+    vibrationMetres: 0
+    hasBoostPose: 0
+    boostPositionOffset: {x: 0, y: 0, z: 0}
+    boostAimOffset: {x: 0, y: 0, z: 0}
+    compositionTarget: {fileID: 0}
+    compositionWeight: 0
+    hasEndPose: 0
+    moveProgress: 0
+    endPositionOffset: {x: 0, y: 0, z: 0}
+    endAimOffset: {x: 0, y: 0, z: 0}
+    wideTarget: {fileID: 0}
+    productionNote: Matched camera and same animated anchor as 03. Hold window alignment,
+      then stay with Khaki as Blue accelerates away.
+  - label: "\uCE74\uD0A4 \uD6C4\uD1F4\u2192\uBCF4\uB137\u2192\uBC1C\uC0AC | 05"
+    camera: {fileID: 1938859124}
+    target: {fileID: 9000000000000000202}
+    mode: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+    aimOffset: {x: 0, y: 0, z: 0}
+    followFiredMissile: 0
+    overhead: 0
+    useFocalLength: 0
     focalLengthMm: 40
     overheadUp: {x: 0, y: 0, z: 0}
     vibrationMetres: 0
     hasBoostPose: 0
     boostPositionOffset: {x: 0, y: 0, z: 0}
     boostAimOffset: {x: 0, y: 0, z: 0}
-    compositionTarget: {fileID: 2547420386921028047}
+    compositionTarget: {fileID: 9000000000000000205}
     compositionWeight: 1
     hasEndPose: 0
     moveProgress: 0
     endPositionOffset: {x: 0, y: 0, z: 0}
     endAimOffset: {x: 0, y: 0, z: 0}
     wideTarget: {fileID: 0}
-    productionNote: 
-  - label: 06 Hood launch - 40mm side-to-front orbit
+    productionNote: Camera 05 moves smoothly from Khaki retreat around the car side
+      into the front bonnet view. Its take ends after the fourth missile launches.
+      Camera 06 begins 0.15 seconds before launch from the same animated position
+      and aim for a seamless edit. Restart Play for a clean loaded missile on each
+      recording.
+  - label: "\uBBF8\uC0AC\uC77C \uBE44\uD589 | 06 \uD0D1\uB2E4\uC6B4 \uCD94\uC801"
     camera: {fileID: 2030033379}
-    target: {fileID: 2547420386921028047}
-    mode: 2
-    positionOffset: {x: -11, y: 4.6, z: 13.5}
-    aimOffset: {x: 0, y: 2.4, z: 3.2}
+    target: {fileID: 9000000000000000202}
+    mode: 0
+    positionOffset: {x: 0, y: 0, z: 0}
+    aimOffset: {x: 0, y: 0, z: 0}
     followFiredMissile: 0
     overhead: 0
-    useFocalLength: 1
-    focalLengthMm: 40
+    useFocalLength: 0
+    focalLengthMm: 50
     overheadUp: {x: 0, y: 0, z: 0}
     vibrationMetres: 0
     hasBoostPose: 0
     boostPositionOffset: {x: 0, y: 0, z: 0}
     boostAimOffset: {x: 0, y: 0, z: 0}
-    compositionTarget: {fileID: 0}
-    compositionWeight: 0
-    hasEndPose: 1
+    compositionTarget: {fileID: 9000000000000000205}
+    compositionWeight: 1
+    hasEndPose: 0
     moveProgress: 0
-    endPositionOffset: {x: -1, y: 4.3, z: 7.8}
-    endAimOffset: {x: 0, y: 2.7, z: 4.8}
+    endPositionOffset: {x: 0, y: 0, z: 0}
+    endAimOffset: {x: 0, y: 0, z: 0}
     wideTarget: {fileID: 0}
-    productionNote: '6.6-10.2s: follow Khaki from front-side to bonnet, physical
-      push-in while missile rises. Shot07 flight unchanged.'
-  - label: "\uBBF8\uC0AC\uC77C \xB7 24mm \uADFC\uC811\uC5D0\uC11C \uB192\uC740 \uC0AC\uC120"
+    productionNote: Camera 06 begins before launch with the same camera position
+      and aim as 05. It follows the launched fourth missile into a fast overhead
+      rise, close overhead beat, and wide retreat. Film starts at 18.45 and overlaps
+      the 05 launch for editing.
+  - label: "\uBBF8\uC0AC\uC77C \uBCF4\uC870 \uAD6C\uB3C4 | 05\uC5D0 \uD3EC\uD568\xB707
+      \uBBF8\uC0AC\uC6A9"
     camera: {fileID: 1678259997}
     target: {fileID: 1783201597120162735}
     mode: 0
@@ -5606,6 +5622,69 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 568845582}
   m_Mesh: {fileID: 5234736100583569000, guid: cc9b9050776166141ab6464419ab7eba, type: 3}
+--- !u!1 &571794335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 571794337}
+  - component: {fileID: 571794336}
+  m_Layer: 0
+  m_Name: DM_Shot03_CameraTimeline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!320 &571794336
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571794335}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 505b0000577446442be515e5da7c3a4c, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 0
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -4392264945890918984, guid: 505b0000577446442be515e5da7c3a4c, type: 2}
+    value: {fileID: 1150774603}
+  - key: {fileID: 378623695148809675, guid: 505b0000577446442be515e5da7c3a4c, type: 2}
+    value: {fileID: 628965915}
+  - key: {fileID: 8584978040067200592, guid: 505b0000577446442be515e5da7c3a4c, type: 2}
+    value: {fileID: 6829537}
+  - key: {fileID: 9000000000000000111, guid: 505b0000577446442be515e5da7c3a4c, type: 2}
+    value: {fileID: 9000000000000000203}
+  - key: {fileID: 9000000000000000112, guid: 505b0000577446442be515e5da7c3a4c, type: 2}
+    value: {fileID: 9000000000000000206}
+  - key: {fileID: 9000000000000000113, guid: 505b0000577446442be515e5da7c3a4c, type: 2}
+    value: {fileID: 9000000000000000207}
+  - key: {fileID: 9000000000000000114, guid: 505b0000577446442be515e5da7c3a4c, type: 2}
+    value: {fileID: 9000000000000000313}
+  m_ExposedReferences:
+    m_References: []
+--- !u!4 &571794337
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571794335}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &577081366
 GameObject:
   m_ObjectHideFlags: 0
@@ -5817,7 +5896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 100
+    m_Value: 10
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -5854,8 +5933,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 592166812}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.006599659, y: 0.9706932, z: 0.02683489, w: -0.23872814}
-  m_LocalPosition: {x: 1791.2716, y: -28.8, z: 10.018797}
+  m_LocalRotation: {x: -0.0062478394, y: 0.9860974, z: 0.038121104, w: 0.16161592}
+  m_LocalPosition: {x: 1156, y: -28.8, z: 5.2000017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6141,6 +6220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 628965914}
   - component: {fileID: 628965913}
+  - component: {fileID: 628965915}
   m_Layer: 0
   m_Name: CM_Shot03_BlueSignal
   m_TagString: Untagged
@@ -6162,17 +6242,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 1
-    m_Value: 10
+    m_Value: 100
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 3012942508440639135}
-    LookAtTarget: {fileID: 3012942508440639135}
+    TrackingTarget: {fileID: 1150774604}
+    LookAtTarget: {fileID: 1150774604}
     CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 13.585862
+    FieldOfView: 49.42635
     OrthographicSize: 10
     NearClipPlane: 0.015
     FarClipPlane: 3500
@@ -6199,13 +6279,35 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 628965912}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0031680851, y: 0.9957756, z: -0.03770801, w: 0.08366131}
-  m_LocalPosition: {x: 1786.0052, y: -26.489817, z: 7.6984653}
+  m_LocalRotation: {x: -0.013281382, y: 0.88879305, z: -0.025808241, w: -0.45738876}
+  m_LocalPosition: {x: 1212, y: -28.756487, z: 17.800003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 498893857}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &628965915
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628965912}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &642240618
 GameObject:
   m_ObjectHideFlags: 0
@@ -9219,7 +9321,7 @@ Camera:
     height: 1
   near clip plane: 0.03
   far clip plane: 3500
-  field of view: 39.760704
+  field of view: 37.29908
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -9245,8 +9347,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.006599659, y: 0.9706932, z: 0.02683489, w: -0.23872814}
-  m_LocalPosition: {x: 1791.2716, y: -28.8, z: 10.018797}
+  m_LocalRotation: {x: -0.013281382, y: 0.88879305, z: -0.025808241, w: -0.45738876}
+  m_LocalPosition: {x: 1212, y: -28.756487, z: 17.800003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10637,7 +10739,7 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: 8b40f86f5cbc31544805dd327cfd165d, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 0c21183143c82d349b943a35035e4386, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &1070987341
 Terrain:
@@ -10648,7 +10750,7 @@ Terrain:
   m_GameObject: {fileID: 1070987338}
   m_Enabled: 1
   serializedVersion: 6
-  m_TerrainData: {fileID: 15600000, guid: 8b40f86f5cbc31544805dd327cfd165d, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 0c21183143c82d349b943a35035e4386, type: 2}
   m_TreeDistance: 5000
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
@@ -10687,7 +10789,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1070987338}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8a4b32ab65f4d1e9ca3d6ea8fa2d901, type: 3}
   m_Name: 
@@ -11176,6 +11278,60 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array: []
+--- !u!1 &1150774602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1150774604}
+  - component: {fileID: 1150774603}
+  m_Layer: 0
+  m_Name: DM_Shot03_CameraAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!95 &1150774603
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150774602}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1150774604
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150774602}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2547420386921028047}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1178767126
 GameObject:
   m_ObjectHideFlags: 0
@@ -12697,7 +12853,7 @@ Transform:
   m_GameObject: {fileID: 1435382970}
   serializedVersion: 2
   m_LocalRotation: {x: -0.004419688, y: 0.64698267, z: 0.0037501985, w: 0.7624827}
-  m_LocalPosition: {x: 1355.7616, y: -29.27, z: -9.4}
+  m_LocalPosition: {x: 1000, y: -29.27, z: -9.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14889,7 +15045,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 1783201597120162735}
     CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 32.2688
+    FieldOfView: 41.67226
     OrthographicSize: 10
     NearClipPlane: 0.015
     FarClipPlane: 3500
@@ -14917,7 +15073,7 @@ Transform:
   m_GameObject: {fileID: 1678259996}
   serializedVersion: 2
   m_LocalRotation: {x: 0.031632874, y: -0.8190223, z: 0.04536594, w: 0.5710899}
-  m_LocalPosition: {x: 1800.6866, y: -27.272675, z: 7.4215097}
+  m_LocalPosition: {x: 1199.5043, y: -27.272675, z: 5.7182903}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17401,6 +17557,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1938859125}
   - component: {fileID: 1938859124}
+  - component: {fileID: 9000000000000000207}
   m_Layer: 0
   m_Name: CM_Shot05_KhakiDropBack
   m_TagString: Untagged
@@ -17428,11 +17585,11 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 5256831219912890109}
-    LookAtTarget: {fileID: 5256831219912890109}
+    TrackingTarget: {fileID: 9000000000000000202}
+    LookAtTarget: {fileID: 9000000000000000205}
     CustomLookAtTarget: 1
   Lens:
-    FieldOfView: 28.409273
+    FieldOfView: 25
     OrthographicSize: 10
     NearClipPlane: 0.015
     FarClipPlane: 3500
@@ -17459,8 +17616,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1938859123}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.048674393, y: 0.83126086, z: -0.07372411, w: 0.5488179}
-  m_LocalPosition: {x: 1788.2716, y: -26.146418, z: 11.018797}
+  m_LocalRotation: {x: 0.018350517, y: 0.7246556, z: -0.019311475, w: 0.68859607}
+  m_LocalPosition: {x: 1153, y: -26.146418, z: 6.2000017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18556,7 +18713,7 @@ GameObject:
   - component: {fileID: 2030033380}
   - component: {fileID: 2030033379}
   m_Layer: 0
-  m_Name: CM_Shot06_HoodLaunch
+  m_Name: CM_Shot06_MissileTopDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18582,8 +18739,8 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 2547420386921028047}
-    LookAtTarget: {fileID: 2547420386921028047}
+    TrackingTarget: {fileID: 9000000000000000202}
+    LookAtTarget: {fileID: 9000000000000000205}
     CustomLookAtTarget: 1
   Lens:
     FieldOfView: 28.40927
@@ -18614,7 +18771,7 @@ Transform:
   m_GameObject: {fileID: 2030033378}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16686602, y: 0.6871359, z: -0.166866, w: 0.68713593}
-  m_LocalPosition: {x: 1790.3823, y: -23.756487, z: 5.5032177}
+  m_LocalPosition: {x: 1189.2, y: -23.756487, z: 3.7999988}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -27235,6 +27392,7 @@ Transform:
   m_Children:
   - {fileID: 106708840107883204}
   - {fileID: 4557594603514116346}
+  - {fileID: 9000000000000000202}
   m_Father: {fileID: 1783201597120162735}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &423780825148758827
@@ -35440,7 +35598,7 @@ Transform:
   m_GameObject: {fileID: 2653356892595156489}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
-  m_LocalPosition: {x: 1866.937, y: -29.647947, z: 5.399856}
+  m_LocalPosition: {x: 1302, y: -29.647947, z: 3.8}
   m_LocalScale: {x: 3.6914148, y: 3.6914148, z: 3.6914148}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -83232,11 +83390,12 @@ Transform:
   m_GameObject: {fileID: 3624710662886921628}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
-  m_LocalPosition: {x: 1801.1824, y: -29.656487, z: 5.503219}
+  m_LocalPosition: {x: 1200, y: -29.656487, z: 3.8}
   m_LocalScale: {x: 2.1868787, y: 2.1868787, z: 2.1868787}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2609930703940187733}
+  - {fileID: 1150774604}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2551088577379501938
@@ -94601,7 +94760,7 @@ Transform:
   m_GameObject: {fileID: 4889141133383742865}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
-  m_LocalPosition: {x: 1789.0052, y: -28.089817, z: -6.3015356}
+  m_LocalPosition: {x: 1178, y: -28.089817, z: -3.8}
   m_LocalScale: {x: 3.315, y: 3.315, z: 3.315}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -109499,7 +109658,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Damin.SceneOnly.DMScene_MissilePreparationSlide
   sequence: {fileID: 3816784084423458971}
   preparationMount: {fileID: 1783201597120162735}
-  forwardDistanceCm: 4
+  forwardDistanceCm: 15
   restLocalPosition: {x: 0.23700002, y: 0.884279, z: 1.6899489}
 --- !u!114 &3624710662886921630
 MonoBehaviour:
@@ -111517,7 +111676,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3244998212935112153}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 8a8d1cb9830645418545c315c95dc348, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 5e6e109de5573eb4490a1c0497832039, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 202609105
@@ -114081,10 +114240,10 @@ MonoBehaviour:
     flightLifetime: 12
   bodySmoke:
     enabled: 1
-    interiorStart: 1.2
-    interiorFillDuration: 1.4
-    interiorSpawnRate: 450
-    interiorDensity: 2.6
+    interiorStart: 1.55
+    interiorFillDuration: 1.05
+    interiorSpawnRate: 650
+    interiorDensity: 2.85
     interiorParticleSize: 0.17
     interiorTurbulence: 0.018
     sideStart: 2.65
@@ -114092,9 +114251,9 @@ MonoBehaviour:
     overflowThreshold: 0.78
     maxLateralDistance: 0.18
     interiorGrowth: 0.055
-    sideSpawnRate: 120
-    sideDensity: 0.58
-    sideParticleSize: 0.075
+    sideSpawnRate: 230
+    sideDensity: 1.05
+    sideParticleSize: 0.09
     sideSpeed: 0.6
     sideSpread: 0.28
     sideTurbulence: 0.13
@@ -114114,8 +114273,8 @@ MonoBehaviour:
     interiorFadeDuration: 1.2
     sideFadeDuration: 5
     residualFadeDuration: 1.8
-    launchBurstIntensity: 1
-    residualSpawnRate: 100
+    launchBurstIntensity: 1.35
+    residualSpawnRate: 140
     residualDensity: 1.3
     smokeColor: {r: 0.88, g: 0.89, b: 0.9, a: 1}
     smokeLifetime: 4.2
@@ -114123,15 +114282,15 @@ MonoBehaviour:
     collisionMargin: 0.025
     smokeRoundness: 1
   interiorSmoke:
-    InteriorSmokeStartTime: 1.2
-    InteriorBuildUpDuration: 1.4
+    InteriorSmokeStartTime: 1.55
+    InteriorBuildUpDuration: 1.05
     InteriorSpawnRateMin: 20
-    InteriorSpawnRateMax: 600
+    InteriorSpawnRateMax: 850
     InteriorLifetimeMin: 2.8
     InteriorLifetimeMax: 3.8
     InteriorStartSize: 0.065
     InteriorEndSize: 0.19
-    InteriorOpacity: 0.26
+    InteriorOpacity: 0.32
     InteriorColor: {r: 0.64, g: 0.65, b: 0.66, a: 1}
     InteriorTurbulence: 0.014
     InteriorUpwardForce: 0.008
@@ -114139,16 +114298,16 @@ MonoBehaviour:
   missileSmoke:
     enabled: 1
     exhaustStartDelay: 0.02
-    trailSpawnRate: 1600
-    trailDensity: 1.6
+    trailSpawnRate: 2600
+    trailDensity: 1.25
     trailWidth: 0.16
-    trailExpansion: 1.2
-    trailTurbulence: 0.34
+    trailExpansion: 0.62
+    trailTurbulence: 0.23
     trailSpeed: 3
     trailLength: 32
     maxSmokeLifetime: 6
     trailColor: {r: 0.82, g: 0.82, b: 0.82, a: 1}
-    extraParticlesPerMeter: 160
+    extraParticlesPerMeter: 240
     maxTrailSpawnRate: 9000
     tailCleanupPadding: 0.25
     tailFadeStart: 0.4
@@ -129053,7 +129212,7 @@ MonoBehaviour:
   buildUpTime: 0.24
   fadeOutTime: 0.65
   surgeThreshold: 0.6
-  surgeBoost: 1.05
+  surgeBoost: 0.8
   layers:
   - layerPrefix: 01_
     response:
@@ -129098,7 +129257,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    maxStrength: 1.15
+    maxStrength: 0.8
   - layerPrefix: 02_
     response:
       serializedVersion: 2
@@ -129142,7 +129301,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    maxStrength: 1.3
+    maxStrength: 1
   - layerPrefix: 03_
     response:
       serializedVersion: 2
@@ -129186,7 +129345,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    maxStrength: 1.65
+    maxStrength: 1.4
   - layerPrefix: 04_
     response:
       serializedVersion: 2
@@ -129230,7 +129389,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    maxStrength: 0.8
+    maxStrength: 0.6
   - layerPrefix: 05_
     response:
       serializedVersion: 2
@@ -129274,12 +129433,12 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    maxStrength: 1.65
+    maxStrength: 1.26
   referenceWheelRadius: 0.65
   wrapAmount: 0.8
   previewAngularSpeed: 5.7
-  smokeLifetime: 3
-  smokeExpansion: 1.85
+  smokeLifetime: 1.7
+  smokeExpansion: 1.6
   vehicleSpeed: 0
   speedToWake:
     serializedVersion: 2
@@ -129305,9 +129464,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  groundWidth: 2
-  groundHeight: 0.75
-  trailLength: 2
+  groundWidth: 1
+  groundHeight: 1
+  trailLength: 1
   previewOnPlay: 0
   loopPreview: 0
   sequenceStartDelay: 2
@@ -135747,7 +135906,7 @@ Transform:
   m_GameObject: {fileID: 452583406062171028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
-  m_LocalPosition: {x: 1889.095, y: -29.1513, z: -0.76265574}
+  m_LocalPosition: {x: 1330, y: -29.1513, z: 0}
   m_LocalScale: {x: 2.3098347, y: 2.3098347, z: 2.3098347}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -150067,7 +150226,7 @@ Transform:
   m_GameObject: {fileID: 4112279421186371281}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
-  m_LocalPosition: {x: 1780.2716, y: -28.146418, z: 1.0187955}
+  m_LocalPosition: {x: 1145, y: -28.146418, z: -3.8}
   m_LocalScale: {x: 3.637218, y: 3.637218, z: 3.637218}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -160481,7 +160640,7 @@ Transform:
   m_GameObject: {fileID: 6006400678910776343}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
-  m_LocalPosition: {x: 1848.0798, y: -28.283953, z: -5.598806}
+  m_LocalPosition: {x: 1275, y: -28.283953, z: -3.8}
   m_LocalScale: {x: 3.8321495, y: 3.8321495, z: 3.8321495}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -194587,7 +194746,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1047816627490022340}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 5bce522cb40d4796bc819ad36d5fed15, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: 923d07ddf18b48049a567c3d47e6cc22, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 202609102
@@ -234075,6 +234234,226 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7458893198345842138}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: -26.474}
+--- !u!1 &9000000000000000201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9000000000000000202}
+  - component: {fileID: 9000000000000000203}
+  m_Layer: 0
+  m_Name: DM_Shot05_PositionAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9000000000000000202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000201}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.5, y: -1.35, z: -11.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 9000000000000000205}
+  m_Father: {fileID: 423555970843817782}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &9000000000000000203
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000201}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &9000000000000000204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9000000000000000205}
+  - component: {fileID: 9000000000000000206}
+  m_Layer: 0
+  m_Name: DM_Shot05_AimAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9000000000000000205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.5, y: 1.4, z: 24}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9000000000000000202}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &9000000000000000206
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000204}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!95 &9000000000000000207
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938859123}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &9000000000000000311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9000000000000000312}
+  - component: {fileID: 9000000000000000314}
+  - component: {fileID: 9000000000000000313}
+  m_Layer: 0
+  m_Name: DM_Shot05_LaunchedMissileRefraction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9000000000000000312
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000311}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &9000000000000000313
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000311}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &9000000000000000314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000000000000000311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c17da27114f6be943b2d220617544953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Damin.VFX.AirDistortion.Reusable.ReusableBulletAirDistortion
+  Target: {fileID: 423555970843817782}
+  ViewCamera: {fileID: 961739752}
+  DistortionStrength: 0
+  SizeMultiplier: 1.1
+  WakeLengthMultiplier: 1.6
+  TrailFade: 0.16
+  AutoSize: 1
+  ManualBulletLength: 0.2
+  ManualBulletDiameter: 0.05
+  CenterOffset: {x: 0, y: 0, z: 0}
+  AutoForwardAxis: 1
+  ForwardAxis: {x: 0, y: 0, z: 1}
+  WidthMultiplier: 1
+  RefractionPixels: 7
+  OpacityMask: 0.8
+  NoiseScale: 4
+  NoiseSpeed: 5
+  FineDetail: 0.35
+  MeasureTargetSpeed: 0
+  FullStrengthSpeed: 60
+  TeleportDistance: 10000
+  DistortionMaterial: {fileID: 2100000, guid: 1c9ce167f64d08e4998339a1342b40e3, type: 2}
 --- !u!1 &9000596104233379632
 GameObject:
   m_ObjectHideFlags: 0
@@ -239330,3 +239709,5 @@ SceneRoots:
   - {fileID: 4726954285401336709}
   - {fileID: 916861922}
   - {fileID: 1550333771}
+  - {fileID: 571794337}
+  - {fileID: 9000000000000000312}
