@@ -21,7 +21,7 @@ public static class DomeInTheMoonTerrainGenerator
     private const float RoadStartX = -925f;
     private const float RoadFlatHalfWidth = 21f;
     private const float RoadBlendHalfWidth = 240f;
-    private const int Version = 11;
+    private const int Version = 12;
 
     [InitializeOnLoadMethod]
     private static void GenerateOnce()
@@ -131,11 +131,11 @@ public static class DomeInTheMoonTerrainGenerator
                 float broadNoise = Fbm(worldX, worldZ, 0.00085f, 4, 311f);
                 float detailNoise = Fbm(worldX, worldZ, 0.0032f, 3, 109f);
 
-                // A roughly 4.2km impact crater, shifted from the dome toward map center.
+                // A roughly 4.8km impact crater, shifted from the dome toward map center.
                 float westFactor = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(2.2f, 3.14f, angle));
-                float westClearance = 230f * westFactor;
-                float rimRadius = 2100f - westClearance + (broadNoise - 0.5f) * 175f +
-                    Mathf.Sin(signedAngle * 5f + 0.7f) * 42f;
+                float westClearance = 270f * westFactor;
+                float rimRadius = 2400f - westClearance + (broadNoise - 0.5f) * 220f +
+                    Mathf.Sin(signedAngle * 5f + 0.7f) * 55f;
                 float crestNoise = Fbm(worldX, worldZ, 0.00125f, 4, 533f);
                 float crestVariation = 0.5f +
                     Mathf.Sin(signedAngle * 3f + 0.6f) * 0.23f +
@@ -159,16 +159,21 @@ public static class DomeInTheMoonTerrainGenerator
                     Mathf.InverseLerp(openingStart, openingEnd, angle + gapVariation));
                 float rim = rimProfile * rimHeight * opening;
 
-                // The interior is a broad floor, not a steep, cup-shaped pit.
-                float floorRise = 8f * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(550f, 1550f, distance));
-                float outerRise = 16f * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(2500f, 3300f, distance));
-                float surface = (broadNoise - 0.5f) * 9f + (detailNoise - 0.5f) * 3.5f;
-                surface *= Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(190f, 420f, distance));
+                // The larger interior rolls gently at several scales instead of reading as a clean flat pad.
+                float floorRise = 13f * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(460f, 1820f, distance));
+                float outerRise = 18f * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(2830f, 3400f, distance));
+                float warpX = (Fbm(worldX, worldZ, 0.00072f, 3, 887f) - 0.5f) * 260f;
+                float warpZ = (Fbm(worldX, worldZ, 0.00067f, 3, 929f) - 0.5f) * 230f;
+                float rotatedX = (worldX + warpX) * 0.848f - (worldZ + warpZ) * 0.53f;
+                float rotatedZ = (worldX + warpX) * 0.53f + (worldZ + warpZ) * 0.848f;
+                float rolling = (Fbm(rotatedX, rotatedZ, 0.0017f, 4, 971f) - 0.5f) * 17f;
+                float surface = (broadNoise - 0.5f) * 14f + (detailNoise - 0.5f) * 5f + rolling;
+                surface *= Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(185f, 350f, distance));
                 float h = groundY + floorRise + outerRise + surface + rim;
 
                 // Level only the actual dome footprint, blending into the crater floor.
                 float domeDistance = Vector2.Distance(new Vector2(worldX, worldZ), new Vector2(domeX, domeZ));
-                float domeFlat = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(185f, 355f, domeDistance));
+                float domeFlat = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(185f, 305f, domeDistance));
                 h = Mathf.Lerp(h, groundY, domeFlat);
 
                 // The east rim is broken for the straight 20m road; its shoulders fade gradually.
