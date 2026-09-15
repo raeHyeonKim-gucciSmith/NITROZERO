@@ -45,6 +45,7 @@ public class SplineCarController : MonoBehaviour
         }
 
         splineLength = splineContainer.CalculateLength();
+
         isPlaying = playOnStart;
     }
 
@@ -104,18 +105,19 @@ public class SplineCarController : MonoBehaviour
         Vector3 tangent =
             splineContainer.EvaluateTangent(t);
 
-        transform.position = position;
-
+        Quaternion targetRotation = transform.rotation;
         if (followRotation && tangent.sqrMagnitude > 0.001f)
         {
-            Quaternion targetRotation =
+            targetRotation =
                 Quaternion.LookRotation(
                     tangent.normalized,
                     Vector3.up
                 );
 
-            transform.rotation = targetRotation * Quaternion.Euler(rotationOffsetEuler);
+            targetRotation *= Quaternion.Euler(rotationOffsetEuler);
         }
+
+        transform.SetPositionAndRotation(position, targetRotation);
     }
 
     // ============================
