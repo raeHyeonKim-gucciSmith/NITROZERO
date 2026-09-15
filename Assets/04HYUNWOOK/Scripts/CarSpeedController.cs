@@ -18,7 +18,16 @@ public enum CoordinateSpace
 
 public class CarSpeedController : MonoBehaviour
 {
+    [Header("0. 사용 범위")]
+    [Tooltip("활성화하면 지정한 카메라 번호부터 기존 돔 탈출용 이동을 정지합니다.")]
+    [SerializeField] private bool thirdPersonTrailerOnly = false;
+    [SerializeField] private CutsceneManager cutsceneManager;
+    [SerializeField] private CutsceneCameraType firstPersonCamera = CutsceneCameraType.Camera6;
+
     [Header("1. 속도 및 가속도 설정")]
+    [Tooltip("중간 주행 장면이 시작될 때 이미 유지하고 있는 속도 (km/h)")]
+    [Min(0f)] public float initialSpeedKmh = 0f;
+
     [Tooltip("목표 최고 속도 (km/h)")]
     public float targetSpeedKmh = 300f;
 
@@ -59,9 +68,26 @@ public class CarSpeedController : MonoBehaviour
     // 내부 상태 변수
     private float currentSpeedKmh = 0f;
     private float elapsedTime = 0f;
+    public float CurrentSpeedKmh => currentSpeedKmh;
+    public int CurrentGear { get; private set; } = 1;
+
+    private void Awake()
+    {
+        if (thirdPersonTrailerOnly && cutsceneManager == null)
+            cutsceneManager = FindFirstObjectByType<CutsceneManager>();
+        currentSpeedKmh = Mathf.Clamp(initialSpeedKmh, 0f, Mathf.Max(0f, targetSpeedKmh));
+        UpdateAutomaticGear();
+    }
 
     void Update()
     {
+        if (thirdPersonTrailerOnly && cutsceneManager != null &&
+            cutsceneManager.activeCamera >= firstPersonCamera)
+        {
+            currentSpeedKmh = 0f;
+            return;
+        }
+
         elapsedTime += Time.deltaTime;
 
         // 1. 출발 딜레이 체크
@@ -85,6 +111,7 @@ public class CarSpeedController : MonoBehaviour
         {
             currentSpeedKmh = finalTargetSpeed;
         }
+        UpdateAutomaticGear();
 
         // km/h -> m/s 변환
         float currentSpeedMps = currentSpeedKmh / 3.6f;
@@ -108,6 +135,13 @@ public class CarSpeedController : MonoBehaviour
         {
             transform.Translate(moveDir * currentSpeedMps * Time.deltaTime, Space.World);
         }
+    }
+
+    private void UpdateAutomaticGear()
+    {
+        CurrentGear = currentSpeedKmh <= 0.01f
+            ? 1
+            : Mathf.Clamp(Mathf.CeilToInt(currentSpeedKmh / 50f), 1, 6);
     }
 
     private Vector3 GetSelectedDirection()

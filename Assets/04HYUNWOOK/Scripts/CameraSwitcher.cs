@@ -8,7 +8,10 @@ public enum CutsceneCameraType
     Camera2,
     Camera3,
     Camera4,
-    Camera5
+    Camera5,
+    Camera6,
+    Camera7,
+    Camera8
 }
 
 [ExecuteAlways] // 에디터(플레이 전) 상태에서도 실시간 작동
@@ -20,6 +23,9 @@ public class CutsceneManager : MonoBehaviour
     public CinemachineCamera camera3;
     public CinemachineCamera camera4;
     public CinemachineCamera camera5;
+    public CinemachineCamera camera6;
+    public CinemachineCamera camera7;
+    public CinemachineCamera camera8;
 
     [Header("플레이 전 시점 선택 (드롭다운)")]
     public CutsceneCameraType activeCamera = CutsceneCameraType.Camera1;
@@ -33,6 +39,29 @@ public class CutsceneManager : MonoBehaviour
 
     [Tooltip("Timeline이 없을 경우 사용할 백업 타이머(초)")]
     public float fallbackDuration = 3.0f;
+
+    public CinemachineCamera ActiveCamera => GetCamera(activeCamera);
+
+    public bool IsActiveCamera(CinemachineCamera camera)
+    {
+        return camera != null && ActiveCamera == camera;
+    }
+
+    private CinemachineCamera GetCamera(CutsceneCameraType type)
+    {
+        switch (type)
+        {
+            case CutsceneCameraType.Camera1: return camera1;
+            case CutsceneCameraType.Camera2: return camera2;
+            case CutsceneCameraType.Camera3: return camera3;
+            case CutsceneCameraType.Camera4: return camera4;
+            case CutsceneCameraType.Camera5: return camera5;
+            case CutsceneCameraType.Camera6: return camera6;
+            case CutsceneCameraType.Camera7: return camera7;
+            case CutsceneCameraType.Camera8: return camera8;
+            default: return null;
+        }
+    }
 
     private void OnEnable()
     {
@@ -83,6 +112,9 @@ public class CutsceneManager : MonoBehaviour
         SetCameraPriority(camera3, activeCamera == CutsceneCameraType.Camera3);
         SetCameraPriority(camera4, activeCamera == CutsceneCameraType.Camera4);
         SetCameraPriority(camera5, activeCamera == CutsceneCameraType.Camera5);
+        SetCameraPriority(camera6, activeCamera == CutsceneCameraType.Camera6);
+        SetCameraPriority(camera7, activeCamera == CutsceneCameraType.Camera7);
+        SetCameraPriority(camera8, activeCamera == CutsceneCameraType.Camera8);
     }
 
     private void SetCameraPriority(CinemachineCamera cam, bool isActive)
