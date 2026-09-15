@@ -19,7 +19,7 @@ public static class JCurveDriftTerrainGenerator
     private const float OriginY = -80f;
     private const float RoadY = -20f;
     private const float RoadHalfWidth = 15f;
-    private const float RoadBlendWidth = 245f;
+    private const float RoadBlendWidth = 360f;
     private const float AsphaltTileWorldSize = 4f;
 
     [MenuItem("NITRO ZERO/Moon Terrain/Create J Curve Drift Scene")]
@@ -86,6 +86,17 @@ public static class JCurveDriftTerrainGenerator
         Debug.Log("[NITRO ZERO] racing 5000x4000 terrain and drift reveal road generated.");
     }
 
+    [MenuItem("NITRO ZERO/Moon Terrain/Rebuild Racing Natural Heights Only")]
+    public static void RebuildNaturalHeightsOnly()
+    {
+        TerrainData data = AssetDatabase.LoadAssetAtPath<TerrainData>(DataPath);
+        if (data == null) throw new MissingReferenceException(DataPath);
+        data.SetHeights(0, 0, BuildHeights());
+        EditorUtility.SetDirty(data);
+        AssetDatabase.SaveAssets();
+        Debug.Log("[NITRO ZERO] Racing terrain rebuilt from the continuous natural-height source.");
+    }
+
     private static float[,] BuildHeights()
     {
         float[,] heights = new float[Resolution, Resolution];
@@ -121,7 +132,8 @@ public static class JCurveDriftTerrainGenerator
 
     private static float DistanceToJRoad(float x, float z)
     {
-        float straight = DistanceToSegment(new Vector2(x, z), new Vector2(-2050f, 600f), new Vector2(-200f, 600f));
+        // Extend the terrain transition beyond both mesh endpoints so it never closes as a circular shelf.
+        float straight = DistanceToSegment(new Vector2(x, z), new Vector2(-2500f, 600f), new Vector2(-200f, 600f));
         Vector2 center = new Vector2(-200f, 0f);
         Vector2 local = new Vector2(x, z) - center;
         float angle = Mathf.Atan2(local.y, local.x) * Mathf.Rad2Deg;
@@ -132,18 +144,18 @@ public static class JCurveDriftTerrainGenerator
             ? Mathf.Abs(local.magnitude - 600f)
             : Mathf.Min(Vector2.Distance(new Vector2(x, z), arcStart), Vector2.Distance(new Vector2(x, z), arcEnd));
         Vector2 exitDirection = new Vector2(Mathf.Sin(endAngle), -Mathf.Cos(endAngle));
-        float exit = DistanceToSegment(new Vector2(x, z), arcEnd, arcEnd + exitDirection * 1450f);
+        float exit = DistanceToSegment(new Vector2(x, z), arcEnd, arcEnd + exitDirection * 1900f);
         return Mathf.Min(straight, Mathf.Min(arc, exit));
     }
 
     private static float RevealMountainRange(float x, float z)
     {
         float h = 0f;
-        h += Mound(x, z, -200f,  20f, 330f, 300f, 152f, 31f);
-        h += Mound(x, z, -410f, 110f, 250f, 220f, 116f, 47f);
-        h += Mound(x, z,    0f,  80f, 235f, 210f, 104f, 63f);
-        h += Mound(x, z, -270f,-210f, 210f, 170f,  79f, 79f);
-        h += Mound(x, z,  -80f, 250f, 185f, 150f,  64f, 97f);
+        h += Mound(x, z, -200f,  20f, 470f, 410f, 88f, 31f);
+        h += Mound(x, z, -430f, 115f, 390f, 330f, 64f, 47f);
+        h += Mound(x, z,   35f,  85f, 370f, 315f, 59f, 63f);
+        h += Mound(x, z, -285f,-235f, 340f, 285f, 52f, 79f);
+        h += Mound(x, z,  -70f, 270f, 310f, 250f, 44f, 97f);
         return h;
     }
 
@@ -179,19 +191,19 @@ public static class JCurveDriftTerrainGenerator
         float h = 0f;
         // Long inner ridge under the incoming straight. Unequal overlapping shoulders
         // keep the silhouette high without reading as a straight artificial wall.
-        h += Mound(x, z, -1510f,  105f, 430f, 215f, 116f, 181f);
-        h += Mound(x, z, -1170f,  135f, 390f, 225f, 143f, 199f);
-        h += Mound(x, z,  -820f,   85f, 410f, 205f, 132f, 223f);
-        h += Mound(x, z,  -470f,  125f, 370f, 220f, 157f, 239f);
-        h += Mound(x, z,  -140f,   70f, 350f, 205f, 139f, 257f);
-        h += Mound(x, z,   130f,   25f, 310f, 195f, 121f, 271f);
+        h += Mound(x, z, -1510f, 105f, 610f, 340f, 54f, 181f);
+        h += Mound(x, z, -1170f, 135f, 580f, 350f, 67f, 199f);
+        h += Mound(x, z,  -820f,  85f, 600f, 335f, 63f, 223f);
+        h += Mound(x, z,  -470f, 125f, 560f, 350f, 74f, 239f);
+        h += Mound(x, z,  -140f,  70f, 520f, 325f, 68f, 257f);
+        h += Mound(x, z,   150f,  20f, 470f, 310f, 57f, 271f);
 
         // Diagonal ridge continues toward the camera side of the curve. It stays on
         // the inside of the exit road, so the car is hidden and then revealed at apex.
-        h += Mound(x, z,  -150f, -170f, 270f, 210f, 146f, 277f);
-        h += Mound(x, z,  -230f, -390f, 285f, 225f, 164f, 293f);
-        h += Mound(x, z,  -325f, -620f, 300f, 235f, 151f, 317f);
-        h += Mound(x, z,  -435f, -850f, 315f, 245f, 128f, 337f);
+        h += Mound(x, z, -150f, -180f, 470f, 350f, 69f, 277f);
+        h += Mound(x, z, -240f, -410f, 490f, 365f, 78f, 293f);
+        h += Mound(x, z, -340f, -650f, 510f, 380f, 72f, 317f);
+        h += Mound(x, z, -460f, -900f, 530f, 400f, 61f, 337f);
         return h;
     }
 
@@ -268,7 +280,7 @@ public static class JCurveDriftTerrainGenerator
     private static void Smooth(float[,] heights, float roadHeight)
     {
         float[,] copy = new float[Resolution, Resolution];
-        for (int pass = 0; pass < 2; pass++)
+        for (int pass = 0; pass < 5; pass++)
         {
             Array.Copy(heights, copy, heights.Length);
             for (int z = 1; z < Resolution - 1; z++)
