@@ -5,7 +5,12 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const ratio = 30 / 35;
-const lightGuid = '62ae067da95c5414486b42f2c078b5ad';
+const lightGuids = new Set([
+  '62ae067da95c5414486b42f2c078b5ad',
+  '9f26ade75f07df44ea06dd09597d7094', // 차량유도봉_2_빨강 used by the dome scenes
+]);
+const isGuidePrefab = b => [...lightGuids].some(guid =>
+  b.includes(`m_SourcePrefab: {fileID: 100100000, guid: ${guid}`));
 const targetLightOffset = 14.55; // center of the shoulder between the white edge line (14.143 m) and 15 m asphalt edge
 const targetLightHeight = 0.08; // clear the road mesh instead of z-fighting with it
 const roadAssets = {
@@ -114,7 +119,7 @@ function adjustScene(relative, centerline, kind) {
       const parent = (b.match(/m_Father: \{fileID: (\d+)\}/) || [])[1];
       if (parent && parent !== '0') parentCounts.set(parent, (parentCounts.get(parent) || 0) + 1);
     }
-    if (b.includes(`m_SourcePrefab: {fileID: 100100000, guid: ${lightGuid}`)) {
+    if (isGuidePrefab(b)) {
       const parent = (b.match(/m_TransformParent: \{fileID: (\d+)\}/) || [])[1];
       if (parent && parent !== '0') parentCounts.set(parent, (parentCounts.get(parent) || 0) + 1);
     }
@@ -171,7 +176,7 @@ function adjustScene(relative, centerline, kind) {
           `m_LocalPosition: {x: ${fmt(next.x)}, y: ${fmt(next.y)}, z: ${fmt(next.z)}}`);
       }
     }
-    if (b.includes(`m_SourcePrefab: {fileID: 100100000, guid: ${lightGuid}`)) {
+    if (isGuidePrefab(b)) {
       const parent = (b.match(/m_TransformParent: \{fileID: (\d+)\}/) || [])[1];
       const x = (b.match(/propertyPath: m_LocalPosition\.x\r?\n\s+value: ([^\r\n]+)/) || [])[1];
       const y = (b.match(/propertyPath: m_LocalPosition\.y\r?\n\s+value: ([^\r\n]+)/) || [])[1];
@@ -194,7 +199,7 @@ function adjustScene(relative, centerline, kind) {
         if (parent !== guideParent) continue;
         const pos = xy(b);
         sides[pos.z < 0 ? 'left' : 'right'].push({i, x:pos.x, direct:true});
-      } else if (b.includes(`m_SourcePrefab: {fileID: 100100000, guid: ${lightGuid}`)) {
+      } else if (isGuidePrefab(b)) {
         const parent = (b.match(/m_TransformParent: \{fileID: (\d+)\}/) || [])[1];
         if (parent !== guideParent) continue;
         const x = +(b.match(/propertyPath: m_LocalPosition\.x\r?\n\s+value: ([^\r\n]+)/) || [])[1];
