@@ -68,6 +68,77 @@ namespace YUJEONG
         [Range(1.0f, 8.0f)]
         public float transformationDuration = 3.2f;
 
+        [Header("[ 🎬 부스터 변형 훑기 카메라 연출 (Booster Sweep Cam) ]")]
+        [Tooltip("체크(ON): 지금 카메라 구도에서 달리는 두 차량을 함께 추종하며, 부스터가 변형되는 모습을 천천히 훑어보는 시네마틱 연출 활성화\n체크 해제(OFF): 기존 일반 카메라 구도로 복귀 (인스펙터에서 언제든 껐다 켤 수 있습니다)")]
+        public bool enableBoosterSweepCam = true;
+
+        [Tooltip("체크(ON): 완전 거울 반대 모드! 스플라인(2) 중심선 기준으로 정확히 반대편(파란 차 측면)에서 똑같은 앵글로 파란 차 부스터부터 빨간 차 부스터 순서로 훑기\n체크 해제(OFF): 기본 모드 (빨간 차 측면에서 빨간 차 부스터부터 훑기)\n인스펙터 체크박스나 컴포넌트 우클릭 메뉴로 실시간 껐다 켤 수 있습니다.")]
+        public bool mirrorBoosterSweepCam = false;
+
+        [Tooltip("부스터 훑기 카메라 롤(Dutch Angle) 기울기 (도 단위, 기본 2.886도, 거울 모드 시 부호 반전되어 완벽한 대칭 연출)")]
+        [Range(-15f, 15f)]
+        public float sweepCamRoll = 2.886f;
+
+        [Tooltip("부스터 변형 모습을 천천히 훑는 데 걸리는 시간 (초 단위, 권장 6.0~10.0초)")]
+        [Range(2.0f, 20.0f)]
+        public float sweepDuration = 8.0f;
+
+        [Header("[ 🏎️ 광고 CF 스타일 세로 훑기 (도로 ➔ 차 전면 ➔ 중앙 ➔ 후면 ➔ 도로 감속 패스) ]")]
+        [Tooltip("체크(ON): 카메라가 차보다 살짝 앞서 달리다가, 슬금슬금 부드럽게 감속하며 [도로 ➔ 차 앞쪽 ➔ 중앙 ➔ 후면 부스터 ➔ 도로 뒤로 빠짐] 순서로 자연스럽게 훑고 지나가는 CF 광고 샷 연출!\n체크 해제(OFF): 기존 카메라")]
+        public bool enableVerticalAdSweepCam = true;
+
+        [Tooltip("1단계: 도로 및 차 앞부분 진입 로컬 위치 (차량 앞 도로를 비추며 시작)")]
+        public Vector3 verticalSweepStartPos = new Vector3(-0.01f, 6.75f, 3.50f);
+
+        [Tooltip("2단계: 차 앞쪽 보닛 클로즈업 로컬 위치 (사진 1~2번 구도: -0.01, 6.45, -0.80)")]
+        public Vector3 verticalSweepMidPos1 = new Vector3(-0.01f, 6.45f, -0.80f);
+
+        [Tooltip("3단계: 차 중앙 엔진룸/벤트판 통과 로컬 위치 (사진 3번 구도: -0.01, 5.62, -3.19)")]
+        public Vector3 verticalSweepMidPos2 = new Vector3(-0.01f, 5.62f, -3.19f);
+
+        [Tooltip("4단계: 차 후면 부스터 노즐 집중 로컬 위치 (사진 4번 구도: -0.01, 4.93, -4.79)")]
+        public Vector3 verticalSweepMidPos3 = new Vector3(-0.01f, 4.93f, -4.79f);
+
+        [Tooltip("5단계: 차가 카메라를 앞질러가며 뒤편 도로가 보이는 종료 로컬 위치")]
+        public Vector3 verticalSweepEndPos = new Vector3(-0.01f, 4.50f, -8.50f);
+
+        [Tooltip("카메라 고정 회전 각도 (인스펙터 수치: 66.881, 0, 0)")]
+        public Vector3 verticalSweepFixedEuler = new Vector3(66.881f, 0f, 0f);
+
+        [Tooltip("스플라인 출발 후 훑기 카메라 연출이 시작되기까지의 대기 시간 (초)")]
+        [Range(0f, 5.0f)]
+        public float sweepStartDelay = 0.5f;
+
+        [Tooltip("빨간 차 부스터 훑기 조준 오프셋 (Image 1 & 2 구도 미세 조정)")]
+        public Vector3 redCarAimOffset = new Vector3(0.5f, 0.4f, -0.5f);
+
+        [Tooltip("파란 차 부스터 훑기 조준 오프셋 (Image 3 & 4 구도 미세 조정)")]
+        public Vector3 blueCarAimOffset = new Vector3(-0.5f, 0.4f, -0.5f);
+
+        [Tooltip("훑기 시작 시 추가 팬 각도 (Image 1의 빨간 차 앞바퀴/측면 여백 각도)")]
+        [Range(-15f, 15f)]
+        public float sweepStartPanAngle = -2.5f;
+
+        [Tooltip("훑기 종료 시 추가 팬 각도 (Image 4의 파란 차 우측 날개 여백 각도)")]
+        [Range(-15f, 15f)]
+        public float sweepEndPanAngle = 2.5f;
+
+        [Header("[ 🏁 두 차량 경쟁 주행 연출 (앞서거니 뒤서거니) ]")]
+        [Tooltip("체크(ON): 빨간차와 파란차가 나란히 달리지 않고, 서로 살짝씩 앞섰다 뒤로 밀렸다 하며 치열하게 경쟁하는 연출 활성화\n체크 해제(OFF): 고정된 기본 위치로 나란히 주행")]
+        public bool enableRacingRivalry = true;
+
+        [Tooltip("경쟁 시 앞뒤로 치고 나가는 최대 거리 (미터 단위, 권장 0.4 ~ 0.8m)")]
+        [Range(0.1f, 2.0f)]
+        public float rivalryDistance = 0.6f;
+
+        [Tooltip("앞뒤로 엎치락뒤치락 바뀌는 속도 / 주기 (초당 반복 속도, 권장 1.0 ~ 2.0)")]
+        [Range(0.2f, 4.0f)]
+        public float rivalrySpeed = 1.4f;
+
+        [Tooltip("경쟁 시 차체가 미세하게 좌우로 흔들리는 미세 주행 유격 (미터 단위)")]
+        [Range(0f, 0.2f)]
+        public float rivalryLateralJitter = 0.04f;
+
         [Tooltip("부스터 점화 전 일반 주행 순항 속도 (SplineAnimate Speed)")]
         [Range(20f, 400f)]
         public float cruiseSpeed = 100f;
@@ -246,6 +317,19 @@ namespace YUJEONG
         private bool hasApproachedFromFront = false;
         private bool hasCarTraveledEnough = false;
 
+        // 부스터 변형 훑기 카메라 및 경쟁 주행 상태 변수
+        private Transform redCarTransform;
+        private Transform blueCarTransform;
+        private Vector3 baseRedCarLocalPos;
+        private Vector3 baseBlueCarLocalPos;
+        private bool hasStoredCarBasePos = false;
+        private Vector3 sweepCamLocalOffset;
+        private Quaternion sweepCamLocalRot;
+        private bool sweepCamOffsetInitialized = false;
+        private Vector3 baseRedSideLocalOffset;
+        private bool hasBaseRedSideOffset = false;
+        private float sweepTimer = 0f;
+
         private void Awake()
         {
             if (Application.isPlaying)
@@ -267,9 +351,13 @@ namespace YUJEONG
         private void OnDisable()
         {
             // 에디터 모드에서는 사용자가 지정한 트랜스폼을 절대 임의로 복원/수정하지 않음
-            if (Application.isPlaying && isKnockedDown)
+            if (Application.isPlaying)
             {
-                RestoreInitialPose();
+                ResetRacingRivalryMotion();
+                if (isKnockedDown)
+                {
+                    RestoreInitialPose();
+                }
             }
         }
 
@@ -339,6 +427,18 @@ namespace YUJEONG
                 initialLocalRot = transform.localRotation;
                 initialWorldRot = transform.rotation;
                 currentTrackingRot = transform.rotation;
+
+                if (targetVehicle != null)
+                {
+                    sweepCamLocalOffset = Quaternion.Inverse(targetVehicle.rotation) * (transform.position - targetVehicle.position);
+                    sweepCamLocalRot = Quaternion.Inverse(targetVehicle.rotation) * transform.rotation;
+                    sweepCamOffsetInitialized = true;
+                    if (!hasBaseRedSideOffset)
+                    {
+                        baseRedSideLocalOffset = sweepCamLocalOffset;
+                        hasBaseRedSideOffset = true;
+                    }
+                }
             }
             isInitialized = true;
         }
@@ -347,6 +447,9 @@ namespace YUJEONG
         {
             if (!isInitialized) return;
             ResetBoosterLaunchState();
+            ResetRacingRivalryMotion();
+            sweepTimer = 0f;
+
             if (isKnockedDown || isCameraDetached)
             {
                 transform.localPosition = initialLocalPos;
@@ -389,7 +492,7 @@ namespace YUJEONG
                 if (centerObj != null) targetVehicle = centerObj.transform;
                 else
                 {
-                    GameObject blueCar = GameObject.Find("Blue_Car_Final");
+                    GameObject blueCar = GameObject.Find("Blue_Car_Final_Booster") ?? GameObject.Find("Blue_Car_Final");
                     if (blueCar != null)
                     {
                         targetVehicle = (blueCar.transform.parent != null && blueCar.transform.parent != blueCar.transform.root)
@@ -405,6 +508,79 @@ namespace YUJEONG
                 if (splineAnimate == null)
                     splineAnimate = targetVehicle.GetComponentInChildren<SplineAnimate>();
             }
+
+            FindCarTransforms();
+
+            if (targetVehicle != null && !sweepCamOffsetInitialized)
+            {
+                sweepCamLocalOffset = Quaternion.Inverse(targetVehicle.rotation) * (transform.position - targetVehicle.position);
+                sweepCamLocalRot = Quaternion.Inverse(targetVehicle.rotation) * transform.rotation;
+                sweepCamOffsetInitialized = true;
+                if (!hasBaseRedSideOffset)
+                {
+                    baseRedSideLocalOffset = sweepCamLocalOffset;
+                    hasBaseRedSideOffset = true;
+                }
+            }
+        }
+
+        public void FindCarTransforms()
+        {
+            if (targetVehicle != null)
+            {
+                for (int i = 0; i < targetVehicle.childCount; i++)
+                {
+                    Transform child = targetVehicle.GetChild(i);
+                    string nameLower = child.name.ToLower();
+                    if (nameLower.Contains("red"))
+                    {
+                        redCarTransform = child;
+                    }
+                    else if (nameLower.Contains("blue"))
+                    {
+                        blueCarTransform = child;
+                    }
+                }
+            }
+
+            if (redCarTransform == null)
+            {
+                GameObject redObj = GameObject.Find("Red_Car_Final_Booster") ?? GameObject.Find("Red_Car_Final") ?? GameObject.Find("Red_Car");
+                if (redObj != null) redCarTransform = redObj.transform;
+            }
+
+            if (blueCarTransform == null)
+            {
+                GameObject blueObj = GameObject.Find("Blue_Car_Final_Booster") ?? GameObject.Find("Blue_Car_Final");
+                if (blueObj != null) blueCarTransform = blueObj.transform;
+            }
+
+            if (!hasStoredCarBasePos)
+            {
+                if (redCarTransform != null) baseRedCarLocalPos = redCarTransform.localPosition;
+                if (blueCarTransform != null) baseBlueCarLocalPos = blueCarTransform.localPosition;
+                if (redCarTransform != null || blueCarTransform != null) hasStoredCarBasePos = true;
+            }
+        }
+
+        /// <summary>
+        /// 빨간 차 부스터 조준 지점 (월드 좌표)
+        /// </summary>
+        public Vector3 GetRedBoosterFocusPoint()
+        {
+            if (targetVehicle == null) return transform.position;
+            Vector3 carPos = (redCarTransform != null) ? redCarTransform.position : (targetVehicle.position + targetVehicle.right * 3.2f);
+            return carPos + (targetVehicle.rotation * redCarAimOffset);
+        }
+
+        /// <summary>
+        /// 파란 차 부스터 조준 지점 (월드 좌표)
+        /// </summary>
+        public Vector3 GetBlueBoosterFocusPoint()
+        {
+            if (targetVehicle == null) return transform.position;
+            Vector3 carPos = (blueCarTransform != null) ? blueCarTransform.position : (targetVehicle.position - targetVehicle.right * 3.6f);
+            return carPos + (targetVehicle.rotation * blueCarAimOffset);
         }
 
         /// <summary>
@@ -513,9 +689,51 @@ namespace YUJEONG
             return transform.forward;
         }
 
+        /// <summary>
+        /// 두 차량이 나란히 달리지 않고 살짝살짝 앞섰다 뒤로 밀렸다 하는 치열한 레이싱 경쟁 연출
+        /// </summary>
+        private void UpdateRacingRivalryMotion()
+        {
+            if (!enableRacingRivalry || !hasStoredCarBasePos) return;
+
+            float time = Time.time * rivalrySpeed;
+            // 복합 사인파 + 펄린 노이즈를 섞어 실제 드라이버가 액셀을 밟으며 엎치락뒤치락하는 레이싱 질감 구현
+            float wave1 = Mathf.Sin(time * 1.0f);
+            float wave2 = Mathf.Sin(time * 2.1f + 1.2f) * 0.35f;
+            float noise = (Mathf.PerlinNoise(time * 0.8f, 25.4f) - 0.5f) * 0.3f;
+            float surge = (wave1 + wave2 + noise); // 약 -1.3 ~ +1.3 범위
+            float forwardOffset = surge * rivalryDistance;
+
+            // 좌우 미세 유격 (핸들 조타 느낌)
+            float lateralJitter = (Mathf.PerlinNoise(time * 1.5f, 0f) - 0.5f) * 2f * rivalryLateralJitter;
+
+            if (redCarTransform != null)
+            {
+                // 빨간 차가 앞서 나가면 (+Z)
+                redCarTransform.localPosition = baseRedCarLocalPos + new Vector3(lateralJitter, 0f, forwardOffset);
+            }
+
+            if (blueCarTransform != null)
+            {
+                // 파란 차는 뒤로 밀렸다가 (-Z), 반대로 파란 차가 치고 나가면 빨간 차가 뒤로 빠짐
+                blueCarTransform.localPosition = baseBlueCarLocalPos + new Vector3(-lateralJitter, 0f, -forwardOffset);
+            }
+        }
+
+        public void ResetRacingRivalryMotion()
+        {
+            if (hasStoredCarBasePos)
+            {
+                if (redCarTransform != null) redCarTransform.localPosition = baseRedCarLocalPos;
+                if (blueCarTransform != null) blueCarTransform.localPosition = baseBlueCarLocalPos;
+            }
+        }
+
         private void Update()
         {
             if (!Application.isPlaying) return;
+
+            UpdateRacingRivalryMotion();
 
             // 재시작 키 체크 (New Input System 및 Legacy Input 호환)
             if (IsRestartKeyPressed())
@@ -604,7 +822,8 @@ namespace YUJEONG
 
                         // 차량이 씬에 존재하고, 실제로 주행을 시작했고, 전방에서 다가왔으며, 카메라 바로 옆에 위치한 경우에만 통과 판정!
                         // ※ 타이밍/타이머 방식 완전 제거: 사용자가 속도를 바꾸거나 대기해도 오직 물리적으로 바로 옆을 지나칠 때만 작동
-                        if (currentCarPos != Vector3.zero && hasCarTraveledEnough && hasApproachedFromFront && isRightNextToCamera)
+                        // ※ 부스터 훑기 카메라(enableBoosterSweepCam) 활성화 중에는 전복되지 않고 차와 함께 달리며 훑습니다.
+                        if (!enableBoosterSweepCam && currentCarPos != Vector3.zero && hasCarTraveledEnough && hasApproachedFromFront && isRightNextToCamera)
                         {
                             // 판정 A: 카메라 평면 통과
                             // 카메라가 차량의 진행방향 앞쪽(+값)에서 뒤쪽(-값)으로 넘어간 순간 (차량 앞범퍼/차체가 카메라를 스쳐 지나간 찰나)
@@ -729,7 +948,8 @@ namespace YUJEONG
             yield return new WaitForSeconds(delay);
             TriggerAllVehiclesBoosterTransformation();
 
-            yield return new WaitForSeconds(Mathf.Max(0.5f, transformationDuration));
+            float waitDuration = enableBoosterSweepCam ? Mathf.Max(transformationDuration, sweepDuration + sweepStartDelay) : transformationDuration;
+            yield return new WaitForSeconds(Mathf.Max(0.5f, waitDuration));
 
             if (leaveCameraBehindOnBoost)
             {
@@ -743,7 +963,8 @@ namespace YUJEONG
 
         private IEnumerator DelayedBoosterCompletionRoutine(float duration)
         {
-            yield return new WaitForSeconds(Mathf.Max(0.5f, duration));
+            float waitDuration = enableBoosterSweepCam ? Mathf.Max(duration, sweepDuration + sweepStartDelay) : duration;
+            yield return new WaitForSeconds(Mathf.Max(0.5f, waitDuration));
 
             if (leaveCameraBehindOnBoost)
             {
@@ -847,6 +1068,156 @@ namespace YUJEONG
             leaveCameraBehindOnBoost = false;
             isCameraDetached = false;
             Debug.Log("[CameraWindBlastShock] 🏎️ '카메라 두고 달려가기' 연출 비활성화 (OFF) - 카메라가 분리되지 않고 차량과 함께 계속 주행합니다.");
+        }
+
+        /// <summary>
+        /// '광고 CF 스타일 세로 훑기 (위 -> 아래)' 켜기 (ON)
+        /// </summary>
+        [ContextMenu("🏎️ [토글] CF 세로 훑기 켜기 (ON - 사진 1->4번 구도)")]
+        public void ToggleVerticalAdSweepCamOn()
+        {
+            enableBoosterSweepCam = true;
+            enableVerticalAdSweepCam = true;
+            sweepTimer = 0f;
+            Debug.Log("[CameraWindBlastShock] 🏎️ 광고 CF 스타일 세로 훑기 카메라 활성화 (ON) - 차와 함께 달리며 위에서 아래로 훑습니다.");
+        }
+
+        /// <summary>
+        /// '광고 CF 스타일 세로 훑기 (위 -> 아래)' 끄기 (OFF)
+        /// </summary>
+        [ContextMenu("🎥 [토글] CF 세로 훑기 끄기 (OFF)")]
+        public void ToggleVerticalAdSweepCamOff()
+        {
+            enableVerticalAdSweepCam = false;
+            Debug.Log("[CameraWindBlastShock] 🎥 광고 CF 스타일 세로 훑기 비활성화 (OFF)");
+        }
+
+        /// <summary>
+        /// '부스터 변형 훑기 카메라' 연출 켜기 (ON)
+        /// </summary>
+        [ContextMenu("🎬 [토글] 부스터 변형 훑기 카메라 켜기 (ON)")]
+        public void ToggleBoosterSweepCamOn()
+        {
+            enableBoosterSweepCam = true;
+            isCameraDetached = false;
+            sweepTimer = 0f;
+            if (targetVehicle != null)
+            {
+                sweepCamLocalOffset = Quaternion.Inverse(targetVehicle.rotation) * (transform.position - targetVehicle.position);
+                sweepCamLocalRot = Quaternion.Inverse(targetVehicle.rotation) * transform.rotation;
+                sweepCamOffsetInitialized = true;
+            }
+            Debug.Log("[CameraWindBlastShock] 🎬 부스터 변형 훑기 카메라 연출 활성화 (ON) - 현재 카메라 구도로 차량을 추종하며 부스터 변형을 천천히 훑습니다.");
+        }
+
+        /// <summary>
+        /// '부스터 변형 훑기 카메라' 연출 끄기 (OFF - 기본 노면/추적 카메라로 복귀)
+        /// </summary>
+        [ContextMenu("🎥 [토글] 부스터 변형 훑기 카메라 끄기 (OFF - 기본 카메라)")]
+        public void ToggleBoosterSweepCamOff()
+        {
+            enableBoosterSweepCam = false;
+            if (transform.parent == null)
+            {
+                transform.position = initialWorldPos;
+                transform.rotation = initialWorldRot;
+            }
+            else
+            {
+                transform.localPosition = initialLocalPos;
+                transform.localRotation = initialLocalRot;
+            }
+            Debug.Log("[CameraWindBlastShock] 🎥 부스터 변형 훑기 카메라 연출 비활성화 (OFF) - 기본 카메라 구도로 복귀합니다.");
+        }
+
+        /// <summary>
+        /// '부스터 변형 훑기 카메라 - 거울 반대 모드' 켜기 (ON: 파란 차 측면에서 파란 차부터 훑기)
+        /// </summary>
+        [ContextMenu("🪞 [토글] 거울 반대 모드 켜기 (ON - 파란차부터 훑기)")]
+        public void ToggleMirrorBoosterSweepCamOn()
+        {
+            mirrorBoosterSweepCam = true;
+            if (!Application.isPlaying)
+            {
+                ApplySweepCamStaticPose(true);
+            }
+            Debug.Log("[CameraWindBlastShock] 🪞 부스터 훑기 거울 반대 모드 활성화 (ON) - 스플라인(2) 기준 반대편(파란 차 측면)에서 파란 차 부스터부터 훑습니다.");
+        }
+
+        /// <summary>
+        /// '부스터 변형 훑기 카메라 - 거울 반대 모드' 끄기 (OFF: 기본 빨간 차 측면에서 빨간 차부터 훑기)
+        /// </summary>
+        [ContextMenu("🎬 [토글] 거울 반대 모드 끄기 (OFF - 빨간차부터 훑기)")]
+        public void ToggleMirrorBoosterSweepCamOff()
+        {
+            mirrorBoosterSweepCam = false;
+            if (!Application.isPlaying)
+            {
+                ApplySweepCamStaticPose(false);
+            }
+            Debug.Log("[CameraWindBlastShock] 🎬 부스터 훑기 거울 반대 모드 비활성화 (OFF) - 기본 빨간 차 측면에서 빨간 차 부스터부터 훑습니다.");
+        }
+
+        /// <summary>
+        /// 에디터 모드에서 거울 반대 모드 / 기본 모드 카메라 위치 및 각도 즉시 정적 적용
+        /// </summary>
+        public void ApplySweepCamStaticPose(bool mirror)
+        {
+            AutoFindComponents();
+            if (targetVehicle == null) return;
+
+            if (!sweepCamOffsetInitialized)
+            {
+                sweepCamLocalOffset = Quaternion.Inverse(targetVehicle.rotation) * (transform.position - targetVehicle.position);
+                sweepCamLocalRot = Quaternion.Inverse(targetVehicle.rotation) * transform.rotation;
+                sweepCamOffsetInitialized = true;
+                if (!hasBaseRedSideOffset)
+                {
+                    baseRedSideLocalOffset = sweepCamLocalOffset;
+                    hasBaseRedSideOffset = true;
+                }
+            }
+
+            Vector3 effectiveOffset = hasBaseRedSideOffset ? baseRedSideLocalOffset : sweepCamLocalOffset;
+            if (mirror)
+            {
+                effectiveOffset.x = -effectiveOffset.x;
+            }
+
+            transform.position = targetVehicle.position + (targetVehicle.rotation * effectiveOffset);
+
+            Vector3 startFocus = mirror ? GetBlueBoosterFocusPoint() : GetRedBoosterFocusPoint();
+            float startPan = mirror ? -sweepStartPanAngle : sweepStartPanAngle;
+            float roll = mirror ? -sweepCamRoll : sweepCamRoll;
+
+            Vector3 toAim = startFocus - transform.position;
+            if (toAim.sqrMagnitude > 0.001f)
+            {
+                Quaternion baseAimRot = Quaternion.LookRotation(toAim.normalized, targetVehicle.up);
+                transform.rotation = baseAimRot * Quaternion.Euler(0f, startPan, roll);
+            }
+        }
+
+        /// <summary>
+        /// '경쟁 주행(앞서거니 뒤서거니)' 연출 켜기 (ON)
+        /// </summary>
+        [ContextMenu("🏁 [토글] 두 차량 경쟁 주행 켜기 (ON)")]
+        public void ToggleRacingRivalryOn()
+        {
+            enableRacingRivalry = true;
+            FindCarTransforms();
+            Debug.Log("[CameraWindBlastShock] 🏁 두 차량 경쟁 주행(앞서거니 뒤서거니) 연출 활성화 (ON)");
+        }
+
+        /// <summary>
+        /// '경쟁 주행' 연출 끄기 (OFF - 기본 나란히 주행)
+        /// </summary>
+        [ContextMenu("🚗 [토글] 두 차량 경쟁 주행 끄기 (OFF - 나란히 주행)")]
+        public void ToggleRacingRivalryOff()
+        {
+            enableRacingRivalry = false;
+            ResetRacingRivalryMotion();
+            Debug.Log("[CameraWindBlastShock] 🚗 두 차량 경쟁 주행 비활성화 (OFF) - 기본 나란히 위치로 복귀");
         }
 
         private IEnumerator AnimateBoostRocketSpeed(float targetSpeed, float duration)
@@ -1199,7 +1570,71 @@ namespace YUJEONG
                     }
                 }
 
-                if (isCameraDetached)
+                if (enableBoosterSweepCam && targetVehicle != null && !isCameraDetached)
+                {
+                    if (splineLaunched || isSequenceRunning)
+                    {
+                        sweepTimer += Time.deltaTime;
+                    }
+
+                    float sweepT = Mathf.Clamp01((sweepTimer - sweepStartDelay) / Mathf.Max(0.1f, sweepDuration));
+                    float smoothSweepT = Mathf.SmoothStep(0f, 1f, sweepT);
+
+                    if (enableVerticalAdSweepCam)
+                    {
+                        // 🏎️ 스팟에서 멈칫거리지 않고 처음부터 끝까지 물 흐르듯 한 번에 부드럽게 주욱 훑는 캣멀-롬(Catmull-Rom) 연속 스플라인 곡선
+                        Vector3 currentLocalPos = EvaluateCatmullRomSpline(
+                            verticalSweepStartPos,
+                            verticalSweepMidPos1,
+                            verticalSweepMidPos2,
+                            verticalSweepMidPos3,
+                            verticalSweepEndPos,
+                            smoothSweepT
+                        );
+
+                        transform.localPosition = currentLocalPos;
+                        transform.localRotation = Quaternion.Euler(verticalSweepFixedEuler);
+                    }
+                    else if (sweepCamOffsetInitialized)
+                    {
+                        // 1. 차량과 함께 달리는 위치 추종 (기본 vs 거울 모드에 따라 스플라인(2) 중심선 기준 X축 반전 반영)
+                        Vector3 effectiveOffset = hasBaseRedSideOffset ? baseRedSideLocalOffset : sweepCamLocalOffset;
+                        if (mirrorBoosterSweepCam)
+                        {
+                            effectiveOffset.x = -effectiveOffset.x;
+                        }
+
+                        Vector3 followPos = targetVehicle.position + (targetVehicle.rotation * effectiveOffset);
+                        transform.position = followPos + shakePos;
+
+                        // 2. 부스터 변형 모습을 천천히 훑는 회전 연출 (기존 좌우 Sweep)
+                        Vector3 redBoosterFocus = GetRedBoosterFocusPoint();
+                        Vector3 blueBoosterFocus = GetBlueBoosterFocusPoint();
+
+                        Vector3 startFocus = mirrorBoosterSweepCam ? blueBoosterFocus : redBoosterFocus;
+                        Vector3 endFocus = mirrorBoosterSweepCam ? redBoosterFocus : blueBoosterFocus;
+
+                        float startPan = mirrorBoosterSweepCam ? -sweepStartPanAngle : sweepStartPanAngle;
+                        float endPan = mirrorBoosterSweepCam ? -sweepEndPanAngle : sweepEndPanAngle;
+                        float roll = mirrorBoosterSweepCam ? -sweepCamRoll : sweepCamRoll;
+
+                        Vector3 currentAimPoint = Vector3.Lerp(startFocus, endFocus, smoothSweepT);
+                        float currentPanAngle = Mathf.Lerp(startPan, endPan, smoothSweepT);
+
+                        Vector3 toAim = currentAimPoint - transform.position;
+                        if (toAim.sqrMagnitude > 0.001f)
+                        {
+                            Quaternion baseAimRot = Quaternion.LookRotation(toAim.normalized, targetVehicle.up);
+                            Quaternion sweepLookRot = baseAimRot * Quaternion.Euler(0f, currentPanAngle, roll);
+                            transform.rotation = sweepLookRot * Quaternion.Euler(shakeRotEuler);
+                        }
+                        else
+                        {
+                            transform.rotation = targetVehicle.rotation * sweepCamLocalRot * Quaternion.Euler(shakeRotEuler);
+                        }
+                    }
+                }
+                else if (isCameraDetached)
                 {
                     transform.position = detachedWorldPos + shakePos;
                     transform.rotation = baseRot * Quaternion.Euler(shakeRotEuler);
@@ -1285,6 +1720,56 @@ namespace YUJEONG
                 }
                 transform.rotation = knockdownStartRot * tumbleRot;
             }
+        }
+
+        /// <summary>
+        /// 5개 제어점을 끊김 없이 물 흐르듯 통과하는 3차 캣멀-롬(Catmull-Rom) 연속 스플라인 보간
+        /// (스팟에서 멈칫하거나 꺾이지 않고 처음부터 끝까지 완전 부드러운 단일 곡선 주행)
+        /// </summary>
+        private Vector3 EvaluateCatmullRomSpline(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, float t)
+        {
+            t = Mathf.Clamp01(t);
+            float scaledT = t * 4f;
+            int segment = Mathf.Min(Mathf.FloorToInt(scaledT), 3);
+            float u = scaledT - segment;
+
+            Vector3 cp0, cp1, cp2, cp3;
+            if (segment == 0)
+            {
+                cp0 = p0 + (p0 - p1); // 가상 선행 제어점
+                cp1 = p0;
+                cp2 = p1;
+                cp3 = p2;
+            }
+            else if (segment == 1)
+            {
+                cp0 = p0;
+                cp1 = p1;
+                cp2 = p2;
+                cp3 = p3;
+            }
+            else if (segment == 2)
+            {
+                cp0 = p1;
+                cp1 = p2;
+                cp2 = p3;
+                cp3 = p4;
+            }
+            else
+            {
+                cp0 = p2;
+                cp1 = p3;
+                cp2 = p4;
+                cp3 = p4 + (p4 - p3); // 가상 후행 제어점
+            }
+
+            // Catmull-Rom Spline Formula
+            return 0.5f * (
+                (2f * cp1) +
+                (-cp0 + cp2) * u +
+                (2f * cp0 - 5f * cp1 + 4f * cp2 - cp3) * (u * u) +
+                (-cp0 + 3f * cp1 - 3f * cp2 + cp3) * (u * u * u)
+            );
         }
 
         private bool IsRestartKeyPressed()
