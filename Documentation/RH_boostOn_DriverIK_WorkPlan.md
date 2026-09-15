@@ -83,11 +83,18 @@
 
 - [x] 완료됨 · 사용자 확인 — v1 운전자의 드리프트·권총 조준·고개 회전 동작을 1차로 완성했다. 접촉·관통의 최종 파일 기반 검증은 별도다.
 - [x] 완료됨 · Codex — v2는 파란 차, v3는 초록 차의 좌석 기준점 아래로 배치했다. 기존 배율과 IK 보정값은 유지했다.
-- [x] 완료됨 · Codex — v1의 내부 IK Target 규칙을 따르는 v2·v3 손 IK 설치 도구를 추가했다. v2는 핸들·시프터·`Ctrl_SwitchPanel_Toggles`의 빨간 스위치 손 목표점, v3는 양손 핸들 목표점을 생성한다. 설치 도구의 Unity 메뉴 실행과 화면 접점 보정은 아직 하지 않았다.
+- [x] 제거됨 · 사용자 요청 — v2 자동 설치용 `OtherDriverIKSetup` 스크립트와 메타 파일을 제거했다. v2 리그는 Unity Hierarchy에서 사용자가 직접 구성한다.
 - [x] 완료됨 · Codex — `DriverHandTargetBlend`에 빨간 스위치 접촉용 Button Source·Button Blend를 추가했다. 기존 v1 블렌드 필드와 수동 IK Transform은 유지했다.
-- [ ] 진행 전 · 사용자/Codex — Unity에서 `NITROZERO > Drivers > Set up v2 and v3 hand IK`를 실행하고 RigBuilder·양팔 Constraint 연결을 확인한다. 설치 도구는 기존 작업을 보존하도록 이름으로 중복 생성을 피한다.
 - [ ] 진행 전 · 사용자/Codex — v2의 `v2_RedSwitchPressTarget`을 패널 가운데가 아니라 **빨간 스위치 표면**에 맞춘다. 현재 `Ctrl_SwitchPanel_Toggles`는 단일 씬 오브젝트이므로 빨간 스위치 자체의 독립 운동 가능 여부를 Unity 화면에서 확인한다.
 - [ ] 진행 전 · 사용자/Codex — v2 시프터 접점, v3 양손 핸들 접점을 각각 맞추고 Play 상태에서 팔꿈치 굽힘·관통을 확인한다.
 - [ ] 진행 전 · Codex — v2 기어 변경 및 빨간 스위치 누르기 Timeline 클립을 v1 동작을 참고해 별도로 생성·바인딩한다. v3는 양손 핸들 기본자세만 사용한다.
 - [ ] 진행 전 · Codex/사용자 — v2·v3 운전자의 Rig 구성, 차량 조작계와 권총 배치를 개별 확인한다. v1의 코드와 눈금 배치는 재사용하되 IK 타겟 Position·Rotation·Scale과 팔·발 접점은 각 캐릭터/차량에 맞춰 별도 보정한다.
 - [ ] 진행 전 · Codex/사용자 — 각 차량용 Timeline 복사본을 만들고 해당 차량의 Animator·조작계·권총·시선 타겟으로 바인딩한다. v1 씬의 바인딩을 그대로 쓰지 않는다.
+
+## v1 일반 주행 미세 조향
+
+- [x] 완료됨 · Codex — `v1_SteeringPivot`에 `SteeringIdleMotion`을 연결했다. `v1_Drift` 회전 곡선에 맞춰 로컬 Y축을 사용하며 레이싱 주행 기본값은 최대 1.8도, 한쪽 진행 0.38초, 불규칙성 45%다.
+- [x] 완료됨 · Codex — `Timeline Steering Override`가 0이면 미세 조향, 1이면 Timeline 조향을 우선하도록 구성했다. 정지 전환은 0.15초, 재개는 0.3초다.
+- [x] 완료됨 · Codex — Timeline이 Transform 회전을 기록하는 프레임에는 그 회전을 새로운 기준 자세로 사용해 기존 핸들 애니메이션과 중복 회전하지 않도록 처리했다.
+- [ ] 진행 전 · 사용자 — Play 상태의 일반 주행에서 회전 방향과 손 접촉을 확인한다. 핸들이 축 방향으로 흔들리면 `Local Rotation Axis`만 실제 회전축에 맞춘다.
+- [ ] 진행 전 · 사용자/Codex — `v1_Drift`에서 핸들 조작 시작 직전에 `Timeline Steering Override` 0→1, 일반 주행 복귀 시 1→0 키를 기록한다. 복귀가 없는 드리프트 컷은 마지막까지 1을 유지한다.
