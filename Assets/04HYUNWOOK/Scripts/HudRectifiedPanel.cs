@@ -19,12 +19,11 @@ namespace RacingUI
                 ? new[] { new Vector2(1438,110), new Vector2(1785,89), new Vector2(1795,308), new Vector2(1448,329) }
                 : new[] { new Vector2(128,98), new Vector2(477,116), new Vector2(469,310), new Vector2(120,292) };
             var mesh = context.Allocate(4, 6, texture);
-            Rect uv = mesh.uvRegion;
             var r = contentRect;
             Vector2[] points = { new Vector2(r.xMin,r.yMin),new Vector2(r.xMax,r.yMin),new Vector2(r.xMax,r.yMax),new Vector2(r.xMin,r.yMax) };
             for (int i=0;i<4;i++)
                 mesh.SetNextVertex(new Vertex { position = new Vector3(points[i].x,points[i].y,Vertex.nearZ), tint = Color.white,
-                    uv = new Vector2(uv.xMin + source[i].x / 1920f * uv.width, uv.yMin + (1-source[i].y/1080f)*uv.height) });
+                    uv = new Vector2(source[i].x / 1920f, 1-source[i].y/1080f) });
             mesh.SetNextIndex(0);mesh.SetNextIndex(1);mesh.SetNextIndex(2);
             mesh.SetNextIndex(2);mesh.SetNextIndex(3);mesh.SetNextIndex(0);
             if (map)
